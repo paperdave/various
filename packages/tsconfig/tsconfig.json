@@ -2,13 +2,16 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "davecode tsconfig",
   "compilerOptions": {
-    "composite": false,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
     "moduleResolution": "node",
+    "noEmit": true,
+    "isolatedModules": true,
+    "composite": false,
+    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": true,
     "strict": true
   },
   "exclude": ["**/node_modules", "**/dist"]

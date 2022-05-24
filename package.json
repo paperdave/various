@@ -1,9 +1,7 @@
 {
-  "name": "turborepo-basic-shared",
-  "version": "0.0.0",
+  "name": "various-web",
   "private": true,
   "workspaces": [
-    "apps/*",
     "packages/*"
   ],
   "scripts": {
@@ -15,10 +13,6 @@
   "devDependencies": {
     "prettier": "latest",
     "turbo": "latest"
-  },
-  "engines": {
-    "npm": ">=7.0.0",
-    "node": ">=14.0.0"
   },
   "packageManager": "pnpm@7.1.0"
 }
