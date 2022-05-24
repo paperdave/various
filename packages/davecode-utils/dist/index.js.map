@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/math.ts", "../src/promise.ts"],
+  "sourcesContent": ["export function clamp(value: number, min: number, max: number): number {\r\n  return Math.min(Math.max(value, min), max);\r\n}\r\n", "export function delay(ms: number) {\r\n  return new Promise((resolve) => setTimeout(resolve, ms));\r\n}\r\n\r\nexport function deferred<T>(): [\r\n  Promise<T>,\r\n  (x: T) => void,\r\n  (err: any) => void\r\n] {\r\n  let resolve!: (x: T) => void;\r\n  let reject!: (err: any) => void;\r\n  const promise = new Promise<T>((res, rej) => {\r\n    resolve = res;\r\n    reject = rej;\r\n  });\r\n  return [promise, resolve, reject];\r\n}\r\n"],
+  "mappings": ";AAAO,eAAe,OAAe,KAAa,KAAqB;AACrE,SAAO,KAAK,IAAI,KAAK,IAAI,OAAO,GAAG,GAAG,GAAG;AAC3C;;;ACFO,eAAe,IAAY;AAChC,SAAO,IAAI,QAAQ,CAAC,YAAY,WAAW,SAAS,EAAE,CAAC;AACzD;AAEO,oBAIL;AACA,MAAI;AACJ,MAAI;AACJ,QAAM,UAAU,IAAI,QAAW,CAAC,KAAK,QAAQ;AAC3C,cAAU;AACV,aAAS;AAAA,EACX,CAAC;AACD,SAAO,CAAC,SAAS,SAAS,MAAM;AAClC;",
+  "names": []
+}

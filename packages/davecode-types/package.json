@@ -1,0 +1,22 @@
+{
+  "name": "@davecode/types",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "types"
+  ],
+  "author": "Dave Caruso <dave@davecode.net",
+  "type": "module",
+  "types": "index.ts",
+  "dependencies": {
+    "@davecode/tsconfig": "workspace:*",
+    "ts-toolbelt": "^9.6.0",
+    "utility-types": "^3.10.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.4"
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}
