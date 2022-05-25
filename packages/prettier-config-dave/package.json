@@ -21,7 +21,6 @@
     "prettier-plugin-svelte": "^2.7.0"
   },
   "devDependencies": {
-    "@davecode/tsconfig": "workspace:*",
     "@types/prettier": "^2.6.1",
     "postcss": "^8.4.14",
     "prettier": "^2.6.2",
