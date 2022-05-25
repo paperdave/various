@@ -14,9 +14,6 @@
     "build": "tsc && esbuild --outfile=./dist/index.js --target=es2020 --format=esm --sourcemap --bundle src/index.ts",
     "lint": "eslint . --max-warnings=0"
   },
-  "dependencies": {
-    "@davecode/tsconfig": "workspace:*"
-  },
   "devDependencies": {
     "esbuild": "^0.14.39",
     "typescript": "^4.6.4"

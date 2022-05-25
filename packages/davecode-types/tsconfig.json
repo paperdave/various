@@ -1,5 +1,5 @@
 {
-  "extends": "@davecode/tsconfig/library",
+  "extends": "../tsconfig/library",
   "compilerOptions": {
     "declarationDir": "dist"
   },

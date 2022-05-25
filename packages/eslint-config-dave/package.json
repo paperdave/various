@@ -23,7 +23,6 @@
     "eslint-plugin-svelte3": "^4.0.0"
   },
   "devDependencies": {
-    "@davecode/tsconfig": "workspace:*",
     "@types/eslint": "^8.4.2",
     "esbuild": "^0.14.39",
     "eslint": "^8.16.0",

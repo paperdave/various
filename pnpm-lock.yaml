@@ -19,10 +19,10 @@ importers:
       typescript: ^4.6.4
       utility-types: ^3.10.0
     dependencies:
-      '@davecode/tsconfig': link:../tsconfig
       ts-toolbelt: 9.6.0
       utility-types: 3.10.0
     devDependencies:
+      '@davecode/tsconfig': link:../tsconfig
       typescript: 4.7.2
 
   packages/davecode-utils:
