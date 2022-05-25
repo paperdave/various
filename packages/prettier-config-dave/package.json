@@ -1,6 +1,6 @@
 {
   "name": "prettier-config-dave",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "keywords": [
     "utility"
@@ -8,7 +8,10 @@
   "author": "Dave Caruso <dave@davecode.net",
   "type": "commonjs",
   "main": "./index.js",
-  "files": [],
+  "files": [
+    "index.js",
+    "src"
+  ],
   "scripts": {
     "build": "tsc"
   },

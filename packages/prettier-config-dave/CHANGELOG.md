@@ -1,5 +1,11 @@
 # prettier-config-dave
 
+## 1.0.1
+
+### Patch Changes
+
+- fix files in package.json to properly publish
+
 ## 1.0.0
 
 ### Major Changes
