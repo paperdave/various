@@ -1,5 +1,5 @@
 {
   "extends": "@davecode/tsconfig",
   "exclude": ["**/node_modules", "**/dist"],
-  "include": [".*.js", "*.js", "test", ".eslintrc.mjs", "src/rules.js"]
+  "include": [".*.js", "*.js", "test", "index.js"]
 }

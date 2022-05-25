@@ -1,0 +1,28 @@
+{
+  "name": "prettier-config-dave",
+  "version": "3.0.0",
+  "description": "",
+  "keywords": [
+    "utility"
+  ],
+  "author": "Dave Caruso <dave@davecode.net",
+  "type": "commonjs",
+  "devDependencies": {
+    "@davecode/tsconfig": "workspace:*",
+    "postcss": "^8.4.14",
+    "prettier": "^2.6.2",
+    "svelte": "^3.2.0",
+    "typescript": "^4.6.4"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "./index.js",
+  "files": [],
+  "dependencies": {
+    "prettier-plugin-css-order": "^1.2.0",
+    "prettier-plugin-jsdoc": "^0.3.38",
+    "prettier-plugin-organize-imports": "^2.3.4",
+    "prettier-plugin-svelte": "^2.7.0"
+  }
+}

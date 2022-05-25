@@ -1,0 +1,1 @@
+# @davecode/tsconfig

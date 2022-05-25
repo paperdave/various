@@ -8,5 +8,6 @@
     "**/Thumbs.db": true,
     "**/node_modules": true,
     "**/.turbo": true
-  }
+  },
+  "workspace.isHidden": false
 }
