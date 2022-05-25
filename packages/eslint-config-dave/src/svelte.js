@@ -3,11 +3,11 @@
 /** @type {import('eslint').Linter.ConfigOverride[]} */
 const svelteOverrides = [
   {
-    files: ["**/*.svelte"],
-    plugins: ["svelte3"],
-    processor: "svelte3/svelte3",
+    files: ['**/*.svelte'],
+    plugins: ['svelte3'],
+    processor: 'svelte3/svelte3',
     settings: {
-      "svelte3/typescript": () => require("typescript"),
+      'svelte3/typescript': () => require('typescript'),
     },
   },
 ];

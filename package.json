@@ -7,10 +7,11 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint": "turbo run lint"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.22.0",
     "prettier": "latest",
     "turbo": "latest"
   },

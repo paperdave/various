@@ -1,6 +1,6 @@
-/** @type {import()} */
+/** @type {import('prettier').Config} */
 const config = {
   //
 };
 
-module.exports = {};
+module.exports = config;

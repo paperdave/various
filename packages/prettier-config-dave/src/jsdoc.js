@@ -1,4 +1,6 @@
+/** @type {import('prettier').Config & import('../types/prettier-plugin-jsdoc').JsdocOptions} */
 const config = {
+  jsdocAddDefaultToDescription: false,
   jsdocCapitalizeDescription: true,
   jsdocDescriptionTag: false,
   jsdocDescriptionWithDot: true,

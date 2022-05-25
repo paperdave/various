@@ -1,12 +1,27 @@
 {
   "name": "eslint-config-dave",
-  "version": "3.0.0",
+  "version": "2.0.0",
   "description": "",
   "keywords": [
     "utility"
   ],
   "author": "Dave Caruso <dave@davecode.net",
   "type": "commonjs",
+  "main": ".eslintrc.js",
+  "files": [
+    ".eslintrc.js",
+    "src/**/*.js"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --max-warnings=0"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
+    "eslint-plugin-markdown": "^2.2.1",
+    "eslint-plugin-svelte3": "^4.0.0"
+  },
   "devDependencies": {
     "@davecode/tsconfig": "workspace:*",
     "@types/eslint": "^8.4.2",
@@ -14,20 +29,6 @@
     "eslint": "^8.16.0",
     "svelte": "^3.2.0",
     "typescript": "^4.6.4"
-  },
-  "main": ".eslintrc.js",
-  "scripts": {
-    "build": "tsc"
-  },
-  "files": [
-    ".eslintrc.js",
-    "src/**/*.js"
-  ],
-  "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.26.0",
-    "@typescript-eslint/parser": "^5.26.0",
-    "eslint-plugin-markdown": "^2.2.1",
-    "eslint-plugin-svelte3": "^4.0.0"
   },
   "peerDependencies": {
     "eslint": ">=6",

@@ -7,7 +7,7 @@ const base = {
   htmlWhitespaceSensitivity: 'css',
   jsxSingleQuote: true,
   printWidth: 100,
-  proseWrap: 'preserve',
+  proseWrap: 'always',
   quoteProps: 'as-needed',
   semi: true,
   singleQuote: true,

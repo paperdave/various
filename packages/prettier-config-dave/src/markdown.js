@@ -3,10 +3,10 @@ const config = {
     {
       files: '*.md',
       options: {
-        proseWrap: 'always',
+        proseWrap: 'never',
       },
     },
   ],
 };
 
-module.exports = {};
+module.exports = config;

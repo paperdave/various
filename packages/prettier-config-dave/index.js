@@ -1,30 +1,40 @@
 /// <reference types="./ambient" />
 
-// Prettier doesnt
+/* Prettier doesnt have any types */
 
-/** @type {any} */
+const extraPlugins = [
+  require.resolve('@mattinton/prettier-plugin-tidy-imports'),
+  require.resolve('prettier-plugin-packagejson'),
+  require.resolve('prettier-plugin-css-grid'),
+];
+
+/** @type {import('prettier').Config} */
 let config = {
   overrides: [],
-  plugins: [],
+  plugins: extraPlugins,
 };
 
 /** @type {any[]} */
 const configs = [
   //
   require('./src/base'),
-  require('./src/svelte'),
-  require('./src/markdown'),
   require('./src/jsdoc'),
-  require('./src/organise-imports'),
+  require('./src/markdown'),
+  require('./src/svelte'),
 ];
 
 for (const file of configs) {
   config = {
     ...config,
     ...file,
-    overrides: [...config.overrides, ...(file.overrides ?? [])],
-    plugins: [...config.plugins, ...(file.plugins ?? [])],
+    overrides: mergeArrays(config.overrides, file.overrides),
+    plugins: mergeArrays(config.plugins, file.plugins),
   };
+}
+
+/** @param {any[]} arrays */
+function mergeArrays(...arrays) {
+  return [].concat(...arrays.filter(x => x && x.length));
 }
 
 module.exports = config;
