@@ -74,7 +74,7 @@ const rules = {
   complexity: 'error',
   'consistent-return': 'error',
   'consistent-this': ['error', 'self'],
-  curly: ['error', 'multi-or-nest', 'consistent'],
+  curly: ['error', 'all'],
   'default-case': 'error',
   'default-case-last': 'error',
   'default-param-last': 'error',
