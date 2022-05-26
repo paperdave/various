@@ -4,6 +4,7 @@
 export type {
   Assign,
   Brand,
+  Class,
   DeepNonNullable,
   DeepPartial,
   DeepRequired,
