@@ -1,33 +1,35 @@
 // Don't reinvent the wheel. Someone already made some nice types, however I do not want to
+import { DeepReadonly } from 'utility-types';
+
 // re-export their entire library.
 export type {
-  SymmetricDifference,
-  NonUndefined,
-  FunctionKeys,
-  NonFunctionKeys,
-  MutableKeys,
-  ReadonlyKeys,
-  RequiredKeys,
-  OptionalKeys,
-  PickByValue,
-  PickByValueExact,
-  OmitByValue,
-  OmitByValueExact,
-  Intersection,
-  Diff,
-  Subtract,
-  Overwrite,
   Assign,
-  Unionize,
-  DeepReadonly,
-  DeepRequired,
+  Brand,
   DeepNonNullable,
   DeepPartial,
-  Brand,
-  Optional,
-  ValuesType,
-  UnionToIntersection,
+  DeepReadonly,
+  DeepRequired,
+  Diff,
+  FunctionKeys,
+  Intersection,
   Mutable,
+  MutableKeys,
+  NonFunctionKeys,
+  NonUndefined,
+  OmitByValue,
+  OmitByValueExact,
+  Optional,
+  OptionalKeys,
+  Overwrite,
+  PickByValue,
+  PickByValueExact,
+  ReadonlyKeys,
+  RequiredKeys,
+  Subtract,
+  SymmetricDifference,
+  Unionize,
+  UnionToIntersection,
+  ValuesType,
 } from 'utility-types';
 
 // TODO: pick out some nice stuff from `ts-toolbelt`. There's a lot, and I think keeping some
@@ -65,3 +67,6 @@ export type ObjectWithMethod<
     method(...args: Parameters<Value>): ReturnType<Value>;
   }
 > = { [K in keyof Obj as Key]: Obj[K] };
+
+/** `Immutable<T>` represents T as an immutable object. Equal to DeepReadonly<T>, with a different name. */
+export type Immutable<T> = DeepReadonly<T>;
