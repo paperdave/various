@@ -1,5 +1,4 @@
 // Don't reinvent the wheel. Someone already made some nice types, however I do not want to
-import { DeepReadonly } from 'utility-types';
 
 // re-export their entire library.
 export type {
@@ -7,12 +6,11 @@ export type {
   Brand,
   DeepNonNullable,
   DeepPartial,
-  DeepReadonly,
   DeepRequired,
   Diff,
   FunctionKeys,
   Intersection,
-  Mutable,
+  Mutable as MutableObject,
   MutableKeys,
   NonFunctionKeys,
   NonUndefined,
@@ -23,6 +21,7 @@ export type {
   Overwrite,
   PickByValue,
   PickByValueExact,
+  Primitive,
   ReadonlyKeys,
   RequiredKeys,
   Subtract,
@@ -51,10 +50,19 @@ export type Awaitable<T> = T | Promise<T>;
  */
 export declare type Await<T> = T extends Promise<infer U> ? Await<U> : T;
 
-/** Identity will force the hover overlay to flatten this type one layer down. */
-export type Identity<T> = T extends Record<string, unknown>
-  ? { [P in keyof T]: Identity<T[P]> }
+/**
+ * Utility type to force the hover tooltip to "simplify" it's type, one layer down. Call repeatedly
+ * to simplify multiple passes.
+ */
+export type ForceSimplify<T> = T extends Record<string, unknown>
+  ? { [P in keyof T]: ForceSimplify<T[P]> }
   : T;
+
+/**
+ * Utility type to prevent the hover tooltip from automatically simplifying. Place at the root of
+ * another type to get it's hover overlay to show `YourTypeName<{ passed type }>`
+ */
+export type PreventAutoSimplify<T> = T & Record<never, never>;
 
 /**
  * ObjectWithMethod<Key, Method> resolves to an object with a single method. In autocomplete, the
@@ -68,5 +76,31 @@ export type ObjectWithMethod<
   }
 > = { [K in keyof Obj as Key]: Obj[K] };
 
-/** `Immutable<T>` represents T as an immutable object. Equal to DeepReadonly<T>, with a different name. */
-export type Immutable<T> = DeepReadonly<T>;
+/** Separate type so if you Simplify<Immutable<T>>, it will handle properly. */
+type _Immutable<T> = T extends Array<infer U>
+  ? ReadonlyArray<_Immutable<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<_Immutable<U>>
+  : T extends Map<infer K, infer V>
+  ? ReadonlyMap<_Immutable<K>, _Immutable<V>>
+  : T extends ReadonlyMap<infer K, infer V>
+  ? ReadonlyMap<_Immutable<K>, _Immutable<V>>
+  : T extends Set<infer U>
+  ? ReadonlySet<_Immutable<U>>
+  : T extends ReadonlySet<infer U>
+  ? ReadonlySet<_Immutable<U>>
+  : T extends Record<PropertyKey, unknown>
+  ? { readonly [P in keyof T]: _Immutable<T[P]> }
+  : T;
+
+/** `Immutable<T>` represents T as an immutable object (recursive) */
+export type Immutable<T> = PreventAutoSimplify<_Immutable<T>>;
+
+/** `Mutable<T>` represents T as a mutable object (recursive). Reverse of Immutable<T>. */
+export type Mutable<T> = T extends ReadonlyArray<infer U>
+  ? Array<Mutable<U>>
+  : T extends Array<infer U>
+  ? Array<Mutable<U>>
+  : T extends Record<PropertyKey, unknown>
+  ? { -readonly [P in keyof T]: Mutable<T[P]> }
+  : T;
