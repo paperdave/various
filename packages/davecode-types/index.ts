@@ -62,8 +62,10 @@ export type ForceSimplify<T> = T extends Record<string, unknown>
 /**
  * Utility type to prevent the hover tooltip from automatically simplifying. Place at the root of
  * another type to get it's hover overlay to show `YourTypeName<{ passed type }>`
+ *
+ * WIP.
  */
-export type PreventAutoSimplify<T> = T & Record<never, never>;
+export type PreventAutoSimplify<T> = T;
 
 /**
  * ObjectWithMethod<Key, Method> resolves to an object with a single method. In autocomplete, the

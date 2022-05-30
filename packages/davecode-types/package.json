@@ -1,6 +1,6 @@
 {
   "name": "@davecode/types",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "keywords": [
     "types"
@@ -8,7 +8,7 @@
   "author": "Dave Caruso <dave@davecode.net",
   "type": "module",
   "main": "index.ts",
-  "types": "index.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --max-warnings=0"
