@@ -1,5 +1,12 @@
 # eslint-config-dave
 
+## 3.0.3
+
+### Patch Changes
+
+- make all peer dependencies normal, since package managers do not follow peerDependenciesMeta, at
+  least for nested stuff. i'm tired of the stupid install warning
+
 ## 3.0.2
 
 ### Patch Changes
