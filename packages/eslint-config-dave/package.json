@@ -31,9 +31,12 @@
   },
   "peerDependencies": {
     "eslint": ">=6",
-    "typescript": ">=4"
+    "typescript": ">=4",
+    "svelte": ">=3"
   },
-  "optionalDependencies": {
-    "svelte": "^3.2.0"
+  "peerDependenciesMeta": {
+    "svelte": {
+      "optional": true
+    }
   }
 }
