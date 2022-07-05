@@ -1,5 +1,11 @@
 # eslint-config-dave
 
+## 3.0.2
+
+### Patch Changes
+
+- fbce85e: set dependencies as optional
+
 ## 3.0.1
 
 ### Patch Changes

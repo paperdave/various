@@ -1,5 +1,11 @@
 # @davecode/types
 
+## 1.0.2
+
+### Patch Changes
+
+- 176570b: export Class from types package
+
 ## 1.0.1
 
 ### Patch Changes

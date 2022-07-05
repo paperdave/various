@@ -1,5 +1,11 @@
 # prettier-config-dave
 
+## 1.0.2
+
+### Patch Changes
+
+- fbce85e: set dependencies as optional
+
 ## 1.0.1
 
 ### Patch Changes
