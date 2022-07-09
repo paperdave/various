@@ -15,9 +15,6 @@
     "build": "tsc && esbuild --outfile=./dist/index.js --target=es2020 --format=esm --sourcemap --bundle src/index.ts",
     "lint": "eslint . --max-warnings=0"
   },
-  "dependencies": {
-    "@davecode/types": "^1.0.2"
-  },
   "devDependencies": {
     "bun-types": "^0.1.2",
     "esbuild": "^0.14.39",
