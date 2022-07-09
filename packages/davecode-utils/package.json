@@ -1,12 +1,13 @@
 {
   "name": "@davecode/utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "keywords": [
     "utility"
   ],
   "author": "Dave Caruso <dave@davecode.net",
   "type": "module",
+  "main": "./dist/index.js",
   "files": [
     "dist"
   ],
@@ -17,5 +18,8 @@
   "devDependencies": {
     "esbuild": "^0.14.39",
     "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "@davecode/types": "^1.0.2"
   }
 }
