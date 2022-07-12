@@ -1,5 +1,11 @@
 # eslint-config-dave
 
+## 3.0.4
+
+### Patch Changes
+
+- 153228b: add typescript-eslint rules
+
 ## 3.0.3
 
 ### Patch Changes
