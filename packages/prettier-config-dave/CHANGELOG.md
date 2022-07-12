@@ -1,5 +1,11 @@
 # prettier-config-dave
 
+## 1.0.4
+
+### Patch Changes
+
+- 96510dd: files like [name].nowrap.[ext] will not wrap at all.
+
 ## 1.0.3
 
 ### Patch Changes

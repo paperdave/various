@@ -1,5 +1,11 @@
 # eslint-config-dave
 
+## 3.0.5
+
+### Patch Changes
+
+- 96510dd: fix no-redeclare
+
 ## 3.0.4
 
 ### Patch Changes

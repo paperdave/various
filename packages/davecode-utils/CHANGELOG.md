@@ -1,5 +1,11 @@
 # @davecode/utils
 
+## 1.0.2
+
+### Patch Changes
+
+- 96510dd: add `range` and `pipe` and `pipeAsync`
+
 ## 1.0.1
 
 ### Patch Changes
