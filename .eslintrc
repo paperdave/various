@@ -1,1 +1,1 @@
-{ "extends": "dave" }
+{ "extends": "./packages/eslint-config-dave" }

@@ -12,7 +12,7 @@
     "pub": "changeset publish"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.22.0",
+    "@changesets/cli": "^2.23.1",
     "prettier": "latest",
     "turbo": "latest"
   },
