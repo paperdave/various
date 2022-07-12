@@ -1,6 +1,6 @@
 {
   "name": "@davecode/utils",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "keywords": [
     "utility"
@@ -13,13 +13,15 @@
   ],
   "scripts": {
     "build": "tsc && esbuild --outfile=./dist/index.js --target=es2020 --format=esm --sourcemap --bundle src/index.ts",
-    "lint": "eslint . --max-warnings=0"
+    "lint": "eslint . --max-warnings=0",
+    "test": "bun wiptest"
+  },
+  "dependencies": {
+    "@davecode/types": "^1.0.3",
+    "bun-types": "^0.1.2"
   },
   "devDependencies": {
     "esbuild": "^0.14.39",
     "typescript": "^4.6.4"
-  },
-  "dependencies": {
-    "@davecode/types": "^1.0.2"
   }
 }

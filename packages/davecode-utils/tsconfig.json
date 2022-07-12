@@ -2,7 +2,8 @@
   "extends": "../tsconfig/library",
   "compilerOptions": {
     "declarationDir": "dist",
-    "target": "esnext"
+    "target": "esnext",
+    "types": ["bun-types"]
   },
   "exclude": ["**/node_modules", "**/dist"]
 }

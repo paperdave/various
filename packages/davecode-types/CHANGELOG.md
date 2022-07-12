@@ -1,5 +1,11 @@
 # @davecode/types
 
+## 1.0.3
+
+### Patch Changes
+
+- add EmptyObject as a really short alias
+
 ## 1.0.2
 
 ### Patch Changes

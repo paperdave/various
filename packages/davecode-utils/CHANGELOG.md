@@ -1,5 +1,13 @@
 # @davecode/utils
 
+## 1.0.3
+
+### Patch Changes
+
+- some minor changes
+- Updated dependencies
+  - @davecode/types@1.0.3
+
 ## 1.0.2
 
 ### Patch Changes

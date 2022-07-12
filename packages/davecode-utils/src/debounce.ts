@@ -4,7 +4,7 @@ export function debounce<Args extends any[]>(func: (...args: Args) => void, wait
 
   return function (...args: Args) {
     clearTimeout(timeout);
-    timeout = setTimeout(func, waitTime, ...args);
+    timeout = setTimeout(func as any, waitTime, ...args);
   };
 }
 
@@ -13,7 +13,7 @@ export function throttle<Args extends any[]>(func: (...args: Args) => void, wait
   let timeout: number | null = null;
   let previous = 0;
 
-  var later = function (...args: Args) {
+  const later = (...args: Args) => {
     previous = Date.now();
     timeout = null;
     func(...args);
@@ -29,7 +29,7 @@ export function throttle<Args extends any[]>(func: (...args: Args) => void, wait
       later(...args);
     } else if (!timeout) {
       //null timeout -> no pending execution
-      timeout = setTimeout(later, remaining, ...args);
+      timeout = setTimeout(later as any, remaining, ...args);
     }
   };
 }

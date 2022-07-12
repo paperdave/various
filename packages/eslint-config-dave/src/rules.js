@@ -40,7 +40,7 @@ const rules = {
   'no-misleading-character-class': 'error',
   'no-new-symbol': 'error',
   'no-obj-calls': 'off', // TypeScript checker catches this
-  'no-promise-executor-return': 'error',
+  'no-promise-executor-return': 'off', // Arrow functions
   'no-prototype-builtins': 'error',
   'no-self-assign': 'error', // TODO: Svelte files must have this off
   'no-self-compare': 'error',
@@ -121,7 +121,7 @@ const rules = {
   'no-global-assign': 'off', // TypeScript checker catches this
   'no-implicit-coercion': 'off', // TypeScript checker doesn't like these anyways
   'no-implicit-globals': 'off',
-  'no-implied-eval': 'error',
+  'no-implied-eval': 'off', // Overridden by @typescript-eslint
   'no-inline-comments': 'off',
   'no-invalid-this': 'off', // TypeScript checker catches this
   'no-iterator': 'error',
@@ -254,7 +254,7 @@ const rules = {
   "@typescript-eslint/no-array-constructor": "error",
   "@typescript-eslint/no-base-to-string": "error",
   "@typescript-eslint/no-confusing-non-null-assertion": "error",
-  "@typescript-eslint/no-confusing-void-expression": "error",
+  "@typescript-eslint/no-confusing-void-expression": ["error", { ignoreArrowShorthand: true }],
   "@typescript-eslint/no-dupe-class-members": "error",
   "@typescript-eslint/no-duplicate-enum-values": "error",
   "@typescript-eslint/no-dynamic-delete": "error",
@@ -267,7 +267,7 @@ const rules = {
   "@typescript-eslint/no-extraneous-class": "off",
   "@typescript-eslint/no-floating-promises": "off", // This will lead to a bunch of .catch(() => {}), which is worse than just throwing them IMO.
   "@typescript-eslint/no-for-in-array": "error",
-  "@typescript-eslint/no-implied-eval": "error",
+  "@typescript-eslint/no-implied-eval": "off",
   "@typescript-eslint/no-inferrable-types": "error",
   "@typescript-eslint/no-invalid-this": "off", // I thought the TypeScript compiler would catch this.
   "@typescript-eslint/no-invalid-void-type": "error",

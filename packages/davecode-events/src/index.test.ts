@@ -1,4 +1,3 @@
-// @ts-ignore
 import { expect, it } from 'bun:test';
 import { Emitter } from '.';
 
@@ -58,6 +57,8 @@ it('example with types', () => {
   emitter.emit('noData');
 
   // Invalid
+  // @ts-expect-error
+  emitter.emit('test', 321);
   // @ts-expect-error
   emitter.emit('test');
   // @ts-expect-error

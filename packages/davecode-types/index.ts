@@ -107,3 +107,5 @@ export type Mutable<T> = T extends ReadonlyArray<infer U>
   : T extends Record<PropertyKey, unknown>
   ? { -readonly [P in keyof T]: Mutable<T[P]> }
   : T;
+
+export type EmptyObject = Dict<never>;
