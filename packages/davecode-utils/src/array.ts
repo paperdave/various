@@ -33,3 +33,14 @@ export function removeArrayValue<T>(arr: T[], i: number): T[] {
 export function insertArrayValue<T>(arr: T[], i: number, value: T): T[] {
   return [...arr.slice(0, i), value, ...arr.slice(i)];
 }
+
+/** Returns an array with a specified range. */
+export function range(length: number): number[];
+export function range(start: number, end: number, step?: number): number[];
+export function range(a: number, b?: number, c = 1): number[] {
+  if (b === undefined) {
+    b = a;
+    a = 0;
+  }
+  return Array.from({ length: Math.ceil((b - a) / c) }, (_, i) => a + i * c);
+}

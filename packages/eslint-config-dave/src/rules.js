@@ -145,7 +145,7 @@ const rules = {
   'no-param-reassign': 'off',
   'no-plusplus': 'off', // who made this rule, i want to send them a angry letter
   'no-proto': 'off', // TypeScript checker catches this
-  'no-redeclare': 'error',
+  'no-redeclare': 'off', // Overridden by @typescript-eslint
   'no-regex-spaces': 'warn',
   'no-restricted-exports': 'off',
   'no-restricted-globals': 'off',
@@ -153,7 +153,7 @@ const rules = {
   'no-restricted-properties': 'off',
   'no-restricted-syntax': 'off',
   'no-return-assign': 'error',
-  'no-return-await': 'error',
+  'no-return-await': 'off', // Overridden by @typescript-eslint
   'no-script-url': 'error',
   'no-sequences': 'off',
   'no-shadow': 'off', // Overridden by @typescript-eslint
@@ -230,7 +230,7 @@ const rules = {
   "@typescript-eslint/consistent-type-assertions": "error",
   "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
   "@typescript-eslint/consistent-type-exports": ["error", { "fixMixedExportsWithInlineTypeSpecifier": true }],
-  "@typescript-eslint/consistent-type-imports": ["error"],
+  "@typescript-eslint/consistent-type-imports": ["error", { disallowTypeAnnotations: false }],
   "@typescript-eslint/default-param-last": "error",
   "@typescript-eslint/dot-notation": ["error", {
     allowIndexSignaturePropertyAccess: true,
@@ -283,6 +283,7 @@ const rules = {
   // Same with no-any and ban-ts-comment, you'll just add eslint ignores everywhere instead of documenting why. But
   // also alot of these cases you can just infer based on usage that it's ok to use the assert.
   "@typescript-eslint/no-non-null-assertion": "off",
+  "@typescript-eslint/no-redeclare": "error",
   "@typescript-eslint/no-redundant-type-constituents": "error",
   "@typescript-eslint/no-require-imports": "off",
   "@typescript-eslint/no-restricted-imports": "off", // We do not have any restricted imports.
@@ -291,7 +292,7 @@ const rules = {
   "@typescript-eslint/no-throw-literal": "error", // This should be enforced by the JS runtime tbh.
   "@typescript-eslint/no-type-alias": "off", // No.
   "@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",
-  "@typescript-eslint/no-unnecessary-condition": "error",
+  "@typescript-eslint/no-unnecessary-condition": "off",
   "@typescript-eslint/no-unnecessary-qualifier": "error",
   "@typescript-eslint/no-unnecessary-type-arguments": "error",
   "@typescript-eslint/no-unnecessary-type-assertion": "error",
@@ -300,7 +301,7 @@ const rules = {
   "@typescript-eslint/no-unsafe-assignment": "off", // any is supposed to just work, not be limited.
   "@typescript-eslint/no-unsafe-call": "off", // any is supposed to just work, not be limited.
   "@typescript-eslint/no-unsafe-member-access": "off", // any is supposed to just work, not be limited.
-  "@typescript-eslint/no-unsafe-return": "error", // OK this one is a fine.
+  "@typescript-eslint/no-unsafe-return": "off", // any is supposed to just work, not be limited.
   '@typescript-eslint/no-unused-expressions': 'off', // This is turned off since every line of code will be red underlined as you type.
   "@typescript-eslint/no-unused-vars": "warn",
   "@typescript-eslint/no-use-before-define": "off", // TypeScript checker catches this
@@ -328,7 +329,7 @@ const rules = {
   "@typescript-eslint/promise-function-async": "error",
   "@typescript-eslint/require-array-sort-compare": ["error", { ignoreStringArrays: true }],
   "@typescript-eslint/require-await": "warn",
-  "@typescript-eslint/restrict-plus-operands": "error",
+  "@typescript-eslint/restrict-plus-operands": "off", // Doesn't work.
   "@typescript-eslint/restrict-template-expressions": "off",
   "@typescript-eslint/return-await": ["error", "always"], // Forcing await will add an extra line to the stack trace, to improve debugging of where the promise was actually created.
   "@typescript-eslint/sort-type-union-intersection-members": "off", // Sometimes we want a custom order of a union.
@@ -337,7 +338,8 @@ const rules = {
   "@typescript-eslint/triple-slash-reference": "off", // These have uses still
   "@typescript-eslint/typedef": "error",
   "@typescript-eslint/unbound-method": "off",
-  "@typescript-eslint/unified-signatures": "error",
+  "@typescript-eslint/unified-signatures": 'off', // Does not work right. see @davecode/utils' range() function.
+  // "@typescript-eslint/unified-signatures": ["error", { ignoreDifferentlyNamedParameters: true }],
 };
 
 module.exports = { rules };

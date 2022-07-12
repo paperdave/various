@@ -21,6 +21,7 @@ const configs = [
   require('./src/jsdoc'),
   require('./src/markdown'),
   require('./src/svelte'),
+  require('./src/nowrap'),
 ];
 
 for (const file of configs) {
