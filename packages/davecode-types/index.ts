@@ -41,15 +41,8 @@ export type Dict<T> = Record<string, T>;
 /** Represents something that _might_ be a promise. */
 export type Awaitable<T> = T | Promise<T>;
 
-/**
- * Resolves a promise, if present.
- *
- * ```ts
- * // Expect: string;
- * type Response = Await<Promise<string>>;
- * ```
- */
-export declare type Await<T> = T extends Promise<infer U> ? Await<U> : T;
+/** @deprecated Use `Awaitable<T>` instead. */
+export declare type Await<T> = Awaited<T>;
 
 /**
  * Utility type to force the hover tooltip to "simplify" it's type, one layer down. Call repeatedly
