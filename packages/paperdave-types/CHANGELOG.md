@@ -1,4 +1,4 @@
-# @davecode/types
+# @paperdave/types
 
 ## 1.0.3
 

@@ -1,4 +1,4 @@
-# @davecode/utils
+# @paperdave/utils
 
 ## 1.0.1
 
@@ -12,7 +12,7 @@
 
 - add more utils
 - Updated dependencies [176570b]
-  - @davecode/types@1.0.2
+  - @paperdave/types@1.0.2
 
 ## 1.0.0
 

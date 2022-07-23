@@ -1,9 +1,9 @@
 {
-  "name": "@davecode/events",
-  "version": "1.0.1",
+  "name": "@paperdave/utils",
+  "version": "1.0.3",
   "description": "",
   "keywords": [
-    "events"
+    "utility"
   ],
   "author": "Dave Caruso <dave@davecode.net",
   "type": "module",
@@ -13,15 +13,15 @@
   ],
   "scripts": {
     "build": "tsc && esbuild --outfile=./dist/index.js --target=es2020 --format=esm --sourcemap --bundle src/index.ts",
-    "lint": "eslint . --max-warnings=0"
+    "lint": "eslint . --max-warnings=0",
+    "test": "bun wiptest"
+  },
+  "dependencies": {
+    "@paperdave/types": "^1.0.3",
+    "bun-types": "^0.1.2"
   },
   "devDependencies": {
-    "@davecode/types": "workspace:^1.0.3",
-    "bun-types": "^0.1.2",
     "esbuild": "^0.14.39",
     "typescript": "^4.6.4"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

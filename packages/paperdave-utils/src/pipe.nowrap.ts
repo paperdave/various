@@ -1,4 +1,4 @@
-import type { Await, Awaitable } from '@davecode/types';
+import type { Await, Awaitable } from '@paperdave/types';
 
 type F<In, Out> = (input: In) => Out;
 type A<In, Out> = (input: Await<In>) => Awaitable<Out>;

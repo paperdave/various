@@ -1,1 +1,1 @@
-# @davecode/tsconfig
+# @paperdave/tsconfig

@@ -1,4 +1,4 @@
-import type { Awaitable } from '@davecode/types';
+import type { Awaitable } from '@paperdave/types';
 
 /** Returns a promise that resolves after `ms` milliseconds, essentially a Promisified `setTimeout` */
 export function delay(ms: number) {

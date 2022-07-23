@@ -222,7 +222,7 @@ const rules = {
     'ts-nocheck': 'allow-with-description',
   }],
   // TODO: Add custom rules for this next one. Could consider having `{}` and `Object` tell user
-  // about a nonexistant type alias in `@davecode/types` for `NonNullish` or whatever.
+  // about a nonexistant type alias in `@paperdave/types` for `NonNullish` or whatever.
   '@typescript-eslint/ban-types': 'error',
   '@typescript-eslint/class-literal-property-style': ['error', 'fields'],
   "@typescript-eslint/consistent-generic-constructors": "error",
@@ -338,7 +338,7 @@ const rules = {
   "@typescript-eslint/triple-slash-reference": "off", // These have uses still
   "@typescript-eslint/typedef": "error",
   "@typescript-eslint/unbound-method": "off",
-  "@typescript-eslint/unified-signatures": 'off', // Does not work right. see @davecode/utils' range() function.
+  "@typescript-eslint/unified-signatures": 'off', // Does not work right. see @paperdave/utils' range() function.
   // "@typescript-eslint/unified-signatures": ["error", { ignoreDifferentlyNamedParameters: true }],
 };
 
