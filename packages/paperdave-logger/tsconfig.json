@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig/library",
+  "compilerOptions": {
+    "declarationDir": "dist",
+    "target": "esnext",
+    "module": "esnext",
+    "types": ["bun-types", "node"]
+  },
+  "exclude": ["**/dist"]
+}

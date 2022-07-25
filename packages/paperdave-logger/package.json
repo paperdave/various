@@ -1,0 +1,34 @@
+{
+  "name": "@paperdave/events",
+  "version": "1.0.1",
+  "description": "",
+  "keywords": [
+    "events"
+  ],
+  "author": "Dave Caruso <dave@davecode.net",
+  "type": "module",
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && esbuild --outfile=./dist/index.js --target=es2020 --format=esm --sourcemap --bundle src/index.ts",
+    "lint": "eslint . --max-warnings=0"
+  },
+  "devDependencies": {
+    "@paperdave/types": "workspace:^1.0.3",
+    "@types/node": "^18.0.3",
+    "bun-types": "^0.1.2",
+    "esbuild": "^0.14.39",
+    "typescript": "^4.6.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@types/wrap-ansi": "^8.0.1",
+    "string-length": "^5.0.1",
+    "supports-color": "^9.2.2",
+    "wrap-ansi": "^8.0.1"
+  }
+}
