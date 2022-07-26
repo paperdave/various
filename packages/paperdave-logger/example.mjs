@@ -1,32 +1,25 @@
-import { CLIError, injectLogger, log, LogLevel } from './dist/index.js';
+import * as log from './dist/index.js';
+import { delay } from '../paperdave-utils/dist/index.js';
 
-injectLogger();
+log.info('Hello World');
 
-console.log('Hello World!');
-console.info('Hello World!');
-console.warn('Hello World!');
-console.error('Hello World!');
-console.debug('Hello World!');
-
-// log.writeRawLine('');
-// log.info('Hello World!');
-// log.warn('This is a warning!');
-// log.error('This is an error!');
-// log.debug('This is a debug message!');
-// log.success('Your web server is running on http://localhost:3000');
-// log.warn('Type "success" messages should be used sparingly.');
-
-// log.info(
-//   "If you log an empty string or pass no args, the prefix isn't shown. Also, these logs will wrap if it gets too long, which is very arbitrarily defined, but I think it's kind of nice."
-// );
-// log.info('');
-// log.info();
-
-// log.error(new Error('This is an error!'));
-// log.info("There's a special error class you can use to print nice formatted errors");
-// log.error(
-//   new CLIError(
-//     'Invalid config file',
-//     `Please check your config file at ~/.cool.json and try again.`
-//   )
-// );
+const spinner = new log.Spinner();
+await delay(1000);
+log.info('etc etc etc');
+await delay(1000);
+const spinner2 = new log.Spinner({ message: 'a subtask or whatever' });
+await delay(1000);
+log.info('etc etc etc');
+await delay(1000);
+log.warn('something might blow up');
+await delay(1000);
+spinner.remove();
+log.fail('the thing blew up!');
+await delay(1000);
+log.error('yeah that error sucks lol');
+log.debug('wont be shown lol');
+await delay(1000);
+log.info('hmm');
+await delay(1000);
+spinner2.remove();
+log.success('done');

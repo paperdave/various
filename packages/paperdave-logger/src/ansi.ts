@@ -1,5 +1,6 @@
 import supportsColor from 'supports-color';
 
+/** A mini ansi-formatting library. */
 export const ansi = {
   bold: '\x1b[1m',
   dim: '\x1b[2m',
@@ -7,7 +8,7 @@ export const ansi = {
   blink: '\x1b[5m',
   reverse: '\x1b[7m',
   hidden: '\x1b[8m',
-  
+
   reset: '\x1b[0m',
   resetBold: '\x1b[21m',
   resetDim: '\x1b[22m',
@@ -48,11 +49,26 @@ export const ansi = {
   bgMagentaBright: '\x1b[105m',
   bgCyanBright: '\x1b[106m',
   bgWhiteBright: '\x1b[107m',
+
+  up(n: number) {
+    return n === 0 ? '' : n === 1 ? `\x1b[A` : `\x1b[${n}A`;
+  },
+  down(n: number) {
+    return n === 0 ? '' : n === 1 ? `\x1b[B` : `\x1b[${n}B`;
+  },
+  forward(n: number) {
+    return n === 0 ? '' : n === 1 ? `\x1b[C` : `\x1b[${n}C`;
+  },
+  backward(n: number) {
+    return n === 0 ? '' : n === 1 ? `\x1b[D` : `\x1b[${n}D`;
+  },
+
+  clearLine: '\x1b[2K',
 };
 
 if (!supportsColor.stdout) {
   Object.keys(ansi).forEach(key => {
-    ansi[key as keyof typeof ansi] = '';
+    (ansi as any)[key] = typeof ansi[key as keyof typeof ansi] === 'function' ? () => '' : '';
   });
 }
 
