@@ -26,7 +26,7 @@ export interface PrintableError extends Error {
     hideStack?: boolean;
     hideName?: boolean;
 }
-interface Logger {
+export interface Logger {
     /** Writes a log line with a blue `info` prefix. */
     info(...data: any[]): void;
     /** Writes a log line with a yellow `warn` prefix. */
