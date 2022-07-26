@@ -56,20 +56,20 @@ importers:
       '@types/wrap-ansi': ^8.0.1
       bun-types: ^0.1.2
       esbuild: ^0.14.39
-      string-length: ^5.0.1
+      mitata: ^0.1.6
       supports-color: ^9.2.2
       typescript: ^4.6.4
       wrap-ansi: ^8.0.1
     dependencies:
-      '@types/wrap-ansi': 8.0.1
-      string-length: 5.0.1
       supports-color: 9.2.2
       wrap-ansi: 8.0.1
     devDependencies:
       '@paperdave/types': link:../paperdave-types
       '@types/node': 18.0.3
+      '@types/wrap-ansi': 8.0.1
       bun-types: 0.1.2
       esbuild: 0.14.49
+      mitata: 0.1.6
       typescript: 4.7.4
 
   packages/paperdave-types:
@@ -516,7 +516,7 @@ packages:
 
   /@types/wrap-ansi/8.0.1:
     resolution: {integrity: sha512-cjwgM6WWy9YakrQ36Pq0vg5XoNblVEaNq+/pHngKl4GyyDIxTeskPoG+tp4LsRk0lHrA4LaLJqlvYridi7mzlw==}
-    dev: false
+    dev: true
 
   /@typescript-eslint/eslint-plugin/5.30.6_2vt5mtrqleafs33qg2bhpmbaqm:
     resolution: {integrity: sha512-J4zYMIhgrx4MgnZrSDD7sEnQp7FmhKNOaqaOpaoQ/SfdMfRB/0yvK74hTnvH+VQxndZynqs5/Hn4t+2/j9bADg==}
@@ -805,11 +805,6 @@ packages:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
-
-  /char-regex/2.0.1:
-    resolution: {integrity: sha512-oSvEeo6ZUD7NepqAat3RqoucZ5SeqLJgOvVIwkafu6IP3V0pO38s/ypdVUmDDK6qIIHNlYHJAKX9E7R7HoKElw==}
-    engines: {node: '>=12.20'}
-    dev: false
 
   /character-entities-legacy/1.1.4:
     resolution: {integrity: sha512-3Xnr+7ZFS1uxeiUDvV02wQ+QDbc55o97tIV5zHScSPJpcLm/r0DFPcoY3tYRp+VZukxuMeKgXYmsXQHO05zQeA==}
@@ -2303,6 +2298,10 @@ packages:
       kind-of: 6.0.3
     dev: true
 
+  /mitata/0.1.6:
+    resolution: {integrity: sha512-VKQ0r3jriTOU9E2Z+mwbZrUmbg4Li4QyFfi7kfHKl6reZhGzL0AYlu3wE0VPXzIwA5xnFzmEQoBwCcNT8stUkA==}
+    dev: true
+
   /mixme/0.5.4:
     resolution: {integrity: sha512-3KYa4m4Vlqx98GPdOHghxSdNtTvcP8E0kkaJ5Dlh+h2DRzF7zpuVVcA8B0QpKd11YJeP9QQ7ASkKzOeu195Wzw==}
     engines: {node: '>= 8.0.0'}
@@ -2884,14 +2883,6 @@ packages:
     dependencies:
       mixme: 0.5.4
     dev: true
-
-  /string-length/5.0.1:
-    resolution: {integrity: sha512-9Ep08KAMUn0OadnVaBuRdE2l615CQ508kr0XMadjClfYpdCyvrbFp6Taebo8yyxokQ4viUd/xPPUA4FGgUa0ow==}
-    engines: {node: '>=12.20'}
-    dependencies:
-      char-regex: 2.0.1
-      strip-ansi: 7.0.1
-    dev: false
 
   /string-width/4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}

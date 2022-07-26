@@ -1,6 +1,8 @@
-import { CLIError, log } from './src';
+// import { CLIError, log } from './src';
 
-log.setShowDebug(true);
+import { CLIError, injectLogger, log, LogLevel } from './src';
+
+log.setLevel(LogLevel.Info);
 log.writeRawLine('');
 log.info('Hello World!');
 log.warn('This is a warning!');
@@ -23,4 +25,11 @@ log.error(
     `Please check your config file at ~/.cool.json and try again.`
   )
 );
-log.info('yeah.');
+
+injectLogger();
+
+console.log('Hello World!');
+console.info('Hello World!');
+console.warn('Hello World!');
+console.error('Hello World!');
+console.debug('Hello World!');

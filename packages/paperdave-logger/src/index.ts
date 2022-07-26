@@ -3,8 +3,26 @@ import wrapAnsi from 'wrap-ansi';
 import { inspect } from 'node:util';
 import { ansi, colorize } from './ansi';
 
-let showDebug = typeof process !== 'undefined' && !!process.env.DEBUG;
+/** Enum of log level names to their level ID. */
+export enum LogLevel {
+  /** Print nothing. */
+  Silent = 0,
+  /** Print only errors. */
+  Error = 1,
+  /** Print warnings and errors. */
+  Warn = 2,
+  /** Print all non-debug, the default. */
+  Info = 3,
+  /** Print everything. Default is `process.env.DEBUG` is set to true. */
+  Debug = 4,
+}
 
+/** Either a LogLevel or a string key of the LogLevel. */
+type SetLevelInput = LogLevel | Lowercase<keyof typeof LogLevel>;
+
+let level = typeof process !== 'undefined' && !!process.env.DEBUG ? LogLevel.Debug : LogLevel.Info;
+
+/** Hardcoded magic number, all prefixes are 6 characters excluding colors, eg `info `. */
 const PREFIX_LENGTH = 6;
 
 const wrapOptions = {
@@ -12,14 +30,11 @@ const wrapOptions = {
   hard: true,
 };
 
+/** Platform-specific write to stdout. */
 const write =
   typeof Bun !== 'undefined'
     ? (data: string) => Bun.write(Bun.stdout, data)
     : (data: string) => (process as any).stdout.write(data);
-
-function writeLine(data: string) {
-  write(data + '\n');
-}
 
 function stringify(...data: any[]) {
   return data.map(obj => (typeof obj === 'string' ? obj : inspect(obj, false, 4, true))).join(' ');
@@ -37,6 +52,14 @@ function logPrefixed(prefix: string, content: string) {
   write(prefix + wrapped + '\n');
 }
 
+/**
+ * A Printable Error is an error that defines some extra fields. `@paperdave/logger` handles these
+ * objects within logs which allows customizing their appearance. It can be useful when building
+ * CLIs to throw formatted error objects that instruct the user what they did wrong, without
+ * printing a huge piece of text with a useless stack trace.
+ *
+ * @see {CLIError} an easy class to construct these objects.
+ */
 export interface PrintableError extends Error {
   description: string;
   hideStack?: boolean;
@@ -44,19 +67,35 @@ export interface PrintableError extends Error {
 }
 
 interface Logger {
+  /** Writes a log line with a blue `info` prefix. */
   info(...data: any[]): void;
+  /** Writes a log line with a yellow `warn` prefix. */
   warn(...data: any[]): void;
+  /**
+   * Writes a log line with a yellow `error` prefix. Accepts an `Error` or `PrintableError` in
+   * addition to standard text, in which case it will print the error in a pretty way.
+   */
   error(error: Error | PrintableError): void;
+  /**
+   * Writes a log line with a yellow `error` prefix. Accepts an `Error` or `PrintableError` in
+   * addition to standard text, in which case it will print the error in a pretty way.
+   */
   error(...data: any[]): void;
+  /** Writes a log line with a cyan `debug` prefix. These are not visible by default. */
   debug(...data: any[]): void;
+  /** Writes a log line in all green and with a checkmark prefix. */
   success(...data: any[]): void;
 
+  /** Writes raw text, but will do nothing if the log level is set to `LogLevel.Silent` */
   writeRaw(data: string): void;
+  /** Writes raw line of text, but will do nothing if the log level is set to `LogLevel.Silent` */
   writeRawLine(data: string): void;
 
-  setShowDebug(showDebug: boolean): void;
+  /** Sets the log level. Accepts a `LogLevel` enum or a string. */
+  setLevel(level: SetLevelInput): void;
 }
 
+/** Utility function we use internally for formatting the stack trace of an error. */
 function formatStackTrace(err: Error) {
   if (!err.stack) {
     return '';
@@ -150,39 +189,78 @@ function formatErrorObj(err: Error | PrintableError) {
   ].join('');
 }
 
+/** An opiniated logger object. */
 export const log: Logger = {
-  info: (...data: any[]) =>
-    logPrefixed(`${ansi.blueBright}${ansi.bold}info  ${ansi.reset}`, stringify(...data)),
-  warn: (...data: any[]) =>
-    logPrefixed(
-      `${ansi.yellowBright}${ansi.bold}warn  ${ansi.reset}`,
-      colorize(ansi.yellowBright, stringify(...data))
-    ),
+  info: (...data: any[]) => {
+    if (level >= LogLevel.Info) {
+      logPrefixed(`${ansi.blueBright}${ansi.bold}info  ${ansi.reset}`, stringify(...data));
+    }
+  },
+  warn: (...data: any[]) => {
+    if (level >= LogLevel.Warn) {
+      logPrefixed(
+        `${ansi.yellowBright}${ansi.bold}warn  ${ansi.reset}`,
+        colorize(ansi.yellowBright, stringify(...data))
+      );
+    }
+  },
   error(...data: any[]) {
-    logPrefixed(
-      `${ansi.redBright}${ansi.bold}error ${ansi.reset}`,
-      data.length === 1 && data[0] instanceof Error
-        ? formatErrorObj(data[0])
-        : colorize(ansi.redBright, stringify(...data))
-    );
+    if (level >= LogLevel.Error) {
+      logPrefixed(
+        `${ansi.redBright}${ansi.bold}error ${ansi.reset}`,
+        data.length === 1 && data[0] instanceof Error
+          ? formatErrorObj(data[0])
+          : colorize(ansi.redBright, stringify(...data))
+      );
+    }
   },
   debug(...data: any[]) {
-    if (showDebug) {
+    if (level >= LogLevel.Debug) {
       logPrefixed(`${ansi.cyanBright}${ansi.bold}debug ${ansi.reset}`, stringify(...data));
     }
   },
   success(...data: any[]) {
-    const str = stringify(...data);
-    if (str === '') {
-      write('\n');
-    } else {
-      write(wrapAnsi(colorize(ansi.green + ansi.bold, '✔ ' + str), 90, wrapOptions) + '\n');
+    if (level >= LogLevel.Info) {
+      const str = stringify(...data);
+      if (str === '') {
+        write('\n');
+      } else {
+        write(wrapAnsi(colorize(ansi.green + ansi.bold, '✔ ' + str), 90, wrapOptions) + '\n');
+      }
     }
   },
-  writeRaw: write,
-  writeRawLine: writeLine,
-  setShowDebug(show: boolean) {
-    showDebug = show;
+  writeRaw(data: string) {
+    if (level > LogLevel.Silent) {
+      write(data);
+    }
+  },
+  writeRawLine(data: string) {
+    if (level > LogLevel.Silent) {
+      write(data + '\n');
+    }
+  },
+  setLevel(show: SetLevelInput) {
+    if (typeof show === 'number') {
+      level = show;
+    } else {
+      switch (show) {
+        case 'debug':
+          level = LogLevel.Debug;
+          break;
+        case 'info':
+          level = LogLevel.Info;
+          break;
+        case 'warn':
+          level = LogLevel.Warn;
+          break;
+        case 'error':
+          level = LogLevel.Error;
+          break;
+        case 'silent':
+          level = LogLevel.Silent;
+          break;
+      }
+    }
   },
 };
 
@@ -191,10 +269,18 @@ export const log: Logger = {
  * is useful to give users a better description on what the error actually is. Does not show a stack
  * trace by default.
  *
+ * For example, in Purplet we throw this error if the `$DISCORD_BOT_TOKEN` environment variable is missing.
+ *
  * ```ts
  * new CLIError(
- *   'Invalid config file',
- *   `Please check your config file at ${chalk.cyan(config)} and try again.`
+ *   'Missing DISCORD_BOT_TOKEN environment variable!',
+ *   dedent`
+ *     Please create an ${chalk.cyan('.env')} file with the following contents:
+ *
+ *     ${chalk.cyanBright('DISCORD_BOT_TOKEN')}=${chalk.grey('<your bot token>')}
+ *
+ *     You can create or reset your bot token at ${devPortalLink}
+ *   `
  * );
  * ```
  */
@@ -213,6 +299,16 @@ export class CLIError extends Error implements PrintableError {
   }
 }
 
+/**
+ * Injects the logger into `globalThis.console`, or whatever is given. Only fills the following
+ * functions: `log`, `info`, `warn`, `error`, `debug`.
+ *
+ * For accessing some special functions, use the `log` object directly.
+ */
 export function injectLogger(obj = console) {
-  // obj.
+  obj.log = log.info;
+  obj.info = log.info;
+  obj.warn = log.warn;
+  obj.error = log.error;
+  obj.debug = log.debug;
 }
