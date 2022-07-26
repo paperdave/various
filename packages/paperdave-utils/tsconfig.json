@@ -5,5 +5,6 @@
     "target": "esnext",
     "types": ["bun-types"]
   },
-  "exclude": ["**/node_modules", "**/dist"]
+  "exclude": ["**/node_modules", "**/dist"],
+  "include": ["src/**/*.ts"]
 }

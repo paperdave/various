@@ -1,6 +1,4 @@
-// import { CLIError, log } from './src';
-
-import { CLIError, injectLogger, log, LogLevel } from './src';
+import { CLIError, injectLogger, log, LogLevel } from './dist/index.js';
 
 log.setLevel(LogLevel.Info);
 log.writeRawLine('');

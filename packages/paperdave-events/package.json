@@ -5,7 +5,7 @@
   "keywords": [
     "events"
   ],
-  "author": "Dave Caruso <dave@davecode.net",
+  "author": "Dave Caruso <dave@davecode.net>",
   "type": "module",
   "main": "./dist/index.js",
   "files": [

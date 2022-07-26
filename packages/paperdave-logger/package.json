@@ -6,9 +6,10 @@
     "logger",
     "bun"
   ],
-  "author": "Dave Caruso <dave@davecode.net",
+  "author": "Dave Caruso <dave@davecode.net>",
   "type": "module",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],

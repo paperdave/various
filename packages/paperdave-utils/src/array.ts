@@ -14,9 +14,11 @@ export function shuffle<T>(t: T[]): T[] {
 
 /** Creates an array using a length and a `map(index)` function. */
 export function createArray<T>(length: number, map: (index: number) => T): T[] {
-  return Array(length)
-    .fill(null)
-    .map((_, index) => map(index));
+  const arr = Array(length);
+  for (let i = 0; i < length; i++) {
+    arr[i] = map(i);
+  }
+  return arr;
 }
 
 /** Moves index `i` to index `j` in an array immutably. */
@@ -34,13 +36,18 @@ export function insertArrayValue<T>(arr: T[], i: number, value: T): T[] {
   return [...arr.slice(0, i), value, ...arr.slice(i)];
 }
 
-/** Returns an array with a specified range. */
-export function range(length: number): number[];
-export function range(start: number, end: number, step?: number): number[];
-export function range(a: number, b?: number, c = 1): number[] {
+/**
+ * Returns an iterator with a specified range. Range includes the first number and does not include
+ * the second.
+ */
+export function range(length: number): IterableIterator<number>;
+export function range(start: number, end: number, step?: number): IterableIterator<number>;
+export function* range(a: number, b?: number, c = 1): IterableIterator<number> {
   if (b === undefined) {
     b = a;
     a = 0;
   }
-  return Array.from({ length: Math.ceil((b - a) / c) }, (_, i) => a + i * c);
+  for (let i = a; i < b; i += c) {
+    yield i;
+  }
 }

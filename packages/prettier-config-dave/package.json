@@ -5,7 +5,7 @@
   "keywords": [
     "utility"
   ],
-  "author": "Dave Caruso <dave@davecode.net",
+  "author": "Dave Caruso <dave@davecode.net>",
   "type": "commonjs",
   "main": "./index.js",
   "files": [

@@ -5,7 +5,7 @@
   "keywords": [
     "utility"
   ],
-  "author": "Dave Caruso <dave@davecode.net",
+  "author": "Dave Caruso <dave@davecode.net>",
   "type": "module",
   "main": "./dist/index.js",
   "files": [
@@ -17,11 +17,12 @@
     "test": "bun wiptest"
   },
   "dependencies": {
-    "@paperdave/types": "^1.0.3",
-    "bun-types": "^0.1.2"
+    "@paperdave/types": "^1.0.3"
   },
   "devDependencies": {
+    "bun-types": "^0.1.2",
     "esbuild": "^0.14.39",
+    "mitata": "^0.1.6",
     "typescript": "^4.6.4"
   }
 }

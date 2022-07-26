@@ -1,5 +1,11 @@
 # @paperdave/types
 
+## 1.0.4
+
+### Patch Changes
+
+- 5440708: Deprecate `Await`, since `Awaited` is a builtin.
+
 ## 1.0.3
 
 ### Patch Changes

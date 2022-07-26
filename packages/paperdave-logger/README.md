@@ -2,6 +2,12 @@
 
 This is the logger I use in some places, such as in [Purplet](https://github.com/CRBT-Team/Purplet). It is very opiniated and clean (according to my opinion), and supports multiple levels.
 
+- [Documentation](https://doc.deno.land/https://raw.githubusercontent.com/paperdave/various-web/main/packages/paperdave-logger/dist/index.d.ts) (i'm using deno doc however this module doesn't work with Deno)
+
+![](screenshot.png)
+
+## Basic Example
+
 ```ts
 import { log } from '@paperdave/logger';
 
