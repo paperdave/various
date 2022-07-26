@@ -1,7 +1,15 @@
 import path from 'node:path';
 import wrapAnsi from 'wrap-ansi';
+import { writeSync } from 'node:fs';
 import { inspect } from 'node:util';
 import { ansi, colorize } from './ansi';
+
+/**
+ * In this package we use `writeSync(STDOUT, ...)` to write to the stdout instead of
+ * `console.log(...)`, or `process.stdout.write(...)` since it is faster and the code will work
+ * across node and bun.
+ */
+const STDOUT = 0;
 
 /** Enum of log level names to their level ID. */
 export enum LogLevel {
@@ -30,28 +38,20 @@ const wrapOptions = {
   hard: true,
 };
 
-declare const Bun: any;
-
-/** Platform-specific write to stdout. */
-const write =
-  typeof Bun !== 'undefined'
-    ? (data: string) => Bun.write(Bun.stdout, data)
-    : (data: string) => (process as any).stdout.write(data);
-
 function stringify(...data: any[]) {
   return data.map(obj => (typeof obj === 'string' ? obj : inspect(obj, false, 4, true))).join(' ');
 }
 
 function logPrefixed(prefix: string, content: string) {
   if (content === '') {
-    write('\n');
+    writeSync(STDOUT, '\n');
     return;
   }
 
   const wrapped = wrapAnsi(content, 90 - 6, wrapOptions) //
     .replace(/\n\s*/g, '\n' + ' '.repeat(PREFIX_LENGTH));
 
-  write(prefix + wrapped + '\n');
+  writeSync(STDOUT, prefix + wrapped + '\n');
 }
 
 /**
@@ -225,20 +225,23 @@ export const log: Logger = {
     if (level >= LogLevel.Info) {
       const str = stringify(...data);
       if (str === '') {
-        write('\n');
+        writeSync(0, '\n');
       } else {
-        write(wrapAnsi(colorize(ansi.green + ansi.bold, '✔ ' + str), 90, wrapOptions) + '\n');
+        writeSync(
+          0,
+          wrapAnsi(colorize(ansi.green + ansi.bold, '✔ ' + str), 90, wrapOptions) + '\n'
+        );
       }
     }
   },
   writeRaw(data: string) {
     if (level > LogLevel.Silent) {
-      write(data);
+      writeSync(STDOUT, data);
     }
   },
   writeRawLine(data: string) {
     if (level > LogLevel.Silent) {
-      write(data + '\n');
+      writeSync(STDOUT, data + '\n');
     }
   },
   setLevel(show: SetLevelInput) {
