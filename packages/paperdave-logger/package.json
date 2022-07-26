@@ -11,7 +11,8 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "screenshot.png"
   ],
   "scripts": {
     "build": "tsc && esbuild --outfile=./dist/index.js --target=es2020 --format=esm --platform=node --sourcemap --bundle src/index.ts --external:wrap-ansi --external:supports-color",

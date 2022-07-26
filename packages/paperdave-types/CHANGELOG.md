@@ -5,6 +5,8 @@
 ### Patch Changes
 
 - 5440708: Deprecate `Await`, since `Awaited` is a builtin.
+- `range` now returns an iterator
+- `createArray` is faster now
 
 ## 1.0.3
 
