@@ -30,6 +30,8 @@ const wrapOptions = {
   hard: true,
 };
 
+declare const Bun: any;
+
 /** Platform-specific write to stdout. */
 const write =
   typeof Bun !== 'undefined'
