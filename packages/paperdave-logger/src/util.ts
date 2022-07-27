@@ -23,6 +23,7 @@ export function stringify(...data: any[]) {
 
 export type Timer = ReturnType<typeof setInterval>;
 
+/** A console color enum. */
 export enum Color {
   Black = 'black',
   Red = 'red',

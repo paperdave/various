@@ -27,12 +27,12 @@ export abstract class LogWidget {
    * Returns a string of what the widget looks like. Called 15 times per second to allow for smooth
    * animation. The value passed to now is the result of `performance.now`.
    */
-  abstract format(now: number): string;
+  protected abstract format(now: number): string;
   /**
    * The current FPS of the widget. If this is set to 0, the widget will not automatically update
    * and you must call `update`.
    */
-  abstract fps: number;
+  protected abstract fps: number;
 
   /** Removes this widget from the log. */
   protected remove(finalMessage?: string) {
@@ -94,6 +94,7 @@ export abstract class LogWidget {
     redrawWidgets();
   }
 
+  /** Remove this widget with a success message. */
   success(message: string) {
     LogWidget.batchRedraw(() => {
       success(message);
@@ -101,6 +102,7 @@ export abstract class LogWidget {
     });
   }
 
+  /** Remove this widget with a failure message. */
   fail(message: string | Error) {
     LogWidget.batchRedraw(() => {
       fail(message);

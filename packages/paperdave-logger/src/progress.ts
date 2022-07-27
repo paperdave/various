@@ -55,25 +55,38 @@ function getAsciiBar(progress: number, width: number) {
   ].join('');
 }
 
+/** A Progress Bar Style. Ascii is forced in non-unicode terminals. */
 export enum BarStyle {
   Unicode = 'unicode',
   Ascii = 'ascii',
 }
 
+/** Options to be passed to `new Progress` */
 export interface ProgressOptions<Props extends Record<string, unknown> = EmptyObject> {
+  /** Text displayed to the right of the bar. */
   text: string | ((props: ExtendedProps<Props>) => string);
+  /** Text displayed to the left of the bar, if specified. */
   beforeText?: string | ((props: ExtendedProps<Props>) => string);
+  /** Properties to be passed to `text` and `beforeText` formatting functions. */
   props?: Props;
+  /** Width of the progress bar itself. Default: 35. */
   barWidth?: number;
+  /** Progress bar style, default `BarStyle.Unicode` */
   barStyle?: BarStyle | `${BarStyle}`;
+  /** Spinner settings. Set to `null` to disable the spinner. */
   spinner?: Partial<BarSpinnerOptions> | null;
+  /** Starting value. Default: 0. */
   value?: number;
+  /** Ending value. Default: 100. */
   total?: number;
 }
 
 export interface BarSpinnerOptions {
+  /** Frames per second of the Spinner. */
   fps: number;
+  /** Sequence of frames for the spinner. */
   frames: string[];
+  /** Color of the spinner. If set to `match` it will match the bar. */
   color: Color | `${Color}` | 'match';
 }
 
@@ -93,29 +106,30 @@ const defaultOptions = {
 type ExtendedProps<T> = T & {
   value: number;
   total: number;
+  /** Number 0-1, inclusive. */
   progress: number;
 };
 
 export class Progress<Props extends Record<string, unknown>> extends LogWidget {
   #text: string | ((props: ExtendedProps<Props>) => string);
   #beforeText: string | ((props: ExtendedProps<Props>) => string);
-  barWidth: number;
-  barStyle: NonNullable<ProgressOptions['barStyle']>;
-  spinnerColor: NonNullable<BarSpinnerOptions['color']>;
-  spinnerFrames?: string[];
+  #barWidth: number;
+  #barStyle: NonNullable<ProgressOptions['barStyle']>;
+  #spinnerColor: NonNullable<BarSpinnerOptions['color']>;
+  #spinnerFrames?: string[];
   #props: Props;
-  fps: number;
-  spinnerFPS: number;
+  #spinnerFPS: number;
   #value: number;
   #total: number;
+  protected fps: number;
 
   constructor(options: ProgressOptions<Props>) {
     super();
 
     this.#text = options.text;
     this.#beforeText = options.beforeText ?? defaultOptions.beforeText;
-    this.barWidth = options.barWidth ?? defaultOptions.barWidth;
-    this.barStyle = options.barStyle ?? defaultOptions.barStyle;
+    this.#barWidth = options.barWidth ?? defaultOptions.barWidth;
+    this.#barStyle = options.barStyle ?? defaultOptions.barStyle;
     this.#props = options.props ?? ({} as Props);
     this.#value = options.value ?? defaultOptions.value;
     this.#total = options.total ?? defaultOptions.total;
@@ -124,22 +138,24 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
     // eslint-disable-next-line eqeqeq
     if (options.spinner !== null) {
       this.fps = 15;
-      this.spinnerFPS = options.spinner?.fps ?? defaultOptions.spinner.fps;
-      this.spinnerFrames = options.spinner?.frames ?? defaultOptions.spinner.frames;
-      this.spinnerColor = options.spinner?.color ?? defaultOptions.spinner.color;
+      this.#spinnerFPS = options.spinner?.fps ?? defaultOptions.spinner.fps;
+      this.#spinnerFrames = options.spinner?.frames ?? defaultOptions.spinner.frames;
+      this.#spinnerColor = options.spinner?.color ?? defaultOptions.spinner.color;
     } else {
       this.fps = 0;
-      this.spinnerFPS = defaultOptions.spinner.fps;
-      this.spinnerFrames = undefined;
-      this.spinnerColor = defaultOptions.spinner.color;
+      this.#spinnerFPS = defaultOptions.spinner.fps;
+      this.#spinnerFrames = undefined;
+      this.#spinnerColor = defaultOptions.spinner.color;
     }
   }
 
+  /** Properties to be passed to `text` and `beforeText` formatting functions. */
   set props(value: Partial<Props>) {
     this.#props = {
       ...this.#props,
       ...value,
     };
+    this.redraw();
   }
 
   get props(): ExtendedProps<Props> {
@@ -151,6 +167,7 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
     };
   }
 
+  /** Text displayed to the right of the bar. */
   get text(): string {
     return typeof this.#text === 'function' ? this.#text(this.props) : this.#text;
   }
@@ -160,6 +177,7 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
     this.redraw();
   }
 
+  /** Text displayed to the left of the bar, if specified. */
   get beforeText(): string {
     return typeof this.#beforeText === 'function' ? this.#beforeText(this.props) : this.#beforeText;
   }
@@ -168,7 +186,7 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
     this.#beforeText = value;
     this.redraw();
   }
-
+  /** Current value of progress bar. */
   get value() {
     return this.value;
   }
@@ -178,6 +196,7 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
     this.redraw();
   }
 
+  /** Total value of progress bar. When value === total, the bar is full. */
   get total() {
     return this.value;
   }
@@ -187,7 +206,19 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
     this.redraw();
   }
 
-  format(now: number): string {
+  /** Updates the progress bar with a new value and props. */
+  update(value: number, props?: Partial<Props>) {
+    this.#value = value;
+    if (props) {
+      this.#props = {
+        ...this.props,
+        ...props,
+      };
+    }
+    this.redraw();
+  }
+
+  protected format(now: number): string {
     const progress = this.#total === 0 ? 1 : this.#value / this.#total;
 
     const hue = Math.min(Math.max(progress, 0), 1) / 3;
@@ -196,18 +227,18 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
       ansi.bgRgb(...convertHSVtoRGB(hue, 0.8, 0.5));
 
     let spinner;
-    if (this.spinnerFrames) {
-      const frame = Math.floor(now / (1000 / this.spinnerFPS)) % this.spinnerFrames.length;
-      spinner = this.spinnerColor
-        ? (this.spinnerColor === 'match'
+    if (this.#spinnerFrames) {
+      const frame = Math.floor(now / (1000 / this.#spinnerFPS)) % this.#spinnerFrames.length;
+      spinner = this.#spinnerColor
+        ? (this.#spinnerColor === 'match'
             ? ansi.rgb(...convertHSVtoRGB(hue, 0.8, 1))
-            : ansi[this.spinnerColor]) +
-          this.spinnerFrames[frame] +
+            : ansi[this.#spinnerColor]) +
+          this.#spinnerFrames[frame] +
           ansi.reset
-        : this.spinnerFrames[frame];
+        : this.#spinnerFrames[frame];
     }
 
-    const getBar = isUnicodeSupported && this.barStyle === 'unicode' ? getUnicodeBar : getAsciiBar;
+    const getBar = isUnicodeSupported && this.#barStyle === 'unicode' ? getUnicodeBar : getAsciiBar;
 
     const beforeText = this.beforeText;
 
@@ -215,7 +246,7 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
       spinner ? spinner + ' ' : '',
       beforeText ? beforeText + ' ' : '',
       barColor,
-      getBar(progress, this.barWidth),
+      getBar(progress, this.#barWidth),
       ansi.reset,
       ' ',
       this.text,
@@ -235,8 +266,10 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
 
 export interface WithProgressOptions<Props extends Record<string, unknown>, T>
   extends ProgressOptions<Props> {
-  successMessage?: string | ((result: T) => string);
-  failureMessage?: string | ((error: Error) => string);
+  /** Message to print on success. If a function, the result is passed. */
+  successText?: string | ((result: T) => string);
+  /** Message to print on fail. If a function, the error is passed. */
+  failureText?: string | ((error: Error) => string);
 }
 
 export async function withProgress<Props extends Record<string, unknown>, T>(
@@ -248,10 +281,10 @@ export async function withProgress<Props extends Record<string, unknown>, T>(
   try {
     const result = await fn(bar);
     bar.success(
-      opts.successMessage
-        ? typeof opts.successMessage === 'function'
-          ? opts.successMessage(result)
-          : opts.successMessage
+      opts.successText
+        ? typeof opts.successText === 'function'
+          ? opts.successText(result)
+          : opts.successText
         : opts.text
         ? typeof opts.text === 'function'
           ? opts.text(bar.props)
@@ -260,9 +293,7 @@ export async function withProgress<Props extends Record<string, unknown>, T>(
     );
   } catch (error: any) {
     bar.fail(
-      typeof opts.failureMessage === 'function'
-        ? opts.failureMessage(error)
-        : opts.failureMessage ?? error
+      typeof opts.failureText === 'function' ? opts.failureText(error) : opts.failureText ?? error
     );
     throw error;
   }

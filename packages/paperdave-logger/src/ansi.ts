@@ -127,14 +127,17 @@ const colorList = [
 ] as const;
 
 interface T1 {
+  /** Applies this color to a given string. */
   fn(str: string): string;
 }
 export type ColorObject = { [K in keyof T1 as typeof colorList[number]]: T1[K] } & {
+  /** Applies this RGB color to a given string. */
   rgb(r: number, g: number, b: number, string: string): string;
+  /** Applies this RGB color to a given string. */
   bgRgb(r: number, g: number, b: number, string: string): string;
 };
 
-/** Simpler alternative to `chalk` */
+/** Simpler alternative to `chalk`, provides methods that colorize strings. */
 export const colors = {} as ColorObject;
 
 for (const colorName of colorList) {

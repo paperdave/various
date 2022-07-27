@@ -4,10 +4,15 @@ import { Color, wrapOptions } from './util';
 import { LogWidget } from './widget';
 
 export interface SpinnerOptions<Props extends Record<string, unknown>> {
+  /** Text displayed to the right of the spinner. */
   text: string | ((props: Props) => string);
+  /** Color of the spinner. */
   color?: Color | `${Color}` | false;
+  /** Sequence of frames for the spinner. */
   frames?: string[];
+  /** Frames per second of the Spinner. */
   fps?: number;
+  /** Properties to be passed to the `text` formatting function. */
   props?: Props;
 }
 
@@ -20,27 +25,43 @@ export const defaultSpinnerOptions = {
 
 export class Spinner<Props extends Record<string, unknown>> extends LogWidget {
   #text: string | ((props: Props) => string);
-  color: Color | `${Color}` | false;
-  fps: number;
-  frames: string[];
-  props: Props;
+  #color: Color | `${Color}` | false;
+  #frames: string[];
+  #props: Props;
+  protected fps: number;
 
   constructor(options: SpinnerOptions<Props>) {
     super();
     this.#text = options.text ?? defaultSpinnerOptions.text;
-    this.color = options.color ?? defaultSpinnerOptions.color;
-    this.frames = options.frames ?? defaultSpinnerOptions.frames;
+    this.#color = options.color ?? defaultSpinnerOptions.color;
+    this.#frames = options.frames ?? defaultSpinnerOptions.frames;
     this.fps = options.fps ?? defaultSpinnerOptions.fps;
-    this.props = options.props ?? ({} as Props);
+    this.#props = options.props ?? ({} as Props);
   }
 
+  /** Text displayed to the right of the spinner. */
   get text(): string {
-    return typeof this.#text === 'function' ? this.#text(this.props) : this.#text;
+    return typeof this.#text === 'function' ? this.#text(this.#props) : this.#text;
   }
 
   set text(value: string | (() => string)) {
     this.#text = value;
     this.redraw();
+  }
+
+  /** Properties to be passed to `text` and `beforeText` formatting functions. */
+  set props(value: Partial<Props>) {
+    this.#props = {
+      ...this.#props,
+      ...value,
+    };
+    this.redraw();
+  }
+
+  get props(): Props {
+    return {
+      ...this.#props,
+    };
   }
 
   /**
@@ -53,23 +74,27 @@ export class Spinner<Props extends Record<string, unknown>> extends LogWidget {
     if (typeof newData === 'string') {
       this.text = newData;
     } else {
-      this.props = { ...this.props, ...newData };
+      this.#props = { ...this.#props, ...newData };
       this.redraw();
     }
   }
 
-  format(now: number): string {
-    const frame = Math.floor(now / (1000 / this.fps)) % this.frames.length;
+  protected format(now: number): string {
+    const frame = Math.floor(now / (1000 / this.fps)) % this.#frames.length;
 
     return (
-      (this.color ? ansi[this.color] + this.frames[frame] + ansi.reset : this.frames[frame]) +
+      (this.#color ? ansi[this.#color] + this.#frames[frame] + ansi.reset : this.#frames[frame]) +
       ' ' +
-      wrapAnsi(this.text, 90 - 1 - this.frames[frame].length, wrapOptions)
+      wrapAnsi(this.text, 90 - 1 - this.#frames[frame].length, wrapOptions)
     );
   }
 
-  remove() {
-    super.remove();
+  success(message?: string): void {
+    super.success(message ?? this.text);
+  }
+
+  fail(message?: string | Error): void {
+    super.fail(message ?? this.text);
   }
 }
 
