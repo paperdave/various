@@ -1,15 +1,24 @@
 # @paperdave/logger
 
-This is the logger I use in some places, such as in [Purplet](https://github.com/CRBT-Team/Purplet). It is very opiniated and clean (according to my opinion), and supports multiple levels.
+This is the logger I use in some of my programs, it has:
 
-- [Documentation](https://doc.deno.land/https://raw.githubusercontent.com/paperdave/various-web/main/packages/paperdave-logger/dist/index.d.ts) (i'm using deno doc however this module doesn't work with Deno)
+- Multiple levels, such as `debug` logs that aren't shown by default
+- Widgets, dynamic and animatable things such as:
+  - Spinners (replaces `ora`)
+  - Progress Bars (replaces `cli-progress` and alternatives)
+  - Custom api for other ideas.
+- Pretty error formatting.
+- Injecting the global `console` object to force all logs to be formatted.
+- Bun and Node.js support
 
 ![](screenshot.png)
+
+[Documentation](https://doc.deno.land/https://raw.githubusercontent.com/paperdave/various-web/main/packages/paperdave-logger/dist/index.d.ts) (i'm using deno doc however this module doesn't work with Deno)
 
 ## Basic Example
 
 ```ts
-import { log } from '@paperdave/logger';
+import log from '@paperdave/logger';
 
 log.info('Hello World!');
 log.warn('This is a warning!');
@@ -32,3 +41,30 @@ import { injectLogger } from '@paperdave/logger';
 
 injectLogger();
 ```
+
+## Spinners and Progress Bars
+
+The `Spinner` and `ProgressBar` bar classes instantly start rendering when constructed, and have various methods to update their state and resolve them.
+
+```ts
+import { Spinner } from '@paperdave/logger';
+import { delay } from '@paperdave/utils';
+
+const spinner = new Spinner({
+  message: 'Loading...'
+});
+await delay(1000);
+spinner.update('Still Loading...');
+await delay(1000);
+spinner.success('Done!');
+```
+
+## Custom Widgets
+
+`LogWidget` is a base class for widgets. A widget is responsible for providing a `format(now) -> string` function, where `now` is the value of `performance.now()`, and then an `fps` constant which is set to 15 by default.
+
+In addition to that, the (protected) api contains
+
+- `remove` - remove the widget from the log
+- `redraw` - forces a redraw
+- `LogWidget.batchRedraw(fn)` - pass an fn and perform multiple log operations in a single batch, useful to optimize log + remove() calls.

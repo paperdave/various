@@ -1,16 +1,33 @@
-import log, { Spinner } from './dist/index.js';
+import log, { Spinner, withSpinner } from './dist/index.js';
+import { delay } from '../paperdave-utils/dist/index.js';
 
 log.info('yeah');
 
-log.success('Finished Build');
+await withSpinner(
+  async spinner => {
+    await delay(1000);
+    spinner.update('working on it');
+    await delay(1000);
 
-const spinner = new Spinner({ message: '12.5fps, what ora uses.' });
-const spinner2 = new Spinner({ message: '60fps lol', fps: 60 });
-const spinner3 = new Spinner({
-  message: () => `2fps, random number is ${Math.random()}`,
-  fps: 2,
-  color: 'greenBright',
-});
+    throw new Error('oops');
+
+    return 'result';
+  },
+  {
+    color: 'red',
+    message: 'Calculating a thing...',
+    failureMessage: 'Lol it fuckin broke',
+    successMessage: result => `It succeeded with ${result}`,
+  }
+);
+
+// const spinner = new Spinner({ message: '12.5fps, what ora uses.' });
+// const spinner2 = new Spinner({ message: '60fps lol', fps: 60 });
+// const spinner3 = new Spinner({
+//   message: () => `2fps, random number is ${Math.random()}`,
+//   fps: 2,
+//   color: 'greenBright',
+// });
 
 // await delay(1000);
 // log.info('etc etc etc');

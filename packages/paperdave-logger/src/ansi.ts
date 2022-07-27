@@ -1,6 +1,5 @@
 import supportsColor from 'supports-color';
 
-/** A mini ansi-formatting library. */
 export const ansi = {
   bold: '\x1b[1m',
   dim: '\x1b[2m',
@@ -67,6 +66,13 @@ export const ansi = {
 
   show: '\x1b[?25h',
   hide: '\x1b[?25l',
+
+  rgb(r: number, g: number, b: number) {
+    return `\x1b[38;2;${r};${g};${b}m`;
+  },
+  bgRgb(r: number, g: number, b: number) {
+    return `\x1b[48;2;${r};${g};${b}m`;
+  },
 };
 
 if (!supportsColor.stdout) {
@@ -78,3 +84,68 @@ if (!supportsColor.stdout) {
 export function colorize(color: string, str: string) {
   return color + str.replaceAll(ansi.reset, ansi.reset + color) + ansi.reset;
 }
+
+const colorList = [
+  'bold',
+  'dim',
+  'underlined',
+  'blink',
+  'reverse',
+  'hidden',
+  'black',
+  'red',
+  'green',
+  'yellow',
+  'blue',
+  'magenta',
+  'cyan',
+  'white',
+  'blackBright',
+  'redBright',
+  'greenBright',
+  'yellowBright',
+  'blueBright',
+  'magentaBright',
+  'cyanBright',
+  'whiteBright',
+  'bgBlack',
+  'bgRed',
+  'bgGreen',
+  'bgYellow',
+  'bgBlue',
+  'bgMagenta',
+  'bgCyan',
+  'bgWhite',
+  'bgBlackBright',
+  'bgRedBright',
+  'bgGreenBright',
+  'bgYellowBright',
+  'bgBlueBright',
+  'bgMagentaBright',
+  'bgCyanBright',
+  'bgWhiteBright',
+] as const;
+
+interface T1 {
+  fn(str: string): string;
+}
+export type ColorObject = { [K in keyof T1 as typeof colorList[number]]: T1[K] } & {
+  rgb(r: number, g: number, b: number, string: string): string;
+  bgRgb(r: number, g: number, b: number, string: string): string;
+};
+
+/** Simpler alternative to `chalk` */
+export const colors = {} as ColorObject;
+
+for (const colorName of colorList) {
+  Object.defineProperty(colors, colorName, {
+    value(str: string) {
+      return colorize(ansi[colorName], str);
+    },
+  });
+}
+
+colors.rgb = (r: number, g: number, b: number, string: string) =>
+  colorize(ansi.rgb(r, g, b), string);
+colors.bgRgb = (r: number, g: number, b: number, string: string) =>
+  colorize(ansi.bgRgb(r, g, b), string);

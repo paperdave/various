@@ -3,6 +3,7 @@ import { writeSync } from 'node:fs';
 import { ansi, colorize } from './ansi';
 import { formatErrorObj } from './error';
 import { level, LogLevel } from './level';
+import { logSymbols } from './unicode';
 import { PREFIX_LENGTH, STDOUT, stringify, wrapOptions } from './util';
 import { clearWidgets, redrawWidgets } from './widget';
 
@@ -70,7 +71,14 @@ export function success(...data: any[]) {
     if (str === '') {
       writeSync(0, '\n');
     } else {
-      writeSync(0, wrapAnsi(colorize(ansi.green + ansi.bold, '✔ ' + str), 90, wrapOptions) + '\n');
+      writeSync(
+        0,
+        wrapAnsi(
+          colorize(ansi.green + ansi.bold, logSymbols.success + ' ' + str),
+          90,
+          wrapOptions
+        ) + '\n'
+      );
     }
     redrawWidgets();
   }
@@ -85,7 +93,11 @@ export function fail(...data: any[]) {
     if (str === '') {
       writeSync(0, '\n');
     } else {
-      writeSync(0, wrapAnsi(colorize(ansi.red + ansi.bold, '✖ ' + str), 90, wrapOptions) + '\n');
+      writeSync(
+        0,
+        wrapAnsi(colorize(ansi.red + ansi.bold, logSymbols.error + ' ' + str), 90, wrapOptions) +
+          '\n'
+      );
     }
     redrawWidgets();
   }

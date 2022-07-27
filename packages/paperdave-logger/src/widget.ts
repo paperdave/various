@@ -6,6 +6,7 @@ import { STDOUT } from './util';
 const widgets: LogWidget[] = [];
 let widgetLineCount = 0;
 let widgetTimer: Timer | undefined;
+let widgetDrawingDisabled = false;
 
 /**
  * A Log Widget is a piece of log content that is held at the bottom of the console log, and can be
@@ -51,8 +52,8 @@ export abstract class LogWidget {
     }
   }
 
-  /** Forces an update to happen immediately. */
-  protected update() {
+  /** Forces a redraw to happen immediately. */
+  protected redraw() {
     this.#nextUpdate = 0;
     redrawWidgets();
   }
@@ -80,6 +81,17 @@ export abstract class LogWidget {
     widgetLineCount += this.#newlines;
     return this.#text;
   }
+
+  /**
+   * Runs the given function without redrawing anything, then runs a redraws. This is used to batch
+   * some updates together without having to redraw the current widgets more than once per frame.
+   */
+  static batchRedraw(fn: () => void) {
+    widgetDrawingDisabled = true;
+    fn();
+    widgetDrawingDisabled = false;
+    redrawWidgets();
+  }
 }
 
 export function clearWidgets() {
@@ -93,7 +105,7 @@ export function clearWidgets() {
 }
 
 export function redrawWidgets() {
-  if (!widgetTimer) {
+  if (!widgetTimer || widgetDrawingDisabled) {
     return;
   }
 
