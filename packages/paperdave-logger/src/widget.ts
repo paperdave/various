@@ -16,7 +16,8 @@ export abstract class LogWidget {
     widgets.push(this);
 
     if (!widgetTimer) {
-      widgetTimer = setInterval(redrawWidgets, 1000 / 15);
+      widgetTimer = setInterval(redrawWidgets, 1000 / 60);
+      writeSync(STDOUT, ansi.hide);
     }
   }
 
@@ -25,9 +26,10 @@ export abstract class LogWidget {
    * animation. The value passed to now is the result of `performance.now`.
    */
   abstract format(now: number): string;
+  abstract fps: number;
 
   /** Removes this widget from the log. */
-  remove(finalMessage?: string) {
+  protected remove(finalMessage?: string) {
     const index = widgets.indexOf(this);
     if (index >= 0) {
       widgets.splice(index, 1);
@@ -39,8 +41,40 @@ export abstract class LogWidget {
     if (widgets.length === 0) {
       clearInterval(widgetTimer);
       widgetTimer = undefined;
+      writeSync(STDOUT, ansi.show);
+    } else {
+      redrawWidgets();
     }
+  }
+
+  /** Forces an update to happen immediately. */
+  protected update() {
+    this.#nextUpdate = 0;
     redrawWidgets();
+  }
+
+  #nextUpdate = 0;
+  #text = '';
+  #newlines = 0;
+
+  /** @internal */
+  private __internalUpdate(now: number) {
+    if (now > this.#nextUpdate) {
+      this.#nextUpdate = this.fps === 0 ? Infinity : now + 1000 / this.fps;
+      const text = this.format(now);
+      if (text !== this.#text) {
+        this.#text = text + '\n';
+        this.#newlines = text.split('\n').length;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  /** @interal */
+  private __internalGetText() {
+    widgetLineCount += this.#newlines;
+    return this.#text;
   }
 }
 
@@ -59,12 +93,11 @@ export function redrawWidgets() {
     return;
   }
 
-  clearWidgets();
   const now = performance.now();
-  for (const w of widgets) {
-    const str = w.format(now);
-    writeSync(STDOUT, str);
-    widgetLineCount += str.split('\n').length;
-    writeSync(STDOUT, '\n');
+  const hasUpdate = widgets.filter(widget => widget['__internalUpdate'](now)).length > 0;
+
+  if (hasUpdate || widgetLineCount === 0) {
+    clearWidgets();
+    writeSync(STDOUT, widgets.map(widget => widget['__internalGetText']()).join(''));
   }
 }

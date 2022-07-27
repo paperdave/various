@@ -22,3 +22,22 @@ export function stringify(...data: any[]) {
 }
 
 export type Timer = ReturnType<typeof setInterval>;
+
+export enum Color {
+  Black = 'black',
+  Red = 'red',
+  Green = 'green',
+  Yellow = 'yellow',
+  Blue = 'blue',
+  Magenta = 'magenta',
+  Cyan = 'cyan',
+  White = 'white',
+  BlackBright = 'blackBright',
+  RedBright = 'redBright',
+  GreenBright = 'greenBright',
+  YellowBright = 'yellowBright',
+  BlueBright = 'blueBright',
+  MagentaBright = 'magentaBright',
+  CyanBright = 'cyanBright',
+  WhiteBright = 'whiteBright',
+}
