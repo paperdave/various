@@ -26,6 +26,10 @@ export abstract class LogWidget {
    * animation. The value passed to now is the result of `performance.now`.
    */
   abstract format(now: number): string;
+  /**
+   * The current FPS of the widget. If this is set to 0, the widget will not automatically update
+   * and you must call `update`.
+   */
   abstract fps: number;
 
   /** Removes this widget from the log. */

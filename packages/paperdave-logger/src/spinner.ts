@@ -5,7 +5,7 @@ import { LogWidget } from './widget';
 
 export interface SpinnerOptions {
   message: string | (() => string);
-  color: Color | false;
+  color: Color | `${Color}` | false;
   frames: string[];
   fps: number;
 }

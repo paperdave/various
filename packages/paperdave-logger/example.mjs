@@ -2,11 +2,14 @@ import log, { Spinner } from './dist/index.js';
 
 log.info('yeah');
 
+log.success('Finished Build');
+
 const spinner = new Spinner({ message: '12.5fps, what ora uses.' });
 const spinner2 = new Spinner({ message: '60fps lol', fps: 60 });
 const spinner3 = new Spinner({
   message: () => `2fps, random number is ${Math.random()}`,
   fps: 2,
+  color: 'greenBright',
 });
 
 // await delay(1000);
