@@ -1,5 +1,11 @@
 # @paperdave/utils
 
+## 1.0.4
+
+### Patch Changes
+
+- 77299e4: Fix typo
+
 ## 1.0.3
 
 ### Patch Changes
