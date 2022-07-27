@@ -90,7 +90,7 @@ const defaultOptions = {
   total: 100,
 } as const;
 
-type ExtendedProps<T> = Omit<T, 'value' | 'total' | 'progress'> & {
+type ExtendedProps<T> = T & {
   value: number;
   total: number;
   progress: number;
