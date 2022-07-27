@@ -23,7 +23,7 @@
     "wrap-ansi": "^8.0.1"
   },
   "devDependencies": {
-    "@paperdave/types": "workspace:^1.0.3",
+    "@paperdave/types": "workspace:^1.0.4",
     "@types/node": "^18.0.3",
     "@types/wrap-ansi": "^8.0.1",
     "bun-types": "^0.1.2",

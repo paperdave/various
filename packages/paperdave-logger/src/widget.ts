@@ -1,5 +1,6 @@
 import { writeSync } from 'fs';
 import { ansi } from './ansi';
+import { fail, success } from './log';
 import type { Timer } from './util';
 import { STDOUT } from './util';
 
@@ -91,6 +92,20 @@ export abstract class LogWidget {
     fn();
     widgetDrawingDisabled = false;
     redrawWidgets();
+  }
+
+  success(message: string) {
+    LogWidget.batchRedraw(() => {
+      success(message);
+      this.remove();
+    });
+  }
+
+  fail(message: string | Error) {
+    LogWidget.batchRedraw(() => {
+      fail(message);
+      this.remove();
+    });
   }
 }
 

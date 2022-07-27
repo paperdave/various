@@ -1,47 +1,45 @@
 import wrapAnsi from 'wrap-ansi';
 import { ansi } from './ansi';
-import { fail, success } from './log';
 import { Color, wrapOptions } from './util';
 import { LogWidget } from './widget';
 
 export interface SpinnerOptions<Props extends Record<string, unknown>> {
-  message: string | ((props: Props) => string);
-  color: Color | `${Color}` | false;
-  frames: string[];
-  fps: number;
-  props: Props;
+  text: string | ((props: Props) => string);
+  color?: Color | `${Color}` | false;
+  frames?: string[];
+  fps?: number;
+  props?: Props;
 }
 
-const defaultOptions = {
-  message: 'Loading...',
+export const defaultSpinnerOptions = {
+  text: 'Loading...',
   color: Color.BlueBright,
   frames: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
   fps: 12.5,
 };
 
 export class Spinner<Props extends Record<string, unknown>> extends LogWidget {
-  #message: string | ((props: Props) => string);
+  #text: string | ((props: Props) => string);
   color: Color | `${Color}` | false;
   fps: number;
   frames: string[];
   props: Props;
 
-  constructor(options: Partial<SpinnerOptions<Props>> = {}) {
+  constructor(options: SpinnerOptions<Props>) {
     super();
-    this.#message = options.message ?? defaultOptions.message;
-    this.color = options.color ?? defaultOptions.color;
-    this.frames = options.frames ?? defaultOptions.frames;
-    this.fps = options.fps ?? defaultOptions.fps;
+    this.#text = options.text ?? defaultSpinnerOptions.text;
+    this.color = options.color ?? defaultSpinnerOptions.color;
+    this.frames = options.frames ?? defaultSpinnerOptions.frames;
+    this.fps = options.fps ?? defaultSpinnerOptions.fps;
     this.props = options.props ?? ({} as Props);
   }
 
-  /** Either a string message, or a function to format a message with an optional props object. */
-  get message(): string {
-    return typeof this.#message === 'function' ? this.#message(this.props) : this.#message;
+  get text(): string {
+    return typeof this.#text === 'function' ? this.#text(this.props) : this.#text;
   }
 
-  set message(value: string | (() => string)) {
-    this.#message = value;
+  set text(value: string | (() => string)) {
+    this.#text = value;
     this.redraw();
   }
 
@@ -53,7 +51,7 @@ export class Spinner<Props extends Record<string, unknown>> extends LogWidget {
   update(newMessage: string): void;
   update(newData: string | Partial<Props>) {
     if (typeof newData === 'string') {
-      this.message = newData;
+      this.text = newData;
     } else {
       this.props = { ...this.props, ...newData };
       this.redraw();
@@ -66,22 +64,8 @@ export class Spinner<Props extends Record<string, unknown>> extends LogWidget {
     return (
       (this.color ? ansi[this.color] + this.frames[frame] + ansi.reset : this.frames[frame]) +
       ' ' +
-      wrapAnsi(this.message, 90 - 1 - this.frames[frame].length, wrapOptions)
+      wrapAnsi(this.text, 90 - 1 - this.frames[frame].length, wrapOptions)
     );
-  }
-
-  success(message?: string) {
-    LogWidget.batchRedraw(() => {
-      success(message ?? this.message);
-      this.remove();
-    });
-  }
-
-  fail(message?: string | Error) {
-    LogWidget.batchRedraw(() => {
-      fail(message ?? this.message);
-      this.remove();
-    });
   }
 
   remove() {
@@ -90,9 +74,9 @@ export class Spinner<Props extends Record<string, unknown>> extends LogWidget {
 }
 
 export interface WithSpinnerOptions<Props extends Record<string, unknown>, T>
-  extends Partial<SpinnerOptions<Props>> {
-  successMessage?: string | ((result: T) => string);
-  failureMessage?: string | ((error: Error) => string);
+  extends SpinnerOptions<Props> {
+  successText?: string | ((result: T) => string);
+  failureText?: string | ((error: Error) => string);
 }
 
 export async function withSpinner<Props extends Record<string, unknown>, T>(
@@ -104,21 +88,19 @@ export async function withSpinner<Props extends Record<string, unknown>, T>(
   try {
     const result = await fn(spinner);
     spinner.success(
-      opts.successMessage
-        ? typeof opts.successMessage === 'function'
-          ? opts.successMessage(result)
-          : opts.successMessage
-        : opts.message
-        ? typeof opts.message === 'function'
-          ? opts.message(spinner.props)
-          : opts.message
+      opts.successText
+        ? typeof opts.successText === 'function'
+          ? opts.successText(result)
+          : opts.successText
+        : opts.text
+        ? typeof opts.text === 'function'
+          ? opts.text(spinner.props)
+          : opts.text
         : 'Completed'
     );
   } catch (error: any) {
     spinner.fail(
-      typeof opts.failureMessage === 'function'
-        ? opts.failureMessage(error)
-        : opts.failureMessage ?? error
+      typeof opts.failureText === 'function' ? opts.failureText(error) : opts.failureText ?? error
     );
     throw error;
   }
