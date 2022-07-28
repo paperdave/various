@@ -3,7 +3,7 @@ description:
   Requesting a new package. This is a tool for myself, unless I tell you to open the issue for me.
 labels:
   - new package idea
-title: 'new package idea: <title>'
+title: 'new package idea: `@paperdave/...`'
 body:
   - type: markdown
     attributes:
