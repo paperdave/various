@@ -3,7 +3,7 @@ import type { Await, Awaitable } from '@paperdave/types';
 type F<In, Out> = (input: In) => Out;
 type A<In, Out> = (input: Await<In>) => Awaitable<Out>;
 
-/** Function equivlent of the pipe operator or Function.pipe() */
+/** Function equivalent of the pipe operator or Function.pipe() */
 function pipe<T0, T1>(input: T0, f1: F<T0, T1>): T1;
 function pipe<T0, T1, T2>(input: T0, f1: F<T0, T1>, f2: F<T1, T2>): T2;
 function pipe<T0, T1, T2, T3>(input: T0, f1: F<T0, T1>, f2: F<T1, T2>, f3: F<T2, T3>): T3;
@@ -22,7 +22,7 @@ function pipe(input: unknown, ...fns: Array<F<unknown, unknown>>): unknown {
   return fns.reduce((current, f) => f(current), input);
 }
 
-/** Function equivlent of the pipe operator or Function.pipeAsync() */
+/** Function equivalent of the pipe operator or Function.pipeAsync() */
 function pipeAsync<T0, T1>(input: T0, f1: A<T0, T1>): Promise<T1>;
 function pipeAsync<T0, T1, T2>(input: T0, f1: A<T0, T1>, f2: A<T1, T2>): Promise<T2>;
 function pipeAsync<T0, T1, T2, T3>(input: T0, f1: A<T0, T1>, f2: A<T1, T2>, f3: A<T2, T3>): Promise<T3>;
