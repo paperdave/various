@@ -1,5 +1,12 @@
 # eslint-config-dave
 
+## 3.0.6
+
+### Patch Changes
+
+- fix: `fetch().then(x => x.json())` no longer gets marked as a lint error
+  ([`76b4c77`](https://github.com/paperdave/various/commit/76b4c77ba813fff24d04074a366f628df28fe5e7))
+
 ## 3.0.5
 
 ### Patch Changes
