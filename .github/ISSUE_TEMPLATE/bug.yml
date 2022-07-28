@@ -4,19 +4,22 @@ labels:
   - bug
 body:
   - type: markdown
-    value: |
-      Please make sure you tested the latest package for this issue, and also that you
-      tried to search for an existing issue.
+    attributes:
+      value: |
+        Please make sure you tested the latest package for this issue, and also that you
+        tried to search for an existing issue.
   - type: dropdown
-    label: What package(s) does this bug target?
-    multiple: true
-    options:
-      - 'eslint-config-dave'
-      - 'prettier-config-dave'
-      - '@paperdave/utils'
-      - '@paperdave/types'
-      - '@paperdave/events'
-      - '@paperdave/logger'
-      - '@paperdave/tsconfig'
+    attributes:
+      label: What package(s) does this bug target?
+      multiple: true
+      options:
+        - label: 'eslint-config-dave'
+        - label: 'prettier-config-dave'
+        - label: '@paperdave/utils'
+        - label: '@paperdave/types'
+        - label: '@paperdave/events'
+        - label: '@paperdave/logger'
+        - label: '@paperdave/tsconfig'
   - type: textarea
-    label: Describe the bug. A reproductions
+    attributes:
+      label: Describe the bug. A reproductions
