@@ -29,7 +29,7 @@ export abstract class LogWidget {
    */
   protected abstract format(now: number): string;
   /**
-   * The current FPS of the widget. If this is set to 0, the widget will not automatically update
+   * The current FPS of the widget. If this is set to 0, the widget will not automatically update,
    * and you must call `update`.
    */
   protected abstract fps: number;

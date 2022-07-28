@@ -16,7 +16,7 @@ const asciiChars = {
 };
 
 /**
- * This function is derrived from an old program I wrote back in 2020 called `f` which did ffmpeg
+ * This function is derived from an old program I wrote back in 2020 called `f` which did ffmpeg
  * handling. It is probably one of the coolest progress bars ever imagined. The original had the HSL
  * colors baked in, but this one doesn't do that.
  *

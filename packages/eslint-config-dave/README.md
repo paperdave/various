@@ -1,6 +1,6 @@
 # eslint-config-dave
 
-Extremely thorough, but opiniated [ESLint](https://eslint.org/) configuration used by myself. Does not cover formatting, please see my [prettier config](https://npmjs.com/prettier-config-dave). To use, install and write your one-line `.eslintrc`
+Extremely thorough, but opinionated [ESLint](https://eslint.org/) configuration used by myself. Does not cover formatting, please see my [prettier config](https://npmjs.com/prettier-config-dave). To use, install and write your one-line `.eslintrc`
 
 ```json
 { "extends": "dave" }
