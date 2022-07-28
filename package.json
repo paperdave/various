@@ -1,5 +1,4 @@
 {
-  "name": "various-web",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -9,12 +8,12 @@
     "bump": "changeset version",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
-    "pub": "changeset publish"
+    "release": "changeset publish"
   },
-  "devDependencies": {
+  "dependencies": {
     "@changesets/cli": "^2.23.1",
+    "@svitejs/changesets-changelog-github-compact": "^0.1.1",
     "prettier": "latest",
     "turbo": "latest"
-  },
-  "packageManager": "pnpm@7.1.0"
+  }
 }
