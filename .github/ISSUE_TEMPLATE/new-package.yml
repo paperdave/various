@@ -1,0 +1,22 @@
+name: New Package Idea
+description:
+  Requesting a new package. This is a tool for myself, unless I tell you to open the issue for me.
+labels:
+  - new package idea
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **NOTE: This is a tool for myself. Do not open issues with this template unless I tell you to open the issue for me.**
+  - type: input
+    id: name
+    attributes:
+      label: Package name
+      placeholder: '@paperdave/money-printer'
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Description
+    validations:
+      required: true
