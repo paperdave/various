@@ -1,0 +1,22 @@
+name: Bug Report
+description: Report a bug on a specific package.
+labels:
+  - bug
+body:
+  - type: markdown
+    value: |
+      Please make sure you tested the latest package for this issue, and also that you
+      tried to search for an existing issue.
+  - type: dropdown
+    label: What package(s) does this bug target?
+    multiple: true
+    options:
+      - 'eslint-config-dave'
+      - 'prettier-config-dave'
+      - '@paperdave/utils'
+      - '@paperdave/types'
+      - '@paperdave/events'
+      - '@paperdave/logger'
+      - '@paperdave/tsconfig'
+  - type: textarea
+    label: Describe the bug. A reproductions
