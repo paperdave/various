@@ -70,4 +70,4 @@ In addition to that, the (protected) api contains
 
 - `remove` - remove the widget from the log
 - `redraw` - forces a redraw
-- `LogWidget.batchRedraw(fn)` - pass an fn and perform multiple log operations in a single batch, useful to optimize log + remove() calls.
+- `LogWidget.batchRedraw(fn)` - pass a fn and perform multiple log operations in a single batch, useful to optimize log + remove() calls.
