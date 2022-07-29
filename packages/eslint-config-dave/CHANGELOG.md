@@ -1,5 +1,13 @@
 # eslint-config-dave
 
+## 3.0.9
+
+### Patch Changes
+
+- disable `class-methods-use-this` ([`2bc98a3`](https://github.com/paperdave/various/commit/2bc98a33e12367cf4968adda0a76f5f05667fe07))
+
+* set `return-await` to `in-try-catch` for more lenient code ([`2bc98a3`](https://github.com/paperdave/various/commit/2bc98a33e12367cf4968adda0a76f5f05667fe07))
+
 ## 3.0.8
 
 ### Patch Changes
