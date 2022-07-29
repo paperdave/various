@@ -1,5 +1,11 @@
 # @paperdave/logger
 
+## 2.0.3
+
+### Patch Changes
+
+- allow errors to be passed to `fail`, and also style them slightly nicer ([`2bc98a3`](https://github.com/paperdave/various/commit/2bc98a33e12367cf4968adda0a76f5f05667fe07))
+
 ## 2.0.2
 
 ### Patch Changes

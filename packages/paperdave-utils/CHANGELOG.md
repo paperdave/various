@@ -1,5 +1,11 @@
 # @paperdave/utils
 
+## 1.1.2
+
+### Patch Changes
+
+- fix `pipeAsync` ([`2bc98a3`](https://github.com/paperdave/various/commit/2bc98a33e12367cf4968adda0a76f5f05667fe07))
+
 ## 1.1.0
 
 ### Minor Changes
