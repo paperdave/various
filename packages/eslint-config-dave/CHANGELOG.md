@@ -1,5 +1,21 @@
 # eslint-config-dave
 
+## 3.0.8
+
+### Patch Changes
+
+- Modified ([`e7da5e4`](https://github.com/paperdave/various/commit/e7da5e40e24cfd80eb6c63a2dd16d0213212e905))
+
+  - set eslint `curly` rule to `multi-or-nest`, allowing `if (...) return;`
+  - allow empty `catch` blocks
+  - disable the non-typescript `require-await` rule
+  - disable `@typescript-eslint/explicit-module-boundary-types`
+  - disable `@typescript-eslint/no-empty-interface`
+  - disable `@typescript-eslint/no-invalid-void-type`
+  - disable `@typescript-eslint/no-misused-promises`
+  - disable `@typescript-eslint/no-redeclare`
+  - disable `@typescript-eslint/no-redundant-type-constituents`
+
 ## 3.0.7
 
 ### Patch Changes
