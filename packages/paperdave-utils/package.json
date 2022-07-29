@@ -19,7 +19,6 @@
     "test": "bun wiptest"
   },
   "dependencies": {
-    "@paperdave/types": "^1.0.3",
     "utility-types": "^3.10.0"
   },
   "devDependencies": {
