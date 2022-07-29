@@ -5,7 +5,7 @@ import { inspect } from 'util';
  * `console.log(...)`, or `process.stdout.write(...)` since it is faster and the code will work
  * across node and bun.
  */
-export const STDOUT = 0;
+export const STDOUT = 1;
 
 /** Hardcoded magic number, all prefixes are 6 characters excluding colors, eg `info `. */
 export const PREFIX_LENGTH = 6;
