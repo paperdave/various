@@ -13,9 +13,8 @@ This is a monorepo of various packages I've authored. A handful of them are publ
 | Package | Description |
 | --- | --- |
 | [![npm](https://img.shields.io/npm/v/eslint-config-dave.svg?label=eslint-config-dave)](https://www.npmjs.com/package/eslint-config-dave) | Extremely thorough, but opinionated ESLint config. |
-| [![npm](https://img.shields.io/npm/v/prettier-config-dave.svg?label=prettier-config-dave)](https://www.npmjs.com/package/prettier-config-dave) | Extremely thorough, but opinionated ESLint config. |
-| [![npm](https://img.shields.io/npm/v/@paperdave/utils.svg?label=%40paperdave%2Futils)](https://www.npmjs.com/package/@paperdave/utils) | Common utility functions. |
-| [![npm](https://img.shields.io/npm/v/@paperdave/types.svg?label=%40paperdave%2Ftypes)](https://www.npmjs.com/package/@paperdave/types) | Common utility typedefs. |
+| [![npm](https://img.shields.io/npm/v/prettier-config-dave.svg?label=prettier-config-dave)](https://www.npmjs.com/package/prettier-config-dave) | Extremely thorough, but opinionated Prettier config. |
+| [![npm](https://img.shields.io/npm/v/@paperdave/utils.svg?label=%40paperdave%2Futils)](https://www.npmjs.com/package/@paperdave/utils) | Common utility functions and TypeScript types. |
 | [![npm](https://img.shields.io/npm/v/@paperdave/events.svg?label=%40paperdave%2Fevents)](https://www.npmjs.com/package/@paperdave/events) | Another event emitter library, with easy TS types. |
 | [![npm](https://img.shields.io/npm/v/@paperdave/logger.svg?label=%40paperdave%2Flogger)](https://www.npmjs.com/package/@paperdave/logger) | Versitle logging with spinners and progress bars. |
 
