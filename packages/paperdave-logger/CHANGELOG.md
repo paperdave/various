@@ -1,5 +1,11 @@
 # @paperdave/logger
 
+## 2.0.4
+
+### Patch Changes
+
+- fix: write to the correct fd ([`a6d9b3f`](https://github.com/paperdave/various/commit/a6d9b3fb0040a18300c6b7c9d1fdd30f88b7d3ca))
+
 ## 2.0.3
 
 ### Patch Changes
