@@ -1,7 +1,7 @@
-import type { Await, Awaitable } from '@paperdave/types';
+import type { Awaitable } from './types';
 
 type F<In, Out> = (input: In) => Out;
-type A<In, Out> = (input: Await<In>) => Awaitable<Out>;
+type A<In, Out> = (input: Awaited<In>) => Awaitable<Out>;
 
 /** Function equivalent of the pipe operator or Function.pipe() */
 function pipe<T0, T1>(input: T0, f1: F<T0, T1>): T1;
