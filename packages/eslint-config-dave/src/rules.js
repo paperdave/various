@@ -74,7 +74,7 @@ const rules = {
   complexity: 'error',
   'consistent-return': 'error',
   'consistent-this': ['error', 'self'],
-  curly: ['error', 'all'],
+  curly: ['error', 'multi-or-nest'], // I want `if (x) return` syntax allowed, but maybe i can make this more strict so that is the ONLY type allowed
   'default-case': 'off', // Overridden by @typescript-eslint's `switch-exhaustiveness-check`
   'default-case-last': 'error',
   'default-param-last': 'off', // Overridden by @typescript-eslint
@@ -108,7 +108,7 @@ const rules = {
   'no-delete-var': 'error',
   'no-div-regex': 'error',
   'no-else-return': 'error',
-  'no-empty': 'warn',
+  'no-empty': ['warn', { allowEmptyCatch: true }],
   'no-empty-function': 'off', // Eslint will count a filled function as ANYTHING, even a blank comment. For that reason, it's not worth having this rule.
   'no-eq-null': 'off', // Enabling this would contradict `eqeqeq`
   'no-eval': 'warn',
@@ -196,7 +196,7 @@ const rules = {
   'prefer-template': 'off', // I would only turn this on if I could have the rule be at least two concatenations
   'quote-props': 'off', // Prettier handles this
   radix: 'error',
-  'require-await': 'warn',
+  'require-await': 'off', // Overridden by @typescript-eslint
   'require-unicode-regexp': 'off',
   'require-yield': 'warn',
   'sort-imports': 'off', // Prettier handles this
@@ -248,14 +248,8 @@ const rules = {
   ],
   '@typescript-eslint/explicit-function-return-type': 'off', // I dislike this, as I practically am married to inferred types, though I understand how that is nice.
   '@typescript-eslint/explicit-member-accessibility': ['error', { accessibility: 'no-public' }],
-  // With this one I foresee a lot of problems, but I think it's a good idea to have it on.
-  // Setting to warn for now so it gets caught in code reviews.
-  '@typescript-eslint/explicit-module-boundary-types': [
-    'warn',
-    {
-      allowArgumentsExplicitlyTypedAsAny: true,
-    },
-  ],
+  // I would like to use this, but it is just too much extra annotations where I don't see the need for them.
+  '@typescript-eslint/explicit-module-boundary-types': 'off',
   '@typescript-eslint/member-delimiter-style': 'off', // Handled by Prettier
   // This does not have an auto-fix, which is really anoying. I refuse to enable this until
   // https://github.com/typescript-eslint/typescript-eslint/issues/2296 happens, but its been
@@ -271,7 +265,7 @@ const rules = {
   '@typescript-eslint/no-duplicate-enum-values': 'error',
   '@typescript-eslint/no-dynamic-delete': 'error',
   '@typescript-eslint/no-empty-function': 'off', // Eslint will count a filled function as ANYTHING, even a blank comment. For that reason, it's not worth having this rule.
-  '@typescript-eslint/no-empty-interface': 'error', // This is the stupidest rule ever invented.
+  '@typescript-eslint/no-empty-interface': 'off', // This is the stupidest rule ever invented.
   '@typescript-eslint/no-explicit-any': 'off', // This is a good rule, I just love my any. I'll promise to try and document what and why I use it
   '@typescript-eslint/no-extra-non-null-assertion': 'error', // I was not aware this was even valid code.
   '@typescript-eslint/no-extra-parens': 'off', // Prettier handles this
@@ -282,21 +276,21 @@ const rules = {
   '@typescript-eslint/no-implied-eval': 'off',
   '@typescript-eslint/no-inferrable-types': 'error',
   '@typescript-eslint/no-invalid-this': 'off', // I thought the TypeScript compiler would catch this.
-  '@typescript-eslint/no-invalid-void-type': 'error',
+  '@typescript-eslint/no-invalid-void-type': 'off', // In type aliases, these are really useful.
   '@typescript-eslint/no-loop-func': 'error',
   '@typescript-eslint/no-loss-of-precision': 'error',
   '@typescript-eslint/no-magic-numbers': 'off', // TODO: get the sanity to handle using this
   '@typescript-eslint/no-meaningless-void-operator': 'error',
   '@typescript-eslint/no-misused-new': 'error',
-  '@typescript-eslint/no-misused-promises': 'error',
+  '@typescript-eslint/no-misused-promises': 'off', // Anoying
   '@typescript-eslint/no-namespace': 'error', // Namespaces are evil. Use ESM instead.
   '@typescript-eslint/no-non-null-asserted-nullish-coalescing': 'error',
   '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
   // Same with no-any and ban-ts-comment, you'll just add eslint ignores everywhere instead of documenting why. But
   // also alot of these cases you can just infer based on usage that it's ok to use the assert.
   '@typescript-eslint/no-non-null-assertion': 'off',
-  '@typescript-eslint/no-redeclare': 'error',
-  '@typescript-eslint/no-redundant-type-constituents': 'error',
+  '@typescript-eslint/no-redeclare': 'off', // This causes issues where a `const` and a `type` share the same name.
+  '@typescript-eslint/no-redundant-type-constituents': 'off', // Buggy as fuck
   '@typescript-eslint/no-require-imports': 'off',
   '@typescript-eslint/no-restricted-imports': 'off', // We do not have any restricted imports.
   '@typescript-eslint/no-shadow': 'error',
@@ -307,7 +301,7 @@ const rules = {
   '@typescript-eslint/no-unnecessary-condition': 'off',
   '@typescript-eslint/no-unnecessary-qualifier': 'error',
   '@typescript-eslint/no-unnecessary-type-arguments': 'error',
-  '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+  '@typescript-eslint/no-unnecessary-type-assertion': 'off', // Buggy as fuck
   '@typescript-eslint/no-unnecessary-type-constraint': 'error',
   '@typescript-eslint/no-unsafe-argument': 'off', // any is supposed to just work, not be limited.
   '@typescript-eslint/no-unsafe-assignment': 'off', // any is supposed to just work, not be limited.
