@@ -1,5 +1,11 @@
 # eslint-config-dave
 
+## 3.0.7
+
+### Patch Changes
+
+- update readme/metadata ([`83afd2a`](https://github.com/paperdave/various/commit/83afd2a419e32fe3f9c7e55f756fb063eb9257ca))
+
 ## 3.0.6
 
 ### Patch Changes

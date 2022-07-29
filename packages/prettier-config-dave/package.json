@@ -1,6 +1,6 @@
 {
   "name": "prettier-config-dave",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Extremely thorough, but opinionated Prettier config.",
   "keywords": [
     "utility"
