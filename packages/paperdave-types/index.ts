@@ -102,3 +102,5 @@ export type Mutable<T> = T extends ReadonlyArray<infer U>
   : T;
 
 export type EmptyObject = Dict<never>;
+
+export type FIXME = any;

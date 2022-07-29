@@ -1,7 +1,7 @@
 {
   "name": "@paperdave/types",
   "version": "1.0.4",
-  "description": "",
+  "description": "Common utility typedefs.",
   "keywords": [
     "types"
   ],
@@ -19,5 +19,6 @@
   },
   "devDependencies": {
     "typescript": "^4.6.4"
-  }
+  },
+  "paperdave-readme-sort": 50
 }

@@ -1,7 +1,7 @@
 {
   "name": "@paperdave/events",
   "version": "1.0.1",
-  "description": "",
+  "description": "Another event emitter library, with easy TS types.",
   "keywords": [
     "events"
   ],

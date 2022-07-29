@@ -1,9 +1,12 @@
 {
   "name": "eslint-config-dave",
   "version": "3.0.6",
-  "description": "",
+  "description": "Extremely thorough, but opinionated ESLint config.",
   "keywords": [
-    "utility"
+    "eslint",
+    "eslintconfig",
+    "config",
+    "styleguide"
   ],
   "author": "Dave Caruso <dave@davecode.net>",
   "type": "commonjs",
@@ -21,7 +24,7 @@
     "@typescript-eslint/parser": "^5.30.6",
     "eslint-plugin-markdown": "^2.2.1",
     "eslint-plugin-svelte3": "^4.0.0",
-    "svelte": "^3.49.0",
+    "svelte": "*",
     "typescript": "^4.7.4"
   },
   "devDependencies": {
@@ -31,5 +34,9 @@
     "eslint": "^8.19.0",
     "svelte": "^3.2.0",
     "typescript": "^4.6.4"
-  }
+  },
+  "peerDependencies": {
+    "eslint": "^8.19.0"
+  },
+  "paperdave-readme-sort": 10
 }

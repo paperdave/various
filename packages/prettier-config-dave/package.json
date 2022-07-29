@@ -1,7 +1,7 @@
 {
   "name": "prettier-config-dave",
   "version": "1.0.4",
-  "description": "",
+  "description": "Extremely thorough, but opinionated Prettier config.",
   "keywords": [
     "utility"
   ],
@@ -29,5 +29,6 @@
     "@types/prettier": "^2.6.1",
     "prettier": "^2.6.2",
     "typescript": "^4.6.4"
-  }
+  },
+  "paperdave-readme-sort": 10
 }
