@@ -41,7 +41,7 @@ importers:
 
   packages/paperdave-events:
     specifiers:
-      '@paperdave/utils': workspace:^1.0.3
+      '@paperdave/utils': workspace:^1.1.0
       bun-types: ^0.1.2
       esbuild: ^0.14.39
       typescript: ^4.6.4
@@ -53,7 +53,7 @@ importers:
 
   packages/paperdave-logger:
     specifiers:
-      '@paperdave/utils': workspace:^1.0.4
+      '@paperdave/utils': workspace:^1.1.0
       '@types/node': ^18.0.3
       '@types/wrap-ansi': ^8.0.1
       bun-types: ^0.1.2
@@ -76,14 +76,12 @@ importers:
 
   packages/paperdave-utils:
     specifiers:
-      '@paperdave/types': ^1.0.3
       bun-types: ^0.1.2
       esbuild: ^0.14.39
       mitata: ^0.1.6
       typescript: ^4.6.4
       utility-types: ^3.10.0
     dependencies:
-      '@paperdave/types': 1.0.4
       utility-types: 3.10.0
     devDependencies:
       bun-types: 0.1.2
@@ -428,13 +426,6 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
-    dev: false
-
-  /@paperdave/types/1.0.4:
-    resolution: {integrity: sha512-t5Xy+CIImmeurkVlN0J3XVTY73FBBxGEwCDB2/WUZhoWEFSkhupN5ATpTBTyn5hQb1fgIqjWaQ3ixBC20FCo0A==}
-    dependencies:
-      ts-toolbelt: 9.6.0
-      utility-types: 3.10.0
     dev: false
 
   /@svitejs/changesets-changelog-github-compact/0.1.1:
@@ -3129,10 +3120,6 @@ packages:
     dependencies:
       '@ts-morph/common': 0.13.0
       code-block-writer: 11.0.0
-    dev: false
-
-  /ts-toolbelt/9.6.0:
-    resolution: {integrity: sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==}
     dev: false
 
   /tslib/1.14.1:
