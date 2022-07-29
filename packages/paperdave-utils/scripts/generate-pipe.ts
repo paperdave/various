@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export function range(from = 0, to = 1) {
   return Array.from({ length: to - from }, (_, i) => from + i);
 }

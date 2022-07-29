@@ -95,8 +95,13 @@ export function fail(...data: any[]) {
     } else {
       writeSync(
         0,
-        wrapAnsi(colorize(ansi.red + ansi.bold, logSymbols.error + ' ' + str), 90, wrapOptions) +
-          '\n'
+        data.length === 1 && data[0] instanceof Error
+          ? formatErrorObj(data[0], true)
+          : wrapAnsi(
+              colorize(ansi.red + ansi.bold, logSymbols.error + ' ' + stringify(...data)),
+              90,
+              wrapOptions
+            ) + '\n'
       );
     }
     redrawWidgets();

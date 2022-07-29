@@ -16,8 +16,7 @@
     "src/**/*.js"
   ],
   "scripts": {
-    "build": "tsc",
-    "lint": "eslint . --max-warnings=0"
+    "build": "tsc"
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.30.6",

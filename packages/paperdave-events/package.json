@@ -12,8 +12,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && esbuild --outfile=./dist/index.js --target=es2020 --format=esm --sourcemap --bundle src/index.ts",
-    "lint": "eslint . --max-warnings=0"
+    "build": "tsc && esbuild --outfile=./dist/index.js --target=es2020 --format=esm --sourcemap --bundle src/index.ts"
   },
   "devDependencies": {
     "@paperdave/utils": "workspace:^1.1.0",

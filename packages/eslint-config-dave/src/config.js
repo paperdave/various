@@ -19,6 +19,7 @@ if (configIndex > -1) {
     if (contents.some(c => confRegex.test(c))) {
       break;
     }
+
     if (contents.includes('package.json')) {
       const json = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
       if (json.eslintConfig) {
@@ -35,10 +36,7 @@ if (configIndex > -1) {
 
 /** @type {string[]} */
 const tsConfigs = [];
-const hardcodedIgnores = [
-  '.git',
-  'node_modules',
-];
+const hardcodedIgnores = ['.git', 'node_modules'];
 
 /** @param {string} filepath */
 function scanRecursive(filepath) {
@@ -56,7 +54,12 @@ function scanRecursive(filepath) {
     }
   }
 }
-scanRecursive(root);
+
+if (fs.existsSync(path.join(root, 'tsconfig.eslint.json'))) {
+  tsConfigs.push(path.join(root, 'tsconfig.eslint.json'));
+} else {
+  scanRecursive(root);
+}
 
 /** @type {import('eslint').Linter.Config} */
 const config = {
@@ -79,8 +82,7 @@ if (tsConfigs.length > 0) {
     tsconfigRootDir: root,
     project: tsConfigs,
   };
-  // @ts-expect-error: it's already defined above for sure.
-  config.plugins.push('@typescript-eslint');
+  config.plugins?.push('@typescript-eslint');
 }
 
 module.exports = config;

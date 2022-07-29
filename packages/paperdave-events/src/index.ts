@@ -11,7 +11,8 @@ type DefinedKeys<T> = Dict<unknown> extends T
   : { [K in keyof T]: undefined extends T[K] ? never : K }[keyof T];
 type AllKeys<T> = Dict<unknown> extends T ? string : keyof T;
 
-// @ts-expect-error
+// @ts-expect-error Index type error here, though this is an internal type that we only use when
+// that index is a valid operation.
 type Key<T, K extends PropertyKey> = T[K];
 
 /**

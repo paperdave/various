@@ -1,5 +1,6 @@
 import path from 'node:path';
 import wrapAnsi from 'wrap-ansi';
+import { builtinModules } from 'node:module';
 import { ansi } from './ansi';
 import { PREFIX_LENGTH, wrapOptions } from './util';
 
@@ -15,6 +16,10 @@ export interface PrintableError extends Error {
   description: string;
   hideStack?: boolean;
   hideName?: boolean;
+}
+
+export function isBuiltin(pathname: string): boolean {
+  return pathname.startsWith('node:') || builtinModules.includes(pathname);
 }
 
 /** Utility function we use internally for formatting the stack trace of an error. */
@@ -67,42 +72,44 @@ export function formatStackTrace(err: Error) {
   }
   parsed.reverse();
 
-  return parsed
-    .map(({ method, file, line, column, native }) => {
-      const source = native
-        ? `[native code]`
-        : file
-        ? [
-            ansi.cyan,
-            path.dirname(file),
-            path.sep,
-            ansi.greenBright,
-            path.basename(file),
-            ansi.reset,
-            ansi.blackBright,
-            ':',
-            ansi.reset,
-            ansi.yellowBright,
-            line,
-            ansi.reset,
-            ansi.blackBright,
-            ':',
-            ansi.redBright,
-            column,
-          ].join('')
-        : '<unknown>';
+  return (
+    parsed
+      .map(({ method, file, line, column, native }) => {
+        const source = native
+          ? `[native code]`
+          : file
+          ? isBuiltin(file)
+            ? `(${ansi.magenta}${file}${ansi.reset}${ansi.blackBright})`
+            : [
+                '(',
+                ansi.cyan,
+                // Leave the first slash on linux.
+                process.platform === 'win32'
+                  ? path.dirname(file).replace(/^file:\/\/\//g, '')
+                  : path.dirname(file).replace(/^file:\/\//g, ''),
+                path.sep,
+                ansi.green,
+                path.basename(file),
+                ansi.reset,
+                ':',
+                line + ':' + column,
+                ansi.blackBright,
+                ')',
+              ].join('')
+          : '<unknown>';
 
-      return `\u200b  ${ansi.blackBright}at ${method === '' ? '' : `${method} `}${source}`;
-    })
-    .join('\n');
+        return `\u200b  ${ansi.blackBright}at ${method === '' ? '' : `${method} `}${source}`;
+      })
+      .join('\n') + ansi.reset
+  );
 }
 
 /** Formats the given error as a full log string. */
-export function formatErrorObj(err: Error | PrintableError) {
+export function formatErrorObj(err: Error | PrintableError, boldFirstLine = false) {
   const { name, message, description, hideStack, hideName, stack } = err as PrintableError;
 
   return [
-    ansi.redBright,
+    boldFirstLine ? ansi.red + ansi.bold : ansi.red,
     hideName ? '' : (name ?? 'Error') + ': ',
     message ?? 'Unknown error',
     ansi.reset,

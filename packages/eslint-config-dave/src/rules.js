@@ -70,11 +70,11 @@ const rules = {
   'block-scoped-var': 'off', // TypeScript checker catches this
   camelcase: 'off', // There are no variable naming conventions yet.
   'capitalized-comments': 'off', // Seems like a good idea, capitalizes commented code!
-  'class-methods-use-this': 'warn',
+  'class-methods-use-this': 'off',
   complexity: 'error',
   'consistent-return': 'error',
   'consistent-this': ['error', 'self'],
-  curly: ['error', 'multi-or-nest'], // I want `if (x) return` syntax allowed, but maybe i can make this more strict so that is the ONLY type allowed
+  curly: ['error', 'all'], // I want `if (x) return` syntax allowed, but maybe i can make this more strict so that is the ONLY type allowed
   'default-case': 'off', // Overridden by @typescript-eslint's `switch-exhaustiveness-check`
   'default-case-last': 'error',
   'default-param-last': 'off', // Overridden by @typescript-eslint
@@ -337,7 +337,7 @@ const rules = {
   '@typescript-eslint/require-await': 'warn',
   '@typescript-eslint/restrict-plus-operands': 'off', // Doesn't work.
   '@typescript-eslint/restrict-template-expressions': 'off',
-  '@typescript-eslint/return-await': ['error', 'always'], // Forcing await will add an extra line to the stack trace, to improve debugging of where the promise was actually created.
+  '@typescript-eslint/return-await': ['error', 'in-try-catch'],
   '@typescript-eslint/sort-type-union-intersection-members': 'off', // Sometimes we want a custom order of a union.
   '@typescript-eslint/strict-boolean-expressions': 'off',
   '@typescript-eslint/switch-exhaustiveness-check': 'error',

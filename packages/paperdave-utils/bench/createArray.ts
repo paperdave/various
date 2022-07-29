@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 // Different approaches for createArray
 import { bench, group, run } from 'mitata';
 
@@ -14,7 +15,7 @@ function defineTest(LENGTH: number) {
         .map((_, i) => mapfn(i));
     });
     bench('Array + for loop', () => {
-      let arr = Array(LENGTH);
+      const arr = Array(LENGTH);
       for (let i = 0; i < LENGTH; i++) {
         arr[i] = mapfn(i);
       }

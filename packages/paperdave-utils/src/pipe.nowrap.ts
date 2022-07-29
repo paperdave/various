@@ -39,7 +39,7 @@ function pipeAsync<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(i
 function pipeAsync<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(input: T0, f1: A<T0, T1>, f2: A<T1, T2>, f3: A<T2, T3>, f4: A<T3, T4>, f5: A<T4, T5>, f6: A<T5, T6>, f7: A<T6, T7>, f8: A<T7, T8>, f9: A<T8, T9>, f10: A<T9, T10>, f11: A<T10, T11>, f12: A<T11, T12>, f13: A<T12, T13>, f14: A<T13, T14>): Promise<T14>;
 async function pipeAsync(input: unknown, ...fns: Array<A<unknown, unknown>>): Promise<unknown> {
   for (const fn of fns) {
-    input = fn(input);
+    input = await fn(input);
   }
   return input;
 }

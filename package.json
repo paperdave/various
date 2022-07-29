@@ -8,7 +8,7 @@
     "build": "turbo run build",
     "bump": "changeset version",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "lint": "turbo run lint",
+    "lint": "eslint ./**/*.{ts,tsx,js,jsx} --max-warnings=0 --no-error-on-unmatched-pattern",
     "release": "turbo run build && changeset publish"
   },
   "dependencies": {

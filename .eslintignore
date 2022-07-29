@@ -1,0 +1,6 @@
+dist
+build
+.purplet
+local
+*local*/
+node_modules
