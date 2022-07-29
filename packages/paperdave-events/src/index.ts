@@ -1,4 +1,4 @@
-import type { Dict, EmptyObject } from '@paperdave/types';
+import type { Dict, EmptyObject } from '@paperdave/utils';
 
 export type BaseEventMap = Record<string, any> | Dict<unknown>;
 export type EventHandler<T> = undefined extends T ? (event: never) => void : (event: T) => void;

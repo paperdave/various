@@ -6,3 +6,4 @@ export * from './pipe.nowrap';
 export * from './promise';
 export * from './rng';
 export * from './string';
+export * from './types';

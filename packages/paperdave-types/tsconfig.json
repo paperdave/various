@@ -1,7 +1,0 @@
-{
-  "extends": "../tsconfig/library",
-  "compilerOptions": {
-    "declarationDir": "dist"
-  },
-  "exclude": ["**/node_modules", "**/dist"]
-}

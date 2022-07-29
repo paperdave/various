@@ -1,5 +1,5 @@
 ---
-"@paperdave/types": patch
+'@paperdave/utils': minor
 ---
 
 add FIXME type

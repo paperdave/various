@@ -16,7 +16,7 @@
     "lint": "eslint . --max-warnings=0"
   },
   "devDependencies": {
-    "@paperdave/types": "workspace:^1.0.3",
+    "@paperdave/utils": "workspace:^1.0.3",
     "bun-types": "^0.1.2",
     "esbuild": "^0.14.39",
     "typescript": "^4.6.4"

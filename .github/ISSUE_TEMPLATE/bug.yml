@@ -16,7 +16,6 @@ body:
         - 'eslint-config-dave'
         - 'prettier-config-dave'
         - '@paperdave/utils'
-        - '@paperdave/types'
         - '@paperdave/events'
         - '@paperdave/logger'
         - '@paperdave/tsconfig'

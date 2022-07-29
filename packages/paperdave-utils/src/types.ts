@@ -41,9 +41,6 @@ export type Dict<T> = Record<string, T>;
 /** Represents something that _might_ be a promise. */
 export type Awaitable<T> = T | Promise<T>;
 
-/** @deprecated Use `Awaitable<T>` instead. */
-export declare type Await<T> = Awaited<T>;
-
 /**
  * Utility type to force the hover tooltip to "simplify" it's type, one layer down. Call repeatedly
  * to simplify multiple passes.
@@ -101,6 +98,11 @@ export type Mutable<T> = T extends ReadonlyArray<infer U>
   ? { -readonly [P in keyof T]: Mutable<T[P]> }
   : T;
 
+/** Represents an empty object. */
 export type EmptyObject = Dict<never>;
 
+/**
+ * Use this type when you have something unfinished, and you want to make it clear that it must be
+ * fixed. Other than visual, this is an alias to `any`
+ */
 export type FIXME = any;

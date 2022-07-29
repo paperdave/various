@@ -225,7 +225,7 @@ const rules = {
     },
   ],
   // TODO: Add custom rules for this next one. Could consider having `{}` and `Object` tell user
-  // about a nonexistant type alias in `@paperdave/types` for `NonNullish` or whatever.
+  // about a nonexistant type alias in `@paperdave/utils` for `NonNullish` or whatever.
   '@typescript-eslint/ban-types': 'error',
   '@typescript-eslint/class-literal-property-style': ['off'],
   '@typescript-eslint/consistent-generic-constructors': 'error',

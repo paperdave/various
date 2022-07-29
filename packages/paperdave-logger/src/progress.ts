@@ -1,4 +1,4 @@
-import type { EmptyObject } from '@paperdave/types';
+import type { EmptyObject } from '@paperdave/utils';
 import { ansi } from './ansi';
 import { convertHSVtoRGB } from './hsv';
 import { defaultSpinnerOptions } from './spinner';

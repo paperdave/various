@@ -1,9 +1,11 @@
 {
   "name": "@paperdave/utils",
   "version": "1.0.4",
-  "description": "Common utility functions.",
+  "description": "Common utility functions and TypeScript types.",
   "keywords": [
-    "utility"
+    "utility",
+    "types",
+    "utils"
   ],
   "author": "Dave Caruso <dave@davecode.net>",
   "type": "module",
@@ -17,7 +19,8 @@
     "test": "bun wiptest"
   },
   "dependencies": {
-    "@paperdave/types": "^1.0.3"
+    "@paperdave/types": "^1.0.3",
+    "utility-types": "^3.10.0"
   },
   "devDependencies": {
     "bun-types": "^0.1.2",
