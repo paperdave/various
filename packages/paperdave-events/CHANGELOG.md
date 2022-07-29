@@ -1,5 +1,11 @@
 # @paperdave/utils
 
+## 1.0.2
+
+### Patch Changes
+
+- update readme/metadata ([`83afd2a`](https://github.com/paperdave/various/commit/83afd2a419e32fe3f9c7e55f756fb063eb9257ca))
+
 ## 1.0.1
 
 ### Patch Changes

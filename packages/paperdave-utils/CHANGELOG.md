@@ -1,5 +1,19 @@
 # @paperdave/utils
 
+## 1.1.0
+
+### Minor Changes
+
+- Merge `@paperdave/types` into this package. ([`ab62272`](https://github.com/paperdave/various/commit/ab62272b090b3e21f59cfe89ab687d4801de673b))
+
+* add FIXME type ([`83afd2a`](https://github.com/paperdave/various/commit/83afd2a419e32fe3f9c7e55f756fb063eb9257ca))
+
+### Patch Changes
+
+- update readme/metadata ([`83afd2a`](https://github.com/paperdave/various/commit/83afd2a419e32fe3f9c7e55f756fb063eb9257ca))
+
+* Fixed typos, and added commas ([#15](https://github.com/paperdave/various/pull/15))
+
 ## 1.0.4
 
 ### Patch Changes

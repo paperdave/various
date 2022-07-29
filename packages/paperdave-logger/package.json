@@ -1,6 +1,6 @@
 {
   "name": "@paperdave/logger",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Versitle logging with spinners and progress bars.",
   "keywords": [
     "logger",
@@ -23,7 +23,7 @@
     "wrap-ansi": "^8.0.1"
   },
   "devDependencies": {
-    "@paperdave/utils": "workspace:^1.0.4",
+    "@paperdave/utils": "workspace:^1.1.0",
     "@types/node": "^18.0.3",
     "@types/wrap-ansi": "^8.0.1",
     "bun-types": "^0.1.2",
