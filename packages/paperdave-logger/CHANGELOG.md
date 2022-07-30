@@ -1,5 +1,11 @@
 # @paperdave/logger
 
+## 2.0.5
+
+### Patch Changes
+
+- Ability to use custom prefix ([#23](https://github.com/paperdave/various/pull/23))
+
 ## 2.0.4
 
 ### Patch Changes
