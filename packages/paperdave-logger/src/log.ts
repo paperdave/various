@@ -7,7 +7,8 @@ import { logSymbols } from './unicode';
 import { PREFIX_LENGTH, STDOUT, stringify, wrapOptions } from './util';
 import { clearWidgets, redrawWidgets } from './widget';
 
-function logPrefixed(prefix: string, content: string) {
+/** Writes a log line with a custom prefix */
+export function log(prefix: string, content: string) {
   clearWidgets();
 
   if (content === '') {
@@ -26,14 +27,14 @@ function logPrefixed(prefix: string, content: string) {
 /** Writes a log line with a blue `info` prefix. */
 export function info(...data: any[]) {
   if (level >= LogLevel.Info) {
-    logPrefixed(`${ansi.blueBright}${ansi.bold}info  ${ansi.reset}`, stringify(...data));
+    log(`${ansi.blueBright}${ansi.bold}info  ${ansi.reset}`, stringify(...data));
   }
 }
 
 /** Writes a log line with a yellow `warn` prefix. */
 export function warn(...data: any[]) {
   if (level >= LogLevel.Warn) {
-    logPrefixed(
+    log(
       `${ansi.yellowBright}${ansi.bold}warn  ${ansi.reset}`,
       colorize(ansi.yellowBright, stringify(...data))
     );
@@ -46,7 +47,7 @@ export function warn(...data: any[]) {
  */
 export function error(...data: any[]) {
   if (level >= LogLevel.Error) {
-    logPrefixed(
+    log(
       `${ansi.redBright}${ansi.bold}error ${ansi.reset}`,
       data.length === 1 && data[0] instanceof Error
         ? formatErrorObj(data[0])
@@ -58,7 +59,7 @@ export function error(...data: any[]) {
 /** Writes a log line with a cyan `debug` prefix. These are not visible by default. */
 export function debug(...data: any[]) {
   if (level >= LogLevel.Debug) {
-    logPrefixed(`${ansi.cyanBright}${ansi.bold}debug ${ansi.reset}`, stringify(...data));
+    log(`${ansi.cyanBright}${ansi.bold}debug ${ansi.reset}`, stringify(...data));
   }
 }
 
