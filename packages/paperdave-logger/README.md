@@ -54,7 +54,7 @@ import { Spinner } from '@paperdave/logger';
 import { delay } from '@paperdave/utils';
 
 const spinner = new Spinner({
-  message: 'Loading...'
+  text: 'Loading...'
 });
 await delay(1000);
 spinner.update('Still Loading...');
