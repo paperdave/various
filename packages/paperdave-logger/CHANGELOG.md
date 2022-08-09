@@ -1,5 +1,11 @@
 # @paperdave/logger
 
+## 2.0.6
+
+### Patch Changes
+
+- Using ES6 instead of ES2020 to prevent usage of nullish coalescing operator ([#28](https://github.com/paperdave/various/pull/28))
+
 ## 2.0.5
 
 ### Patch Changes
