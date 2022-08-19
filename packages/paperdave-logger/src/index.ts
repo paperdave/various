@@ -4,6 +4,7 @@ export { CLIError, type PrintableError } from './error';
 export { injectLogger } from './inject';
 export { LogLevel, setLevel } from './level';
 export * from './log';
+export * from './log-base';
 export {
   BarStyle,
   Progress,

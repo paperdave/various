@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { debug, error, fail, info, log, trace, warn } from './log';
+import { debug, error, fail, info, trace, warn, writeLine } from './log';
 import { Spinner } from './spinner';
 
 export interface InjectOptions {
@@ -107,10 +107,7 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
       error(exception);
 
       if (exitOnError) {
-        log(
-          '      ',
-          'The above error was not caught by a catch block, execution cannot continue.'
-        );
+        writeLine('The above error was not caught by a catch block, execution cannot continue.');
 
         process.exit(1);
       }
@@ -121,8 +118,7 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
       error(reason);
 
       if (exitOnError) {
-        log(
-          '      ',
+        writeLine(
           '\nThe above error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch()'
         );
         process.exit(1);

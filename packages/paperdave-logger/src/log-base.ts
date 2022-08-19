@@ -1,7 +1,8 @@
-import chalk from 'chalk';
+import chalk, { Chalk } from 'chalk';
 import stripAnsi from 'strip-ansi';
 import { writeSync } from 'fs';
 import { inspect } from 'util';
+import { LogLevel } from './level';
 
 export const STDOUT = 1;
 
@@ -57,13 +58,22 @@ export type CustomLoggerColor =
   | number
   | [number, number, number];
 
-function colorize(str: string, color: CustomLoggerColor) {
+export interface CustomLoggerOptions {
+  id?: string;
+  color?: CustomLoggerColor;
+  coloredText?: boolean;
+  boldText?: boolean;
+  level?: number;
+  error?: boolean;
+}
+
+function getColor(color: CustomLoggerColor): Chalk {
   if (typeof color === 'string') {
-    return color in chalk ? (chalk as any)[color](str) : chalk.hex(color)(str);
+    return color in chalk ? (chalk.bold as any)[color] : chalk.bold.hex(color);
   } else if (Array.isArray(color)) {
-    return chalk.rgb(color[0], color[1], color[2])(str);
+    return chalk.bold.rgb(color[0], color[1], color[2]);
   }
-  return chalk.ansi256(color)(str);
+  return chalk.bold.ansi256(color);
 }
 
 /** Matches `string`, `number`, and other objects with a `.toString()` method. */
@@ -93,7 +103,10 @@ type ProcessFormatString<S> = S extends `${string}%${infer K}${infer B}`
 // Using lowercase `any` will not work in the `LogFunction` type
 type Any = string | number | boolean | object | null | undefined;
 
-export type LogFunction = <S extends Any>(fmt?: S, ...data: ProcessFormatString<S>) => void;
+export interface LogFunction {
+  <S extends Any>(fmt?: S, ...data: ProcessFormatString<S>): void;
+  visible: boolean;
+}
 
 const formatImplementation = {
   '%s': (data: StringLike) => String(data),
@@ -128,6 +141,9 @@ function format(fmt: any, ...args: any[]) {
   return stringify(fmt, ...args);
 }
 
+const hiddenLogFn = () => {};
+hiddenLogFn.visible = false;
+
 /**
  * Creates a logger with a psuedo-random color based off the namespace.
  *
@@ -139,22 +155,49 @@ function format(fmt: any, ...args: any[]) {
  * - Passing a color argument with a RGB value [0, 0, 255]
  * - Using chalk or another formatter on the namespace name.
  */
-export function createLogger(name: string, color?: CustomLoggerColor | undefined): LogFunction {
-  const strippedName = stripAnsi(name);
-  const coloredName = name.includes('\x1b')
-    ? name
-    : color
-    ? colorize(name, color)
-    : chalk.ansi256(selectColor(name))(name);
-
-  const shouldShow = true;
-
-  if (!shouldShow) {
-    return () => {};
+export function createLogger(
+  name: string,
+  opts: CustomLoggerOptions | CustomLoggerColor = {}
+): LogFunction {
+  if (typeof opts === 'string' || Array.isArray(opts) || typeof opts === 'number') {
+    opts = { color: opts };
   }
 
-  return (fmt: unknown, ...args: any[]) => {
+  const {
+    //
+    id = name,
+    color = undefined,
+    coloredText = false,
+    level = LogLevel.Info,
+    boldText = false,
+    error = false,
+  } = opts;
+
+  const strippedName = stripAnsi(name);
+  const colorFn = name.includes('\x1b')
+    ? chalk
+    : color
+    ? getColor(color)
+    : chalk.bold.ansi256(selectColor(name));
+  const coloredName = colorFn.bold(name);
+
+  const shouldShow = true;
+  if (!shouldShow) {
+    return hiddenLogFn;
+  }
+
+  const fn = (fmt: unknown, ...args: any[]) => {
     const data = format(fmt, ...args).trim();
-    writeSync(STDOUT, coloredName + ' ' + data + '\n');
+    writeSync(
+      STDOUT,
+      coloredName +
+        ' ' +
+        (coloredText ? (boldText ? colorFn.bold(data) : colorFn(data)) : data) +
+        '\n'
+    );
   };
+
+  fn.visible = true;
+
+  return fn;
 }

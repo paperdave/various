@@ -1,19 +1,18 @@
-import log, { Progress } from './dist/index.js';
-import { delay, range } from '../paperdave-utils/dist/index.js';
+import log, { createLogger } from './dist/index.js';
 
-log.info('yeah');
+log.info('info message');
+log.warn('warn message');
+log.error('error message');
+log.success('success message');
+log.trace('example trace');
+log.debug('debug message');
 
-const bar = new Progress({
-  text: ({ value, total, id }) => `it's ${value} / ${total}, id=${id}`,
-  total: 100,
-  props: {
-    id: 'some id',
-  },
-});
+console.log();
 
-for (const i of range(0, 100)) {
-  await delay(100);
-  bar.update(i, { id: Math.random().toString().slice(2) });
-}
+const custom = createLogger('custom');
+const dave = createLogger('dave');
+const coolThing = createLogger('cool-thing');
 
-bar.success('We did it!');
+custom('ooh, custom log levels');
+dave('he says hi');
+coolThing('something cool happened');
