@@ -1,6 +1,6 @@
 import wrapAnsi from 'wrap-ansi';
 import { writeSync } from 'fs';
-import { error } from './log';
+import { error, warn } from './log';
 import { STDOUT } from './util';
 import { clearWidgets, redrawWidgets } from './widget';
 
@@ -28,4 +28,41 @@ export function log(prefix: string, content: string, force = false) {
  */
 export function fail(...data: any[]) {
   error(...data);
+}
+
+/**
+ * Enum of log level names to their level ID.
+ *
+ * @deprecated Use named logger strings with `setLogFilter` instead.
+ */
+export enum LogLevel {
+  /** Print nothing. */
+  Silent = 0,
+  /** Print only errors. */
+  Error = 1,
+  /** Print warnings and errors. */
+  Warn = 2,
+  /** Print all non-debug, the default. */
+  Info = 3,
+  /** Print everything. Default is `process.env.DEBUG` is set to true. */
+  Debug = 4,
+}
+
+/** Either a LogLevel or a string key of the LogLevel. */
+type SetLevelInput = LogLevel | Lowercase<keyof typeof LogLevel>;
+
+/**
+ * The log level.
+ *
+ * @deprecated
+ */
+export const level = LogLevel.Info;
+
+/**
+ * Sets the log level. Accepts a `LogLevel` enum or a string.
+ *
+ * @deprecated Use `setLogFilter` instead. Silencing error/info/warn or all logs is not a feature anymore.
+ */
+export function setLevel(show: SetLevelInput) {
+  warn('setLevel is deprecated. Use setLogFilter instead.');
 }

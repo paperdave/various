@@ -2,8 +2,8 @@ import * as log from './log';
 
 export * from './deprecated';
 export { CLIError, type PrintableError } from './error';
+export { setLogFilter } from './filter';
 export { injectLogger } from './inject';
-export { LogLevel, setLevel } from './level';
 export * from './log';
 export { createLogger } from './log-base';
 export {
