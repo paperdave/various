@@ -16,4 +16,4 @@ for (const i of range(0, 100)) {
   bar.update(i, { id: Math.random().toString().slice(2) });
 }
 
-bar.succeed('We did it!');
+bar.success('We did it!');

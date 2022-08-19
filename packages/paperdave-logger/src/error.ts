@@ -1,7 +1,7 @@
+import chalk from 'chalk';
 import path from 'node:path';
 import wrapAnsi from 'wrap-ansi';
 import { builtinModules } from 'node:module';
-import { ansi } from './ansi';
 import { PREFIX_LENGTH, wrapOptions } from './util';
 
 /**
@@ -72,36 +72,31 @@ export function formatStackTrace(err: Error) {
   }
   parsed.reverse();
 
-  return (
-    parsed
-      .map(({ method, file, line, column, native }) => {
-        const source = native
-          ? `[native code]`
-          : file
-          ? isBuiltin(file)
-            ? `(${ansi.magenta}${file}${ansi.reset}${ansi.blackBright})`
-            : [
-                '(',
-                ansi.cyan,
-                // Leave the first slash on linux.
+  return parsed
+    .map(({ method, file, line, column, native }) => {
+      const source = native
+        ? `[native code]`
+        : file
+        ? isBuiltin(file)
+          ? `(${chalk.magenta(file)})`
+          : [
+              '(',
+              chalk.cyan(
                 process.platform === 'win32'
                   ? path.dirname(file).replace(/^file:\/\/\//g, '')
-                  : path.dirname(file).replace(/^file:\/\//g, ''),
-                path.sep,
-                ansi.green,
-                path.basename(file),
-                ansi.reset,
-                ':',
-                line + ':' + column,
-                ansi.blackBright,
-                ')',
-              ].join('')
-          : '<unknown>';
+                  : path.dirname(file).replace(/^file:\/\//g, '') + path.sep
+              ),
+              // Leave the first slash on linux.
+              chalk.green(path.basename(file)),
+              ':',
+              line + ':' + column,
+              ')',
+            ].join('')
+        : '<unknown>';
 
-        return `\u200b  ${ansi.blackBright}at ${method === '' ? '' : `${method} `}${source}`;
-      })
-      .join('\n') + ansi.reset
-  );
+      return chalk.blackBright(`  at ${method === '' ? '' : `${method} `}${source}`);
+    })
+    .join('\n');
 }
 
 /** Formats the given error as a full log string. */
@@ -109,10 +104,9 @@ export function formatErrorObj(err: Error | PrintableError, boldFirstLine = fals
   const { name, message, description, hideStack, hideName, stack } = err as PrintableError;
 
   return [
-    boldFirstLine ? ansi.red + ansi.bold : ansi.red,
-    hideName ? '' : (name ?? 'Error') + ': ',
-    message ?? 'Unknown error',
-    ansi.reset,
+    (boldFirstLine ? chalk.red.bold : chalk.red)(
+      (hideName ? '' : (name ?? 'Error') + ': ') + (message ?? 'Unknown error')
+    ),
     description ? '\n' + wrapAnsi(description, 90 - PREFIX_LENGTH, wrapOptions) : '',
     hideStack || !stack ? '' : '\n' + formatStackTrace(err),
     description || (!hideStack && stack) ? '\n' : '',

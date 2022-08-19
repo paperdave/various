@@ -1,5 +1,5 @@
+import chalk from 'chalk';
 import wrapAnsi from 'wrap-ansi';
-import { ansi } from './ansi';
 import { Color, wrapOptions } from './util';
 import { LogWidget } from './widget';
 
@@ -83,7 +83,7 @@ export class Spinner<Props extends Record<string, unknown>> extends LogWidget {
     const frame = Math.floor(now / (1000 / this.fps)) % this.#frames.length;
 
     return (
-      (this.#color ? ansi[this.#color] + this.#frames[frame] + ansi.reset : this.#frames[frame]) +
+      (this.#color ? chalk[this.#color](this.#frames[frame]) : this.#frames[frame]) +
       ' ' +
       wrapAnsi(this.text, 90 - 1 - this.#frames[frame].length, wrapOptions)
     );

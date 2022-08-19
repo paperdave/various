@@ -15,10 +15,11 @@
     "screenshot.png"
   ],
   "scripts": {
-    "build": "tsc && esbuild --outfile=./dist/index.js --target=es6 --format=esm --platform=node --sourcemap --bundle src/index.ts --external:wrap-ansi --external:supports-color"
+    "build": "tsc && esbuild --outfile=./dist/index.js --target=es6 --format=esm --platform=node --sourcemap --bundle src/index.ts --external:wrap-ansi --external:chalk"
   },
   "dependencies": {
-    "supports-color": "^9.2.2",
+    "ansi-escapes": "^5.0.0",
+    "chalk": "4",
     "wrap-ansi": "^8.0.1"
   },
   "devDependencies": {

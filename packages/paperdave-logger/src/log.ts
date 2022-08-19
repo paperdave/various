@@ -1,13 +1,13 @@
+import chalk from 'chalk';
 import wrapAnsi from 'wrap-ansi';
 import { writeSync } from 'node:fs';
-import { ansi, colorize } from './ansi';
 import { formatErrorObj } from './error';
 import { level, LogLevel } from './level';
 import { logSymbols } from './unicode';
 import { PREFIX_LENGTH, STDOUT, stringify, wrapOptions } from './util';
 import { clearWidgets, redrawWidgets } from './widget';
 
-/** Writes a log line with a custom prefix */
+/** Writes a log line with a custom prefix. */
 export function log(prefix: string, content: string) {
   clearWidgets();
 
@@ -27,17 +27,14 @@ export function log(prefix: string, content: string) {
 /** Writes a log line with a blue `info` prefix. */
 export function info(...data: any[]) {
   if (level >= LogLevel.Info) {
-    log(`${ansi.blueBright}${ansi.bold}info  ${ansi.reset}`, stringify(...data));
+    log(chalk.blueBright.bold('info  '), stringify(...data));
   }
 }
 
 /** Writes a log line with a yellow `warn` prefix. */
 export function warn(...data: any[]) {
   if (level >= LogLevel.Warn) {
-    log(
-      `${ansi.yellowBright}${ansi.bold}warn  ${ansi.reset}`,
-      colorize(ansi.yellowBright, stringify(...data))
-    );
+    log(chalk.yellowBright.bold('warn  '), chalk.yellowBright(stringify(...data)));
   }
 }
 
@@ -48,10 +45,10 @@ export function warn(...data: any[]) {
 export function error(...data: any[]) {
   if (level >= LogLevel.Error) {
     log(
-      `${ansi.redBright}${ansi.bold}error ${ansi.reset}`,
+      chalk.redBright.bold('error '),
       data.length === 1 && data[0] instanceof Error
         ? formatErrorObj(data[0])
-        : colorize(ansi.redBright, stringify(...data))
+        : chalk.redBright(stringify(...data))
     );
   }
 }
@@ -59,7 +56,7 @@ export function error(...data: any[]) {
 /** Writes a log line with a cyan `debug` prefix. These are not visible by default. */
 export function debug(...data: any[]) {
   if (level >= LogLevel.Debug) {
-    log(`${ansi.cyanBright}${ansi.bold}debug ${ansi.reset}`, stringify(...data));
+    log(chalk.cyanBright.bold('debug'), stringify(...data));
   }
 }
 
@@ -74,11 +71,7 @@ export function success(...data: any[]) {
     } else {
       writeSync(
         0,
-        wrapAnsi(
-          colorize(ansi.green + ansi.bold, logSymbols.success + ' ' + str),
-          90,
-          wrapOptions
-        ) + '\n'
+        wrapAnsi(chalk.green.bold(logSymbols.success + ' ' + str), 90, wrapOptions) + '\n'
       );
     }
     redrawWidgets();
@@ -98,11 +91,8 @@ export function fail(...data: any[]) {
         0,
         data.length === 1 && data[0] instanceof Error
           ? formatErrorObj(data[0], true)
-          : wrapAnsi(
-              colorize(ansi.red + ansi.bold, logSymbols.error + ' ' + stringify(...data)),
-              90,
-              wrapOptions
-            ) + '\n'
+          : wrapAnsi(chalk.red.bold(logSymbols.error + ' ' + stringify(...data)), 90, wrapOptions) +
+              '\n'
       );
     }
     redrawWidgets();

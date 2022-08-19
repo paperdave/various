@@ -1,5 +1,5 @@
+import chalk from 'chalk';
 import type { EmptyObject } from '@paperdave/utils';
-import { ansi } from './ansi';
 import { convertHSVtoRGB } from './hsv';
 import { defaultSpinnerOptions } from './spinner';
 import { isUnicodeSupported } from './unicode';
@@ -222,19 +222,17 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
     const progress = this.#total === 0 ? 1 : this.#value / this.#total;
 
     const hue = Math.min(Math.max(progress, 0), 1) / 3;
-    const barColor =
-      ansi.rgb(...convertHSVtoRGB(hue, 0.8, 1)) + //
-      ansi.bgRgb(...convertHSVtoRGB(hue, 0.8, 0.5));
+    const barColor = chalk
+      .rgb(...convertHSVtoRGB(hue, 0.8, 1))
+      .bgRgb(...convertHSVtoRGB(hue, 0.8, 0.5));
 
     let spinner;
     if (this.#spinnerFrames) {
       const frame = Math.floor(now / (1000 / this.#spinnerFPS)) % this.#spinnerFrames.length;
       spinner = this.#spinnerColor
         ? (this.#spinnerColor === 'match'
-            ? ansi.rgb(...convertHSVtoRGB(hue, 0.8, 1))
-            : ansi[this.#spinnerColor]) +
-          this.#spinnerFrames[frame] +
-          ansi.reset
+            ? chalk.rgb(...convertHSVtoRGB(hue, 0.8, 1))
+            : chalk[this.#spinnerColor])(this.#spinnerFrames[frame])
         : this.#spinnerFrames[frame];
     }
 
@@ -245,9 +243,7 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
     return [
       spinner ? spinner + ' ' : '',
       beforeText ? beforeText + ' ' : '',
-      barColor,
-      getBar(progress, this.#barWidth),
-      ansi.reset,
+      barColor(getBar(progress, this.#barWidth)),
       ' ',
       this.text,
     ]

@@ -10,7 +10,6 @@ This is the logger I use in some of my programs, it has:
 - Pretty error formatting.
   - Colorized and simplified stack traces.
   - For CLI Errors such as a missing configuration, attach a long-description to your errors to make them easier for users to debug.
-- Does not depend on `chalk`, but rather a simple built-in color library. Also exports built-in versions of `is-unicode-supported` and `log-symbols`.
 - Injecting the global `console` object to force all logs to be formatted.
 - Bun and Node.js support
 

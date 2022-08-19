@@ -1,5 +1,5 @@
+import ansi from 'ansi-escapes';
 import { writeSync } from 'fs';
-import { ansi } from './ansi';
 import { fail, success } from './log';
 import type { Timer } from './util';
 import { STDOUT } from './util';
@@ -19,7 +19,7 @@ export abstract class LogWidget {
 
     if (!widgetTimer) {
       widgetTimer = setInterval(redrawWidgets, 1000 / 60);
-      writeSync(STDOUT, ansi.hide);
+      // writeSync(STDOUT, ansi.cursorHide);
     }
   }
 
@@ -47,7 +47,7 @@ export abstract class LogWidget {
     if (widgets.length === 0) {
       clearInterval(widgetTimer);
       widgetTimer = undefined;
-      writeSync(STDOUT, ansi.show);
+      // writeSync(STDOUT, ansi.cursorShow);
     } else {
       redrawWidgets();
     }
@@ -115,7 +115,7 @@ export function clearWidgets() {
   if (widgetLineCount) {
     writeSync(
       STDOUT,
-      ansi.clearLine + (ansi.up(1) + ansi.clearLine).repeat(widgetLineCount) + '\r'
+      ansi.eraseLine + (ansi.cursorUp(1) + ansi.eraseLine).repeat(widgetLineCount) + '\r'
     );
     widgetLineCount = 0;
   }
