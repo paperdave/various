@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { debug, error, fail, info, trace, warn, writeLine } from './log';
+import { debug, error, info, trace, warn, writeLine } from './log';
 import { Spinner } from './spinner';
 
 export interface InjectOptions {
@@ -52,7 +52,7 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
   // Assert
   injectConsole.assert = (condition, ...msg) => {
     if (!condition) {
-      fail(...msg);
+      error(...msg);
     }
   };
 

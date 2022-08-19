@@ -83,15 +83,6 @@ export function success(...data: any[]) {
   _success(...data);
 }
 
-/**
- * Writes a log line in all red and with a cross prefix.
- *
- * @deprecated Use `error` instead.
- */
-export function fail(...data: any[]) {
-  _error(...data);
-}
-
 // TODO: move this
 /** Writes raw line of text, but will do nothing if the log level is set to `LogLevel.Silent` */
 export function writeLine(data: string) {

@@ -1,17 +1,18 @@
 # @paperdave/logger
 
-This is the logger I use in some of my programs, it has:
+This is the logger I use in some of my programs. For common cases, `info()` runs faster than Node.js's `console.log()`, plus:
 
-- Multiple levels, such as `debug` logs that aren't shown by default
+- Customizable log levels, with the same automatic colors from the `debug` package.
+- Built in log levels: `info`, `warn`, `debug`, `error`, `success`, and `trace`.
 - Widgets, dynamic and animatable things that stick to the bottom of your log:
   - Spinners (replaces `ora`)
   - Progress Bars (replaces `cli-progress` and alternatives)
   - Simple API for other widgets (specify and `fps` and implement a `format` function).
-- Pretty error formatting.
+- Pretty error formatting, just pass an error object to any log function.
   - Colorized and simplified stack traces.
-  - For CLI Errors such as a missing configuration, attach a long-description to your errors to make them easier for users to debug.
-- Injecting the global `console` object to force all logs to be formatted.
-- Bun (mostly) and Node.js support
+  - `CLIError`, which provides the ability to provide a long description and hide the stack trace - Good for displaying to end users.
+- Injecting the global `console` object to force all logs to be formatted consistantly.
+- Bun (mostly) and Node.js support.
 
 ![](screenshot.png)
 

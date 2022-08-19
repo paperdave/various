@@ -1,5 +1,6 @@
 import wrapAnsi from 'wrap-ansi';
 import { writeSync } from 'fs';
+import { error } from './log';
 import { STDOUT } from './util';
 import { clearWidgets, redrawWidgets } from './widget';
 
@@ -18,4 +19,13 @@ export function log(prefix: string, content: string, force = false) {
   writeSync(STDOUT, prefix + wrapped + '\n');
 
   redrawWidgets();
+}
+
+/**
+ * Writes a log line in all red and with a cross prefix.
+ *
+ * @deprecated Use `error` instead.
+ */
+export function fail(...data: any[]) {
+  error(...data);
 }

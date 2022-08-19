@@ -1,6 +1,6 @@
 import ansi from 'ansi-escapes';
 import { writeSync } from 'fs';
-import { fail, success } from './log';
+import { error, success } from './log';
 import type { Timer } from './util';
 import { STDOUT } from './util';
 
@@ -103,11 +103,16 @@ export abstract class LogWidget {
   }
 
   /** Remove this widget with a failure message. */
-  fail(message: string | Error) {
+  error(message: string | Error) {
     LogWidget.batchRedraw(() => {
-      fail(message);
+      error(message);
       this.stop();
     });
+  }
+
+  /** @deprecated Use `error` instead. */
+  fail(message: string | Error) {
+    this.error(message);
   }
 }
 

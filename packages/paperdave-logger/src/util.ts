@@ -1,11 +1,17 @@
+import { writeSync } from 'fs';
 import { inspect } from 'util';
 
-/**
- * In this package we use `writeSync(STDOUT, ...)` to write to the stdout instead of
- * `console.log(...)`, or `process.stdout.write(...)` since it is faster and the code will work
- * across node and bun.
- */
-export const STDOUT = 1;
+/** File Descriptor for standard output. */
+export const STDOUT = 2;
+/** File Descriptor for standard error. */
+export const STDERR = 2;
+/** File Descriptor for standard input. */
+export const STDIN = 0;
+
+/** Writes output to standard output. This is done using a filesystem call. */
+export const write = writeSync.bind(null, STDOUT) as (data: string | Uint8Array) => void;
+/** Writes output to standard error. This is done using a filesystem call. */
+export const error = writeSync.bind(null, STDERR) as (data: string | Uint8Array) => void;
 
 /** Hardcoded magic number, all prefixes are 6 characters excluding colors, eg `info `. */
 export const PREFIX_LENGTH = 6;

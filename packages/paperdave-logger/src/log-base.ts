@@ -1,10 +1,11 @@
-import chalk, { Chalk } from 'chalk';
+import chalk from 'chalk';
 import stripAnsi from 'strip-ansi';
+import type { Chalk } from 'chalk';
 import { writeSync } from 'fs';
 import { inspect } from 'util';
+import { formatErrorObj } from './error';
 import { LogLevel } from './level';
-
-export const STDOUT = 1;
+import { STDOUT } from './util';
 
 /** Taken from https://github.com/debug-js/debug/blob/d1616622e4d404863c5a98443f755b4006e971dc/src/node.js#L35. */
 const COLORS = [
@@ -16,7 +17,16 @@ const COLORS = [
 
 /** Converts non string objects into a string the way Node.js' console.log does it. */
 export function stringify(...data: any[]) {
-  return data.map(obj => (typeof obj === 'string' ? obj : inspect(obj, false, 4, true))).join(' ');
+  return data
+    .map(obj => {
+      if (typeof obj === 'string') {
+        return obj;
+      } else if (obj instanceof Error) {
+        return formatErrorObj(obj);
+      }
+      return inspect(obj, false, 4, true);
+    })
+    .join(' ');
 }
 
 /**
@@ -145,7 +155,7 @@ const hiddenLogFn = () => {};
 hiddenLogFn.visible = false;
 
 /**
- * Creates a logger with a psuedo-random color based off the namespace.
+ * Creates a logger function with a psuedo-random color based off the namespace.
  *
  * A custom color can be assigned by doing any of the following:
  *
