@@ -88,7 +88,7 @@ export function fail(...data: any[]) {
       writeSync(STDOUT, '\n');
     } else {
       writeSync(
-        0,
+        STDOUT,
         data.length === 1 && data[0] instanceof Error
           ? formatErrorObj(data[0], true)
           : wrapAnsi(chalk.red.bold(logSymbols.error + ' ' + stringify(...data)), 90, wrapOptions) +
