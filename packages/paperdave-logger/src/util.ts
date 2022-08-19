@@ -1,26 +1,11 @@
-import { writeSync } from 'fs';
 import { inspect } from 'util';
 
 /** File Descriptor for standard output. */
-export const STDOUT = 2;
+export const STDOUT = 1;
 /** File Descriptor for standard error. */
 export const STDERR = 2;
 /** File Descriptor for standard input. */
 export const STDIN = 0;
-
-/** Writes output to standard output. This is done using a filesystem call. */
-export const write = writeSync.bind(null, STDOUT) as (data: string | Uint8Array) => void;
-/** Writes output to standard error. This is done using a filesystem call. */
-export const error = writeSync.bind(null, STDERR) as (data: string | Uint8Array) => void;
-
-/** Hardcoded magic number, all prefixes are 6 characters excluding colors, eg `info `. */
-export const PREFIX_LENGTH = 6;
-
-/** For `ansi-wrap` */
-export const wrapOptions = {
-  trim: false,
-  hard: true,
-};
 
 /** Converts non string objects into a string the way Node.js' console.log does it. */
 export function stringify(...data: any[]) {

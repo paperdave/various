@@ -4,8 +4,10 @@ import type { Chalk } from 'chalk';
 import { writeSync } from 'fs';
 import { inspect } from 'util';
 import { formatErrorObj } from './error';
-import { LogLevel } from './level';
-import { STDOUT } from './util';
+import { isLogVisible } from './filter';
+import type { CustomLoggerColor, CustomLoggerOptions, StringLike } from './types';
+import { LogFunction } from './types';
+import { STDERR, STDOUT } from './util';
 
 /** Taken from https://github.com/debug-js/debug/blob/d1616622e4d404863c5a98443f755b4006e971dc/src/node.js#L35. */
 const COLORS = [
@@ -16,7 +18,7 @@ const COLORS = [
 ];
 
 /** Converts non string objects into a string the way Node.js' console.log does it. */
-export function stringify(...data: any[]) {
+function stringify(...data: any[]) {
   return data
     .map(obj => {
       if (typeof obj === 'string') {
@@ -45,38 +47,6 @@ function selectColor(namespace: string) {
   return COLORS[Math.abs(hash) % COLORS.length];
 }
 
-export type CustomLoggerColor =
-  | 'black'
-  | 'red'
-  | 'green'
-  | 'yellow'
-  | 'blue'
-  | 'magenta'
-  | 'cyan'
-  | 'white'
-  | 'gray'
-  | 'grey'
-  | 'blackBright'
-  | 'redBright'
-  | 'greenBright'
-  | 'yellowBright'
-  | 'blueBright'
-  | 'magentaBright'
-  | 'cyanBright'
-  | 'whiteBright'
-  | `#${string}`
-  | number
-  | [number, number, number];
-
-export interface CustomLoggerOptions {
-  id?: string;
-  color?: CustomLoggerColor;
-  coloredText?: boolean;
-  boldText?: boolean;
-  level?: number;
-  error?: boolean;
-}
-
 function getColor(color: CustomLoggerColor): Chalk {
   if (typeof color === 'string') {
     return color in chalk ? (chalk.bold as any)[color] : chalk.bold.hex(color);
@@ -84,38 +54,6 @@ function getColor(color: CustomLoggerColor): Chalk {
     return chalk.bold.rgb(color[0], color[1], color[2]);
   }
   return chalk.bold.ansi256(color);
-}
-
-/** Matches `string`, `number`, and other objects with a `.toString()` method. */
-interface StringLike {
-  toString(): string;
-}
-
-interface FormatStringArgs {
-  '%s': StringLike | null | undefined;
-  '%d': number | null | undefined;
-  '%i': number | null | undefined;
-  '%f': number | null | undefined;
-  '%x': number | null | undefined;
-  '%X': number | null | undefined;
-  '%o': any;
-  '%O': any;
-  '%c': string | null | undefined;
-  '%j': any;
-}
-
-type ProcessFormatString<S> = S extends `${string}%${infer K}${infer B}`
-  ? `%${K}` extends keyof FormatStringArgs
-    ? [FormatStringArgs[`%${K}`], ...ProcessFormatString<B>]
-    : ProcessFormatString<B>
-  : [];
-
-// Using lowercase `any` will not work in the `LogFunction` type
-type Any = string | number | boolean | object | null | undefined;
-
-export interface LogFunction {
-  <S extends Any>(fmt?: S, ...data: ProcessFormatString<S>): void;
-  visible: boolean;
 }
 
 const formatImplementation = {
@@ -151,8 +89,15 @@ function format(fmt: any, ...args: any[]) {
   return stringify(fmt, ...args);
 }
 
-const hiddenLogFn = () => {};
-hiddenLogFn.visible = false;
+const LogFunction = {
+  __proto__: Function.prototype,
+  get visible() {
+    return isLogVisible((this as any).name);
+  },
+  [Symbol.for('nodejs.util.inspect.custom')](depth: number, options: any) {
+    return options.stylize(`[LogFunction: ${(this as any).name}]`, 'special');
+  },
+};
 
 /**
  * Creates a logger function with a psuedo-random color based off the namespace.
@@ -178,12 +123,12 @@ export function createLogger(
     id = name,
     color = undefined,
     coloredText = false,
-    level = LogLevel.Info,
     boldText = false,
     error = false,
   } = opts;
 
   const strippedName = stripAnsi(name);
+
   const colorFn = name.includes('\x1b')
     ? chalk
     : color
@@ -191,23 +136,23 @@ export function createLogger(
     : chalk.bold.ansi256(selectColor(name));
   const coloredName = colorFn.bold(name);
 
-  const shouldShow = true;
-  if (!shouldShow) {
-    return hiddenLogFn;
-  }
-
   const fn = (fmt: unknown, ...args: any[]) => {
-    const data = format(fmt, ...args).trim();
+    if (!isLogVisible(id)) {
+      return;
+    }
+
+    const data = format(fmt, ...args).replace(/\n/g, '\n ' + ' '.repeat(strippedName.length));
     writeSync(
-      STDOUT,
+      error ? STDERR : STDOUT,
       coloredName +
         ' ' +
         (coloredText ? (boldText ? colorFn.bold(data) : colorFn(data)) : data) +
         '\n'
     );
   };
+  fn.__proto__ = LogFunction;
 
-  fn.visible = true;
+  Object.defineProperty(fn, 'name', { value: id });
 
-  return fn;
+  return fn as unknown as LogFunction;
 }

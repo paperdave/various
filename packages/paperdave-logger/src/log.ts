@@ -3,7 +3,7 @@ import { formatStackTrace } from './error';
 import { level, LogLevel } from './level';
 import { createLogger } from './log-base';
 import { logSymbols } from './unicode';
-import { STDOUT } from './util';
+import { STDERR, STDOUT } from './util';
 import { clearWidgets, redrawWidgets } from './widget';
 
 // We use prefixed constants with functions to preserve autocomplete:
@@ -21,7 +21,6 @@ export function info(...data: any[]) {
 const _warn = createLogger('warn', {
   id: '*',
   color: 'yellowBright',
-  level: LogLevel.Warn,
   coloredText: true,
 });
 
@@ -34,21 +33,19 @@ const _trace = createLogger('trace', {
   id: '*',
   color: 208,
   error: true,
-  level: LogLevel.Info,
 });
 
 /** Writes a log line with a yellow `warn` prefix. */
 export function trace(...data: any[]) {
   if (_trace.visible) {
     _trace(...(data.length === 0 ? [' '] : data));
-    writeSync(STDOUT, formatStackTrace(new Error()).split('\n').slice(1).join('\n') + '\n');
+    writeSync(STDERR, formatStackTrace(new Error()).split('\n').slice(1).join('\n') + '\n');
   }
 }
 
 const _error = createLogger(logSymbols.error, {
   id: '*',
   color: 'redBright',
-  level: LogLevel.Error,
   coloredText: true,
   error: true,
 });
@@ -62,9 +59,8 @@ export function error(...data: any[]) {
 }
 
 const _debug = createLogger('debug', {
-  id: '*',
+  id: 'debug',
   color: 'cyanBright',
-  level: LogLevel.Debug,
 });
 
 /** Writes a log line with a cyan `debug` prefix. These are not visible by default. */

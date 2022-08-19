@@ -1,8 +1,6 @@
 import chalk from 'chalk';
 import path from 'node:path';
-import wrapAnsi from 'wrap-ansi';
 import { builtinModules } from 'node:module';
-import { PREFIX_LENGTH, wrapOptions } from './util';
 
 /**
  * A Printable Error is an error that defines some extra fields. `@paperdave/logger` handles these
@@ -123,7 +121,7 @@ export function formatErrorObj(err: Error | PrintableError) {
   return [
     hideName ? '' : (name ?? 'Error') + ': ',
     message ?? 'Unknown error',
-    description ? '\n' + wrapAnsi(description, 90 - PREFIX_LENGTH, wrapOptions) : '',
+    description ? '\n' + description : '',
     hideStack || !stack ? '' : '\n' + formatStackTrace(err),
     description || (!hideStack && stack) ? '\n' : '',
   ].join('');
