@@ -1,17 +1,21 @@
 import chalk from 'chalk';
 import wrapAnsi from 'wrap-ansi';
 import { writeSync } from 'node:fs';
-import { formatErrorObj } from './error';
+import { formatErrorObj, formatStackTrace } from './error';
 import { level, LogLevel } from './level';
 import { logSymbols } from './unicode';
 import { PREFIX_LENGTH, STDOUT, stringify, wrapOptions } from './util';
 import { clearWidgets, redrawWidgets } from './widget';
 
-/** Writes a log line with a custom prefix. */
-export function log(prefix: string, content: string) {
+/**
+ * Writes a log line with a custom prefix.
+ *
+ * @deprecated This function will be removed in the future. use the named functions instead.
+ */
+export function log(prefix: string, content: string, force = false) {
   clearWidgets();
 
-  if (content === '') {
+  if (content === '' && !force) {
     writeSync(STDOUT, '\n');
     return;
   }
@@ -35,6 +39,14 @@ export function info(...data: any[]) {
 export function warn(...data: any[]) {
   if (level >= LogLevel.Warn) {
     log(chalk.yellowBright.bold('warn  '), chalk.yellowBright(stringify(...data)));
+  }
+}
+
+/** Writes a log line with a yellow `warn` prefix. */
+export function trace(...data: any[]) {
+  if (level >= LogLevel.Info) {
+    log(chalk.yellowBright.bold('trace '), chalk.yellowBright(stringify(...data)), true);
+    writeSync(STDOUT, formatStackTrace(new Error()).split('\n').slice(1).join('\n') + '\n');
   }
 }
 

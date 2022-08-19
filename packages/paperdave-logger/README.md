@@ -11,11 +11,9 @@ This is the logger I use in some of my programs, it has:
   - Colorized and simplified stack traces.
   - For CLI Errors such as a missing configuration, attach a long-description to your errors to make them easier for users to debug.
 - Injecting the global `console` object to force all logs to be formatted.
-- Bun and Node.js support
+- Bun (mostly) and Node.js support
 
 ![](screenshot.png)
-
-[Documentation](https://doc.deno.land/https://raw.githubusercontent.com/paperdave/various-web/main/packages/paperdave-logger/dist/index.d.ts) (i'm using deno doc however this module doesn't work with Deno)
 
 ## Basic Example
 
@@ -36,13 +34,15 @@ log.success('This is a success message!');
 
 ## Injecting `console.log` and other functions.
 
-In Purplet, we inject `@paperdave/logger` into the `console` object. This allows the users' logs to appear nicely formatted.
+In Purplet, we inject `@paperdave/logger` into the `console` object. This allows the users' logs to appear nicely formatted. By default this also listens for uncaught errors and **will close the program if an error is thrown**; this is default behavior in modern Node.
 
 ```ts
 import { injectLogger } from '@paperdave/logger';
 
 injectLogger();
 ```
+
+You can pass parameters to the injector to customize how it behaves.
 
 ## Spinners and Progress Bars
 
