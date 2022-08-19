@@ -1,5 +1,17 @@
 # @paperdave/logger
 
+## 2.1.0
+
+### Minor Changes
+
+- switch from using internal ansi library to `chalk@4` ([`9334160`](https://github.com/paperdave/various/commit/933416077f4201e52b9f4bebeec93cae0350deab))
+
+### Patch Changes
+
+- Fix `fail` writing to stdin instead of stdout ([`257963a`](https://github.com/paperdave/various/commit/257963a4d6572402b0ef904a6cf7978cf56b5c21))
+
+* fix error stack traces printing a weird symbol in some consoles ([`9334160`](https://github.com/paperdave/various/commit/933416077f4201e52b9f4bebeec93cae0350deab))
+
 ## 2.0.6
 
 ### Patch Changes
