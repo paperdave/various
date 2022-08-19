@@ -1,5 +1,7 @@
 ---
-"@paperdave/logger": minor
+'@paperdave/logger': minor
 ---
 
-add custom namespaces using new `createLogger` function. the top level `log` function is now fully deprecated
+add custom namespaces using new `createLogger` function.
+
+- all the built in log functions are created through this API.
