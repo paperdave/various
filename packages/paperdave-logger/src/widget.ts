@@ -35,7 +35,7 @@ export abstract class LogWidget {
   protected abstract fps: number;
 
   /** Removes this widget from the log. */
-  protected remove(finalMessage?: string) {
+  stop(finalMessage?: string) {
     const index = widgets.indexOf(this);
     if (index >= 0) {
       widgets.splice(index, 1);
@@ -98,7 +98,7 @@ export abstract class LogWidget {
   success(message: string) {
     LogWidget.batchRedraw(() => {
       success(message);
-      this.remove();
+      this.stop();
     });
   }
 
@@ -106,7 +106,7 @@ export abstract class LogWidget {
   fail(message: string | Error) {
     LogWidget.batchRedraw(() => {
       fail(message);
-      this.remove();
+      this.stop();
     });
   }
 }

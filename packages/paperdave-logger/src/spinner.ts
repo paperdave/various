@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import wrapAnsi from 'wrap-ansi';
+import type { EmptyObject } from '@paperdave/utils';
 import { Color, wrapOptions } from './util';
 import { LogWidget } from './widget';
 
@@ -23,7 +24,7 @@ export const defaultSpinnerOptions = {
   fps: 12.5,
 };
 
-export class Spinner<Props extends Record<string, unknown>> extends LogWidget {
+export class Spinner<Props extends Record<string, unknown> = EmptyObject> extends LogWidget {
   #text: string | ((props: Props) => string);
   #color: Color | `${Color}` | false;
   #frames: string[];
