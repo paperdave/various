@@ -67,10 +67,10 @@ export function success(...data: any[]) {
 
     clearWidgets();
     if (str === '') {
-      writeSync(0, '\n');
+      writeSync(STDOUT, '\n');
     } else {
       writeSync(
-        0,
+        STDOUT,
         wrapAnsi(chalk.green.bold(logSymbols.success + ' ' + str), 90, wrapOptions) + '\n'
       );
     }
@@ -85,7 +85,7 @@ export function fail(...data: any[]) {
 
     clearWidgets();
     if (str === '') {
-      writeSync(0, '\n');
+      writeSync(STDOUT, '\n');
     } else {
       writeSync(
         0,
