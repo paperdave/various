@@ -38,12 +38,10 @@ const mappedColumns = packageJSONs.map(packageJSON => [
   )})](https://www.npmjs.com/package/${packageJSON.name})`,
   // Status
   `[![${
-    statusColors[packageJSON['paperdave-readme-status']] || 'grey'
+    statusColors[packageJSON['paperdave-status']] || 'grey'
   }](https://img.shields.io/badge/status-${encodeURIComponent(
-    packageJSON['paperdave-readme-status'] || 'unknown'
-  )}-${
-    statusColors[packageJSON['paperdave-readme-status']] || 'grey'
-  }.svg)](#project-status-meaning)`,
+    packageJSON['paperdave-status'] || 'unknown'
+  )}-${statusColors[packageJSON['paperdave-status']] || 'grey'}.svg)](#project-status-meaning)`,
   // Description
   packageJSON.description,
 ]);
