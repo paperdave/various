@@ -3,7 +3,7 @@ import path from 'node:path';
 import { builtinModules } from 'node:module';
 
 /**
- * A Printable Error is an error that defines some extra fields. `@paperdave/logger` handles these
+ * A PrintableError is an error that defines some extra fields. `@paperdave/logger` handles these
  * objects within logs which allows customizing their appearance. It can be useful when building
  * CLIs to throw formatted error objects that instruct the user what they did wrong, without
  * printing a huge piece of text with a useless stack trace.

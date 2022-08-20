@@ -5,56 +5,54 @@ import { logSymbols } from './unicode';
 import { STDERR, STDOUT } from './util';
 import { clearWidgets, redrawWidgets } from './widget';
 
-/** Writes a log line with a blue `info` prefix. */
+/** Built in blue "info" logger. */
 export const info = createLogger('info', {
-  id: '*',
   color: 'blueBright',
 });
 
-/** Writes a log line with a yellow `warn` prefix. */
+/** Built in yellow "warn" logger. */
 export const warn = createLogger('warn', {
-  id: '*',
   color: 'yellowBright',
   coloredText: true,
 });
 
 const _trace = createLogger('trace', {
-  id: '*',
   color: 208,
   error: true,
 });
 
-/** Writes a log line with a yellow `warn` prefix. */
-export function trace(...data: any[]) {
+/** Built in orange "trace" logger. Prints a stack trace after the message. */
+export const trace = function trace(...data: any[]) {
   if (_trace.visible) {
     _trace(...(data.length === 0 ? [' '] : data));
     writeSync(STDERR, formatStackTrace(new Error()).split('\n').slice(1).join('\n') + '\n');
   }
-}
+} as typeof _trace;
 
-/** Writes a log line with a red X prefix. */
+/** Built in red "error" logger, uses a unicode X instead of the word Error. */
 export const error = createLogger(logSymbols.error, {
-  id: '*',
+  id: 'error',
   color: 'redBright',
   coloredText: true,
   error: true,
 });
 
-/** Writes a log line with a cyan `debug` prefix. These are not visible by default. */
+/** Built in cyan "debug" logger. */
 export const debug = createLogger('debug', {
-  id: 'debug',
   color: 'cyanBright',
+  debug: true,
 });
 
+/** Built in green "success" logger, uses a unicode Check instead of the word Success. */
 export const success = createLogger(logSymbols.success, {
-  id: '*',
+  id: 'success',
   color: 'greenBright',
   coloredText: true,
 });
 
-/** Writes raw line of text, but will do nothing if the log level is set to `LogLevel.Silent` */
-export function writeLine(data: string) {
+/** Writes raw line of text without a prefix or filtering. Does NOT support formatting features. */
+export function writeLine(message: string) {
   clearWidgets();
-  writeSync(STDOUT, data + '\n');
+  writeSync(STDOUT, message + '\n');
   redrawWidgets();
 }

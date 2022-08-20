@@ -59,7 +59,7 @@ function getColor(color: CustomLoggerColor): Chalk {
 const formatImplementation = {
   '%s': (data: StringLike) => String(data),
   '%d': (data: number) => String(data),
-  '%i': (data: number) => String(Math.round(data)),
+  '%i': (data: number) => String(Math.floor(data)),
   '%f': (data: number) => String(data),
   '%x': (data: number) => data.toString(16),
   '%X': (data: number) => data.toString(16).toUpperCase(),
@@ -99,17 +99,6 @@ const LogFunction = {
   },
 };
 
-/**
- * Creates a logger function with a psuedo-random color based off the namespace.
- *
- * A custom color can be assigned by doing any of the following:
- *
- * - Passing a color argument with a color name "blue"
- * - Passing a color argument with a hex value "#0000FF"
- * - Passing a color argument with an ANSI 256 palette value (0-255)
- * - Passing a color argument with a RGB value [0, 0, 255]
- * - Using chalk or another formatter on the namespace name.
- */
 export function createLogger(
   name: string,
   opts: CustomLoggerOptions | CustomLoggerColor = {}

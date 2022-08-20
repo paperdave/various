@@ -58,8 +58,26 @@ export type ProcessFormatString<S> = S extends `${string}%${infer K}${infer B}`
 export type LogData = string | number | boolean | object | null | undefined;
 
 export interface LogFunction {
-  <S extends LogData>(fmt?: S, ...data: ProcessFormatString<S>): void;
+  /**
+   * Writes data to the log. The first argument can be a printf-style format string, or usage
+   * similar to `console.log`. Handles formatting objects including `Error` objects with pretty
+   * colorized stack traces.
+   *
+   * List of formatters:
+   *
+   * - %s - String.
+   * - %d, %f - Number.
+   * - %i - Integer.
+   * - %x - Hex.
+   * - %X - Hex (uppercase)
+   * - %o - Object.
+   * - %O - Object (pretty printed).
+   * - %j - JSON.
+   */
+  <S extends LogData>(data?: S, ...a: ProcessFormatString<S>): void;
+  /** Calling a logger function with no arguments prints a blank line. */
   (): void;
+
   visible: boolean;
   name: string;
 }

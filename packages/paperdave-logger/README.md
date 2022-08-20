@@ -2,8 +2,9 @@
 
 This is the logger I use in some of my programs. For common cases, `info()` runs faster than Node.js's `console.log()`, plus:
 
-- Customizable log levels, with the same automatic colors from the `debug` package.
+- Customizable log levels, with the same automatic color system the `debug` package uses.
 - Built in log levels: `info`, `warn`, `debug`, `error`, `success`, and `trace`.
+- Injecting the global `console` object to force all logs to be formatted consistantly.
 - Widgets, dynamic and animatable things that stick to the bottom of your log:
   - Spinners (replaces `ora`)
   - Progress Bars (replaces `cli-progress` and alternatives)
@@ -11,26 +12,56 @@ This is the logger I use in some of my programs. For common cases, `info()` runs
 - Pretty error formatting, just pass an error object to any log function.
   - Colorized and simplified stack traces.
   - `CLIError`, which provides the ability to provide a long description and hide the stack trace - Good for displaying to end users.
-- Injecting the global `console` object to force all logs to be formatted consistantly.
-- Bun (mostly) and Node.js support.
-
-![](screenshot.png)
+- Bun and Node.js support.
 
 ## Basic Example
 
 ```ts
-import log from '@paperdave/logger';
+import Logger from '@paperdave/logger';
 
-log.info('Hello World!');
-log.warn('This is a warning!');
-log.error('This is an error!');
-log.debug('This is a debug message!');
+Logger.info('Hello World');
+Logger.warn('This is a warning');
+Logger.debug('This is a debug message'); // Hidden by default
 
-log.setLevel('debug'); // Default to `info`, unless `$DEBUG` is set.
+Logger.error('Program did not succeed!');
+Logger.success('Program Succeeded!');
 
-// Use these sparingly, as they are intended for primary success messages, such as
-// a web server listening on a port, or a Discord bot successfully logging in.
-log.success('This is a success message!');
+Logger.trace('This will print the current stack');
+```
+
+```ts
+import { info, warn } from '@paperdave/logger';
+
+info('Built-in log presets are exposed as separate functions too.');
+warn('This is a warning');
+```
+
+## Custom Log Levels
+
+```ts
+import Logger from '@paperdave/logger';
+
+const http = new Logger('http');
+const db = new Logger('db');
+
+http('Request incoming');
+db('Dropping all tables');
+http('Request complete');
+```
+
+These function similar to the `debug` package, but are **visible by default**. Visibility can be customized with the `DEBUG` environment variable, or by passing the `debug: true` in the second argument.
+
+The rest of the Logger options are as follows:
+
+```ts
+const debug = new Logger(name, {
+  id: name, // Used for `DEBUG` environment variable filtering
+  color: undefined, // Custom color, see jsdoc for how this works.
+  coloredText: false,
+  boldText: false,
+  error: false, // Print to STDERR
+  debug: false, // If true, will be hidden by default
+});
 ```
 
 ## Injecting `console.log` and other functions.
@@ -39,11 +70,15 @@ In Purplet, we inject `@paperdave/logger` into the `console` object. This allows
 
 ```ts
 import { injectLogger } from '@paperdave/logger';
-
 injectLogger();
+
+console.log('This will be formatted!');
+console.error('This will be formatted too!');
 ```
 
 You can pass parameters to the injector to customize how it behaves.
+
+Surprisingly, you may find that `@paperdave/logger` runs faster than Node.js's `console.log` function in some cases ;)
 
 ## Spinners and Progress Bars
 
@@ -61,6 +96,53 @@ spinner.update('Still Loading...');
 await delay(1000);
 spinner.success('Done!');
 ```
+
+It may be more useful to put your logic in an async function and use the `withSpinner` helper:
+
+```ts
+import { withSpinner } from '@paperdave/logger';
+
+await withSpinner(async(spinner) => {
+  await doSomething();
+  spinner.update('part one done');
+  await doSomethingElse();
+}, {
+  text: 'Doing this very cool operation.',
+  successText: 'Operation done.',
+});
+```
+
+Progress bars have the same general API as spinners, but some other properties.
+
+## Custom errors with `PrintableError` and `CLIError`
+
+A `PrintableError` is an error that defines some extra fields. `@paperdave/logger` handles these objects within logs which allows customizing their appearance. It can be useful when building CLIs to throw formatted error objects that instruct the user what they did wrong, without printing a huge piece of text with a useless stack trace.
+
+```ts
+// as defined in @paperdave/logger
+export interface PrintableError extends Error {
+  description: string;
+  hideStack?: boolean;
+  hideName?: boolean;
+}
+```
+
+One real world example of `CLIError` from [Purplet](https://github.com/CRBT-Team/Purplet) is how we handle a missing Discord Token:
+
+```ts
+throw new CLIError(
+  'Missing DISCORD_BOT_TOKEN environment variable!',
+  dedent`
+    Please create an ${chalk.cyan('.env')} file with the following contents:
+
+    ${chalk.cyanBright('DISCORD_BOT_TOKEN')}=${chalk.grey('<your bot token>')}
+
+    You can create or reset your bot token at ${devPortalLink}
+  `
+);
+```
+
+In combination with `injectLogger`, throwing a CLI error is all that is needed to print a pretty error message to the user and exit the program.
 
 ## Custom Widgets
 
