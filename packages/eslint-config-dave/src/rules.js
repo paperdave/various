@@ -334,7 +334,7 @@ const rules = {
   '@typescript-eslint/prefer-ts-expect-error': 'error',
   '@typescript-eslint/promise-function-async': ['error', { checkArrowFunctions: false }],
   '@typescript-eslint/require-array-sort-compare': ['error', { ignoreStringArrays: true }],
-  '@typescript-eslint/require-await': 'warn',
+  '@typescript-eslint/require-await': 'off',
   '@typescript-eslint/restrict-plus-operands': 'off', // Doesn't work.
   '@typescript-eslint/restrict-template-expressions': 'off',
   '@typescript-eslint/return-await': ['error', 'in-try-catch'],
