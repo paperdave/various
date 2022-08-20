@@ -1,14 +1,15 @@
 let filters: string[] = [];
 export function setLogFilter(...newFilters: Array<string | string[]>) {
   filters = newFilters.flat().map(filter => filter.toLowerCase());
-  if (filters.includes('*')) {
-    filters = ['*'];
-  }
 }
 
 export function isLogVisible(id: string, defaultVisibility = true) {
   for (const filter of filters) {
-    if (filter === id || id.startsWith(filter + ':')) {
+    if (filter === '*') {
+      defaultVisibility = true;
+    } else if (filter === '-*') {
+      defaultVisibility = false;
+    } else if (filter === id || id.startsWith(filter + ':')) {
       defaultVisibility = true;
     } else if (filter === '-' + id || id.startsWith('-' + filter + ':')) {
       defaultVisibility = false;

@@ -1,6 +1,8 @@
 import wrapAnsi from 'wrap-ansi';
+import { capitalize } from '@paperdave/utils';
 import { writeSync } from 'fs';
-import { error, warn } from './log';
+import { setLogFilter } from './filter';
+import { error } from './log';
 import { STDOUT } from './util';
 import { clearWidgets, redrawWidgets } from './widget';
 
@@ -64,5 +66,24 @@ export const level = LogLevel.Info;
  * @deprecated Use `setLogFilter` instead. Silencing error/info/warn or all logs is not a feature anymore.
  */
 export function setLevel(show: SetLevelInput) {
-  warn('setLevel is deprecated. Use setLogFilter instead.');
+  if (typeof show === 'string') {
+    show = LogLevel[capitalize(show) as keyof typeof LogLevel];
+  }
+  switch (show) {
+    case LogLevel.Silent:
+      setLogFilter('-*');
+      break;
+    case LogLevel.Error:
+      setLogFilter('-warn', '-info', '-trace', 'error');
+      break;
+    case LogLevel.Warn:
+      setLogFilter('-info');
+      break;
+    case LogLevel.Info:
+      setLogFilter();
+      break;
+    case LogLevel.Debug:
+      setLogFilter('*');
+      break;
+  }
 }
