@@ -255,8 +255,13 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
     super.success(message ?? this.text);
   }
 
+  error(message?: string | Error): void {
+    super.error(message ?? this.text);
+  }
+
+  /** @deprecated Use `error` instead. */
   fail(message?: string | Error): void {
-    super.fail(message ?? this.text);
+    super.error(message ?? this.text);
   }
 }
 

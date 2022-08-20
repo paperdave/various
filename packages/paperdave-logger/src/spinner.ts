@@ -93,6 +93,11 @@ export class Spinner<Props extends Record<string, unknown> = EmptyObject> extend
     super.success(message ?? this.text);
   }
 
+  error(message?: string | Error): void {
+    super.error(message ?? this.text);
+  }
+
+  /** @deprecated Use `error` instead. */
   fail(message?: string | Error): void {
     super.error(message ?? this.text);
   }
