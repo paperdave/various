@@ -1,11 +1,9 @@
 import chalk from 'chalk';
 import path from 'node:path';
-import wrapAnsi from 'wrap-ansi';
 import { builtinModules } from 'node:module';
-import { PREFIX_LENGTH, wrapOptions } from './util';
 
 /**
- * A Printable Error is an error that defines some extra fields. `@paperdave/logger` handles these
+ * A PrintableError is an error that defines some extra fields. `@paperdave/logger` handles these
  * objects within logs which allows customizing their appearance. It can be useful when building
  * CLIs to throw formatted error objects that instruct the user what they did wrong, without
  * printing a huge piece of text with a useless stack trace.
@@ -35,6 +33,15 @@ export function formatStackTrace(err: Error) {
         .map(line => {
           const match = /at (.*) \((.*):(\d+):(\d+)\)/.exec(line);
           if (!match) {
+            const match2 = /at (.*):(\d+):(\d+)/.exec(line);
+            if (match2) {
+              return {
+                method: '<top level>',
+                file: match2[1],
+                line: match2[2],
+                column: match2[3],
+              };
+            }
             return { method: '<unknown>', file: null, line: null, column: null };
           }
           return {
@@ -59,10 +66,18 @@ export function formatStackTrace(err: Error) {
         };
       });
 
-  const firstNative = parsed.reverse().findIndex(line => !line.native);
-  if (firstNative !== -1) {
+  const nodeModuleJobIndex = parsed.findIndex(
+    line => line.file === 'node:internal/modules/esm/module_job'
+  );
+  if (nodeModuleJobIndex !== -1) {
+    parsed.splice(nodeModuleJobIndex, Infinity);
+  }
+
+  parsed.reverse();
+  const sliceAt = parsed.findIndex(line => !line.native);
+  if (sliceAt !== -1) {
     // remove the first native lines
-    parsed.splice(0, firstNative, {
+    parsed.splice(0, sliceAt, {
       native: true,
       method: '',
       column: null,
@@ -100,14 +115,13 @@ export function formatStackTrace(err: Error) {
 }
 
 /** Formats the given error as a full log string. */
-export function formatErrorObj(err: Error | PrintableError, boldFirstLine = false) {
+export function formatErrorObj(err: Error | PrintableError) {
   const { name, message, description, hideStack, hideName, stack } = err as PrintableError;
 
   return [
-    (boldFirstLine ? chalk.red.bold : chalk.red)(
-      (hideName ? '' : (name ?? 'Error') + ': ') + (message ?? 'Unknown error')
-    ),
-    description ? '\n' + wrapAnsi(description, 90 - PREFIX_LENGTH, wrapOptions) : '',
+    hideName ? '' : (name ?? 'Error') + ': ',
+    message ?? 'Unknown error',
+    description ? '\n' + description : '',
     hideStack || !stack ? '' : '\n' + formatStackTrace(err),
     description || (!hideStack && stack) ? '\n' : '',
   ].join('');

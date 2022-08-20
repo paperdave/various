@@ -1,6 +1,7 @@
 import chalk from 'chalk';
-import { debug, error, fail, info, log, trace, warn } from './log';
+import { debug, error, info, trace, warn, writeLine } from './log';
 import { Spinner } from './spinner';
+import type { LogData } from './types';
 
 export interface InjectOptions {
   console?: typeof console;
@@ -50,9 +51,9 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
   injectConsole.debug = debug;
 
   // Assert
-  injectConsole.assert = (condition, ...msg) => {
+  injectConsole.assert = (condition, ...msg: Parameters<typeof error>) => {
     if (!condition) {
-      fail(...msg);
+      error(...msg);
     }
   };
 
@@ -107,10 +108,7 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
       error(exception);
 
       if (exitOnError) {
-        log(
-          '      ',
-          'The above error was not caught by a catch block, execution cannot continue.'
-        );
+        writeLine('The above error was not caught by a catch block, execution cannot continue.');
 
         process.exit(1);
       }
@@ -118,11 +116,10 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
   }
   if (unhandledRejections) {
     injectProcess.on?.('unhandledRejection', reason => {
-      error(reason);
+      error(reason as LogData);
 
       if (exitOnError) {
-        log(
-          '      ',
+        writeLine(
           '\nThe above error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch()'
         );
         process.exit(1);
