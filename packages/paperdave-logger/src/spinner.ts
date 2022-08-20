@@ -1,7 +1,6 @@
 import chalk from 'chalk';
-import wrapAnsi from 'wrap-ansi';
 import type { EmptyObject } from '@paperdave/utils';
-import { Color, wrapOptions } from './util';
+import { Color } from './util';
 import { LogWidget } from './widget';
 
 export interface SpinnerOptions<Props extends Record<string, unknown>> {
@@ -86,7 +85,7 @@ export class Spinner<Props extends Record<string, unknown> = EmptyObject> extend
     return (
       (this.#color ? chalk[this.#color](this.#frames[frame]) : this.#frames[frame]) +
       ' ' +
-      wrapAnsi(this.text, 90 - 1 - this.#frames[frame].length, wrapOptions)
+      this.text
     );
   }
 

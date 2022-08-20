@@ -4,8 +4,7 @@
     "declarationDir": "dist",
     "target": "esnext",
     "module": "esnext"
-    // "types": ["bun-types", "node"]
   },
   "exclude": ["**/dist"],
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.js"]
 }

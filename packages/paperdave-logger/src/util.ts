@@ -1,20 +1,11 @@
 import { inspect } from 'util';
 
-/**
- * In this package we use `writeSync(STDOUT, ...)` to write to the stdout instead of
- * `console.log(...)`, or `process.stdout.write(...)` since it is faster and the code will work
- * across node and bun.
- */
+/** File Descriptor for standard output. */
 export const STDOUT = 1;
-
-/** Hardcoded magic number, all prefixes are 6 characters excluding colors, eg `info `. */
-export const PREFIX_LENGTH = 6;
-
-/** For `ansi-wrap` */
-export const wrapOptions = {
-  trim: false,
-  hard: true,
-};
+/** File Descriptor for standard error. */
+export const STDERR = 2;
+/** File Descriptor for standard input. */
+export const STDIN = 0;
 
 /** Converts non string objects into a string the way Node.js' console.log does it. */
 export function stringify(...data: any[]) {

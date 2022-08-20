@@ -9,6 +9,7 @@ This is a monorepo of various packages I've authored. A handful of them are publ
 ## contents
 
 <!-- START-README-TABLE -->
+
 | Package | Description |
 | --- | --- |
 | [![npm](https://img.shields.io/npm/v/eslint-config-dave.svg?label=eslint-config-dave)](https://www.npmjs.com/package/eslint-config-dave) | Extremely thorough, but opinionated ESLint config. |
@@ -16,6 +17,16 @@ This is a monorepo of various packages I've authored. A handful of them are publ
 | [![npm](https://img.shields.io/npm/v/@paperdave/utils.svg?label=%40paperdave%2Futils)](https://www.npmjs.com/package/@paperdave/utils) | Common utility functions and TypeScript types. |
 | [![npm](https://img.shields.io/npm/v/@paperdave/events.svg?label=%40paperdave%2Fevents)](https://www.npmjs.com/package/@paperdave/events) | Another event emitter library, with easy TS types. |
 | [![npm](https://img.shields.io/npm/v/@paperdave/logger.svg?label=%40paperdave%2Flogger)](https://www.npmjs.com/package/@paperdave/logger) | Versitle logging with spinners and progress bars. |
+
 <!-- END-README-TABLE -->
+
+## project status meaning
+
+| Status | Description                                                            |
+| ------ | ---------------------------------------------------------------------- |
+| Stable | Ready to use and maintained by me.                                     |
+| LTS    | I will fix bugs, but likely not add features .                         |
+| Dead   | I will likely not work on this at all, but still accept contributions. |
+| WIP    | The package is still in development. Will not even be on NPM           |
 
 ## contributing
