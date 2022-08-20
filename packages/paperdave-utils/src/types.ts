@@ -106,3 +106,9 @@ export type EmptyObject = Dict<never>;
  * fixed. Other than visual, this is an alias to `any`
  */
 export type FIXME = any;
+
+/**
+ * Return type of `setTimeout`. Will be `number`, unless @types/node is installed, then it will be
+ * `NodeJS.Timeout`.
+ */
+export type Timer = ReturnType<typeof setTimeout>;

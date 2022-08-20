@@ -27,6 +27,23 @@ importers:
       mitata: 0.1.6
       typescript: 4.7.4
 
+  packages/paperdave-utils:
+    specifiers:
+      '@types/node': ^18.0.3
+      bun-types: ^0.1.2
+      esbuild: ^0.14.39
+      mitata: ^0.1.6
+      typescript: ^4.6.4
+      utility-types: ^3.10.0
+    dependencies:
+      utility-types: 3.10.0
+    devDependencies:
+      '@types/node': 18.0.3
+      bun-types: 0.1.2
+      esbuild: 0.14.49
+      mitata: 0.1.6
+      typescript: 4.7.4
+
 packages:
 
   /@types/node/18.0.3:
@@ -320,3 +337,8 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
+
+  /utility-types/3.10.0:
+    resolution: {integrity: sha512-O11mqxmi7wMKCo6HKFt5AhO4BwY3VV68YU07tgxfz8zJTIxr4BpsezN49Ffwy9j3ZpwwJp4fkRwjRzq3uWE6Rg==}
+    engines: {node: '>= 4'}
+    dev: false

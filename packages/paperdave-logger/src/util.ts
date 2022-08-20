@@ -12,8 +12,6 @@ export function stringify(...data: any[]) {
   return data.map(obj => (typeof obj === 'string' ? obj : inspect(obj, false, 4, true))).join(' ');
 }
 
-export type Timer = ReturnType<typeof setInterval>;
-
 /** A console color enum. */
 export enum Color {
   Black = 'black',

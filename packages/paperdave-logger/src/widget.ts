@@ -1,7 +1,7 @@
 import ansi from 'ansi-escapes';
+import type { Timer } from '@paperdave/utils';
 import { writeSync } from 'fs';
 import { error, success } from './log';
-import type { Timer } from './util';
 import { STDERR, STDOUT } from './util';
 
 const widgets: LogWidget[] = [];

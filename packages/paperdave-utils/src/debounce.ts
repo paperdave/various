@@ -1,6 +1,8 @@
+import type { Timer } from './types';
+
 /** Wrap a function and apply debounce logic to. */
 export function debounce<Args extends any[]>(func: (...args: Args) => void, waitTime: number) {
-  let timeout: number;
+  let timeout: Timer;
 
   return function (...args: Args) {
     clearTimeout(timeout);
@@ -10,7 +12,7 @@ export function debounce<Args extends any[]>(func: (...args: Args) => void, wait
 
 /** Wrap a function and apply throttle logic to. */
 export function throttle<Args extends any[]>(func: (...args: Args) => void, waitTime: number) {
-  let timeout: number | null = null;
+  let timeout: Timer | null = null;
   let previous = 0;
 
   const later = (...args: Args) => {
