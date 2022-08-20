@@ -1,5 +1,15 @@
 # eslint-config-dave
 
+## 3.0.10
+
+### Patch Changes
+
+- disable require-await ([`73d99a4`](https://github.com/paperdave/various/commit/73d99a4a8a7b4163530695e331df681622d61b00))
+
+* Explicitly define nodejs and bun version support. ([`5d0bd0d`](https://github.com/paperdave/various/commit/5d0bd0de6a8429802a66e393134a798b6ea2ff4f))
+
+- Add some badges to the readme indicating project status and release data ([`5d0bd0d`](https://github.com/paperdave/various/commit/5d0bd0de6a8429802a66e393134a798b6ea2ff4f))
+
 ## 3.0.9
 
 ### Patch Changes

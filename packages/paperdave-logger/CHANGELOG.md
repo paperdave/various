@@ -1,5 +1,39 @@
 # @paperdave/logger
 
+## 2.2.0
+
+### Minor Changes
+
+- Add `trace` ([#32](https://github.com/paperdave/various/pull/32))
+
+* All log functions accept and format error objects. ([#34](https://github.com/paperdave/various/pull/34))
+
+- injection can handle uncaught errors automatically ([#32](https://github.com/paperdave/various/pull/32))
+
+* deprecate `level`, `setLevel`, `LogLevel`, `fail`. ([#34](https://github.com/paperdave/various/pull/34))
+
+- add custom namespaces using new `createLogger` function. ([#34](https://github.com/paperdave/various/pull/34))
+
+  - all the built in log functions are created through this API.
+
+* Add `trace`, `time`, `timeEnd`, `timeLog`, `count`, `countReset`, and `assert` to the injected console. ([#32](https://github.com/paperdave/various/pull/32))
+
+- `error` now prints with an X symbol, and this is the standard for printing errors. ([#34](https://github.com/paperdave/various/pull/34))
+
+  `success` is now seen as the opposite of an `error`. I used to say to avoid calling success too much, but with Spinners and Progress bars ending on a `success` check or `error` X message, these should probably be used more often, instead of `info` on a successful action being done.
+
+### Patch Changes
+
+- Explicitly define nodejs and bun version support. ([`5d0bd0d`](https://github.com/paperdave/various/commit/5d0bd0de6a8429802a66e393134a798b6ea2ff4f))
+
+* injectConsole preferably takes an object instead of a console object, but this is not required yet. in v3, it will require for an object. ([#32](https://github.com/paperdave/various/pull/32))
+
+- Add some badges to the readme indicating project status and release data ([`5d0bd0d`](https://github.com/paperdave/various/commit/5d0bd0de6a8429802a66e393134a798b6ea2ff4f))
+
+* removed line wrapping ([#34](https://github.com/paperdave/various/pull/34))
+
+- proper writing to standard error for errors and warnings and interactive content ([#34](https://github.com/paperdave/various/pull/34))
+
 ## 2.1.0
 
 ### Minor Changes
