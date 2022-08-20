@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import { debug, error, info, trace, warn, writeLine } from './log';
 import { Spinner } from './spinner';
-import type { LogData } from './types';
 
 export interface InjectOptions {
   console?: typeof console;
@@ -104,7 +103,7 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
   // TODO: Implement `group`, `groupEnd`, `groupCollapsed`, `table`
 
   if (uncaughtExceptions) {
-    injectProcess.on?.('uncaughtException', exception => {
+    (injectProcess as any).on?.('uncaughtException', (exception: any) => {
       error(exception);
 
       if (exitOnError) {
@@ -115,8 +114,8 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
     });
   }
   if (unhandledRejections) {
-    injectProcess.on?.('unhandledRejection', reason => {
-      error(reason as LogData);
+    (injectProcess as any).on?.('unhandledRejection', (reason: any) => {
+      error(reason);
 
       if (exitOnError) {
         writeLine(

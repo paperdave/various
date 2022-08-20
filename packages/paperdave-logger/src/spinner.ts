@@ -94,7 +94,7 @@ export class Spinner<Props extends Record<string, unknown> = EmptyObject> extend
   }
 
   fail(message?: string | Error): void {
-    super.fail(message ?? this.text);
+    super.error(message ?? this.text);
   }
 }
 

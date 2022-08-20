@@ -8,6 +8,7 @@ import { isLogVisible } from './filter';
 import type { CustomLoggerColor, CustomLoggerOptions, StringLike } from './types';
 import { LogFunction } from './types';
 import { STDERR, STDOUT } from './util';
+import { clearWidgets, redrawWidgets } from './widget';
 
 /** Taken from https://github.com/debug-js/debug/blob/d1616622e4d404863c5a98443f755b4006e971dc/src/node.js#L35. */
 const COLORS = [
@@ -132,6 +133,8 @@ export function createLogger(
     }
 
     const data = format(fmt, ...args).replace(/\n/g, '\n ' + ' '.repeat(strippedName.length));
+
+    clearWidgets();
     writeSync(
       error ? STDERR : STDOUT,
       coloredName +
@@ -139,6 +142,7 @@ export function createLogger(
         (coloredText ? (boldText ? colorFn.bold(data) : colorFn(data)) : data) +
         '\n'
     );
+    redrawWidgets();
   };
   fn.__proto__ = LogFunction;
 
