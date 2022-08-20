@@ -28,6 +28,7 @@ export interface CustomLoggerOptions {
   boldText?: boolean;
   level?: number;
   error?: boolean;
+  debug?: boolean;
 }
 
 /** Matches `string`, `number`, and other objects with a `.toString()` method. */
@@ -54,11 +55,11 @@ export type ProcessFormatString<S> = S extends `${string}%${infer K}${infer B}`
     : ProcessFormatString<B>
   : [];
 
-// Using lowercase `any` will not work in the `LogFunction` type
-export type Any = string | number | boolean | object | null | undefined;
+export type LogData = string | number | boolean | object | null | undefined;
 
 export interface LogFunction {
-  <S extends Any>(fmt?: S, ...data: ProcessFormatString<S>): void;
+  <S extends LogData>(fmt?: S, ...data: ProcessFormatString<S>): void;
+  (): void;
   visible: boolean;
   name: string;
 }

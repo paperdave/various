@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { debug, error, info, trace, warn, writeLine } from './log';
 import { Spinner } from './spinner';
+import type { LogData } from './types';
 
 export interface InjectOptions {
   console?: typeof console;
@@ -50,7 +51,7 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
   injectConsole.debug = debug;
 
   // Assert
-  injectConsole.assert = (condition, ...msg) => {
+  injectConsole.assert = (condition, ...msg: Parameters<typeof error>) => {
     if (!condition) {
       error(...msg);
     }
@@ -115,7 +116,7 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
   }
   if (unhandledRejections) {
     injectProcess.on?.('unhandledRejection', reason => {
-      error(reason);
+      error(reason as LogData);
 
       if (exitOnError) {
         writeLine(

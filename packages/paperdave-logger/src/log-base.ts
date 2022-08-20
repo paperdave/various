@@ -125,6 +125,7 @@ export function createLogger(
     coloredText = false,
     boldText = false,
     error = false,
+    debug = false,
   } = opts;
 
   const strippedName = stripAnsi(name);
@@ -137,7 +138,7 @@ export function createLogger(
   const coloredName = colorFn.bold(name);
 
   const fn = (fmt: unknown, ...args: any[]) => {
-    if (!isLogVisible(id)) {
+    if (!isLogVisible(id, !debug)) {
       return;
     }
 

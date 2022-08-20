@@ -1,7 +1,28 @@
-export function setLogFilter(...filter: Array<string | string[]>) {
-  // TODO: implement
+let filters: string[] = [];
+export function setLogFilter(...newFilters: Array<string | string[]>) {
+  filters = newFilters.flat().map(filter => filter.toLowerCase());
+  if (filters.includes('*')) {
+    filters = ['*'];
+  }
 }
 
-export function isLogVisible(id: string) {
-  return true;
+export function isLogVisible(id: string, defaultVisibility = true) {
+  for (const filter of filters) {
+    if (filter === id || id.startsWith(filter + ':')) {
+      defaultVisibility = true;
+    } else if (filter === '-' + id || id.startsWith('-' + filter + ':')) {
+      defaultVisibility = false;
+    }
+  }
+  return defaultVisibility;
+}
+
+if (process.env.DEBUG !== undefined) {
+  const aliasesToAll = ['1', 'true', 'all'];
+  setLogFilter(
+    String(process.env.DEBUG)
+      .split(',')
+      .map(x => x.trim())
+      .map(x => (aliasesToAll.includes(x.toLowerCase()) ? '*' : x))
+  );
 }
