@@ -1,5 +1,13 @@
 # @paperdave/utils
 
+## 1.0.3
+
+### Patch Changes
+
+- Explicitly define nodejs and bun version support. ([`5d0bd0d`](https://github.com/paperdave/various/commit/5d0bd0de6a8429802a66e393134a798b6ea2ff4f))
+
+* Add some badges to the readme indicating project status and release data ([`5d0bd0d`](https://github.com/paperdave/various/commit/5d0bd0de6a8429802a66e393134a798b6ea2ff4f))
+
 ## 1.0.2
 
 ### Patch Changes
