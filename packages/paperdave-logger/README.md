@@ -1,5 +1,11 @@
 # @paperdave/logger
 
+<div>
+<a href="https://github.com/paperdave/various#project-status-meaning"><img alt="Status: Stable" src="https://img.shields.io/badge/status-stable-brightgreen"></a>
+<a href="https://www.npmjs.com/package/@paperdave/logger"><img alt="NPM Version" src="https://img.shields.io/npm/v/@paperdave/logger.svg?label=latest%20release"></a>
+</div>
+<br>
+
 This is the logger I use in some of my programs. For common cases, `info()` runs faster than Node.js's `console.log()`, plus:
 
 - Customizable log levels, with the same automatic color system the `debug` package uses.
