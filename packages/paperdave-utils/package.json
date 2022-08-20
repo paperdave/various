@@ -14,7 +14,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && esbuild --outfile=./dist/index.js --target=es2020 --format=esm --sourcemap --bundle src/index.ts",
+    "build": "tsc && esbuild --outfile=./dist/index.js --target=es2022 --format=esm --sourcemap --bundle src/index.ts",
     "lint": "eslint . --max-warnings=0",
     "test": "bun wiptest"
   },
@@ -28,5 +28,10 @@
     "mitata": "^0.1.6",
     "typescript": "^4.6.4"
   },
-  "paperdave-readme-sort": 20
+  "engines": {
+    "bun": ">=0.1.9",
+    "node": ">=16"
+  },
+  "paperdave-readme-sort": 20,
+  "paperdave-status": "stable"
 }

@@ -37,5 +37,9 @@
   "peerDependencies": {
     "eslint": "^8.19.0"
   },
-  "paperdave-readme-sort": 10
+  "engines": {
+    "node": ">=16"
+  },
+  "paperdave-readme-sort": 10,
+  "paperdave-status": "stable"
 }

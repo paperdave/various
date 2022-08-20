@@ -4,6 +4,13 @@ import log, { withSpinner } from '../packages/paperdave-logger/dist/index.js';
 
 log.info('Updating README.md with package information.');
 
+const statusColors = {
+  stable: 'brightgreen',
+  lts: 'blue',
+  dead: 'red',
+  wip: 'grey',
+};
+
 const packages = fs.readdirSync('./packages');
 
 const packageJSONs = packages
@@ -22,13 +29,21 @@ const packageJSONs = packages
     return a.name.localeCompare(b.name);
   });
 
-const headers = ['Package', 'Description'];
+const headers = ['Package', 'Status', 'Description'];
 
 const mappedColumns = packageJSONs.map(packageJSON => [
   // Shield icon with npm version
   `[![npm](https://img.shields.io/npm/v/${packageJSON.name}.svg?label=${encodeURIComponent(
     packageJSON.name
   )})](https://www.npmjs.com/package/${packageJSON.name})`,
+  // Status
+  `[![${
+    statusColors[packageJSON['paperdave-readme-status']] || 'grey'
+  }](https://img.shields.io/badge/status-${encodeURIComponent(
+    packageJSON['paperdave-readme-status'] || 'unknown'
+  )}-${
+    statusColors[packageJSON['paperdave-readme-status']] || 'grey'
+  }.svg)](#project-status-meaning)`,
   // Description
   packageJSON.description,
 ]);
@@ -49,14 +64,10 @@ fs.writeFileSync('./README.md', readmeWithTable);
 
 log.success('Updated README.md with package information.');
 
-withSpinner(
+await withSpinner(
   () =>
     new Promise((resolve, reject) => {
-      const proc = spawn(process.argv[0], [
-        './node_modules/.bin/prettier',
-        '--write',
-        './README.md',
-      ]);
+      const proc = spawn('./node_modules/.bin/prettier', ['--write', './README.md']);
       proc.on('exit', code => {
         if (code === 0) {
           resolve();
