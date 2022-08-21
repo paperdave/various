@@ -23,6 +23,7 @@ The exception of the above would be packages that don't make sense in some envir
 | [![npm](https://img.shields.io/npm/v/@paperdave/utils.svg?label=%40paperdave%2Futils)](https://www.npmjs.com/package/@paperdave/utils) | [![brightgreen](https://img.shields.io/badge/status-stable-brightgreen.svg)](#project-status-meaning) | Common utility functions and TypeScript types. |
 | [![npm](https://img.shields.io/npm/v/@paperdave/events.svg?label=%40paperdave%2Fevents)](https://www.npmjs.com/package/@paperdave/events) | [![brightgreen](https://img.shields.io/badge/status-stable-brightgreen.svg)](#project-status-meaning) | Another event emitter library, with easy TS types. |
 | [![npm](https://img.shields.io/npm/v/@paperdave/logger.svg?label=%40paperdave%2Flogger)](https://www.npmjs.com/package/@paperdave/logger) | [![brightgreen](https://img.shields.io/badge/status-stable-brightgreen.svg)](#project-status-meaning) | Versitle logging with spinners and progress bars. |
+| [![npm](https://img.shields.io/npm/v/nodun.svg?label=nodun)](https://www.npmjs.com/package/nodun) | [![brightgreen](https://img.shields.io/badge/status-stable-brightgreen.svg)](#project-status-meaning) | tricks programs to run js with bun instead of node.js |
 
 <!-- END-README-TABLE -->
 
