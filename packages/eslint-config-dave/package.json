@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-dave",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "description": "Extremely thorough, but opinionated ESLint config.",
   "keywords": [
     "eslint",
