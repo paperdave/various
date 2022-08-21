@@ -1,4 +1,3 @@
-import wrapAnsi from 'wrap-ansi';
 import { capitalize } from '@paperdave/utils';
 import { writeSync } from 'fs';
 import { setLogFilter } from './filter';
@@ -15,8 +14,7 @@ export function log(prefix: string, content: string, force = false) {
     return;
   }
 
-  const wrapped = wrapAnsi(content, 90 - 6, { trim: false, hard: true }) //
-    .replace(/\n\s*/g, '\n' + ' '.repeat(6));
+  const wrapped = content.replace(/\n\s*/g, '\n' + ' '.repeat(6));
 
   writeSync(STDOUT, prefix + wrapped + '\n');
 
