@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ -z "$*" ]; then
+  printf "\e[32;1mnodum\e[0m: tricks programs to run js with bun instead of node.js\n"
+  exec bun
+fi
+NODUM_PATH=$(dirname $(realpath "$0"))
+export PATH="$NODUM_PATH:$PATH"
+exec bun "$@"

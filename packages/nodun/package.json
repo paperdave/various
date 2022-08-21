@@ -1,0 +1,22 @@
+{
+  "name": "nodun",
+  "version": "1.0.0",
+  "description": "tricks programs to run js with bun instead of node.js",
+  "keywords": [
+    "bun"
+  ],
+  "homepage": "https://github.com/paperdave/various/tree/master/packages/nodun",
+  "repository": "github:paperdave/various",
+  "license": "MIT",
+  "author": "Dave Caruso <dave@davecode.net>",
+  "bin": {
+    "nodun": "bin/nodun"
+  },
+  "files": [
+    "bin"
+  ],
+  "engines": {
+    "bun": ">=0.1.9"
+  },
+  "paperdave-status": "stable"
+}
