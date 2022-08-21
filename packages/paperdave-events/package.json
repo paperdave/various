@@ -5,6 +5,9 @@
   "keywords": [
     "events"
   ],
+  "homepage": "https://github.com/paperdave/various/tree/master/packages/paperdave-events",
+  "repository": "github:paperdave/various",
+  "license": "MIT",
   "author": "Dave Caruso <dave@davecode.net>",
   "type": "module",
   "main": "./dist/index.js",

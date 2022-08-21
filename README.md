@@ -1,4 +1,4 @@
-# various typescript libraries
+# various javascript/typescript libraries
 
 <div>
 <img alt="Discord" src="https://img.shields.io/discord/516410163230539837?label=discord">
@@ -36,3 +36,13 @@ The exception of the above would be packages that don't make sense in some envir
 | WIP    | The package is still in development. Will not even be on NPM           |
 
 ## contributing
+
+- use pnpm for deps. (will switch to bun once workspaces are stable)
+- use changesets for making changelogs.
+- run eslint and prettier before opening a pr.
+- don't write bad code.
+- i'm pretty chill in this repo so don't worry.
+
+## license
+
+[Everything here is under MIT](./LICENSE)

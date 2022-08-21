@@ -5,6 +5,9 @@
   "keywords": [
     "utility"
   ],
+  "homepage": "https://github.com/paperdave/various/tree/master/packages/prettier-config-dave",
+  "repository": "github:paperdave/various",
+  "license": "MIT",
   "author": "Dave Caruso <dave@davecode.net>",
   "type": "commonjs",
   "main": "./index.js",
