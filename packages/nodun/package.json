@@ -1,6 +1,6 @@
 {
   "name": "nodun",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "tricks programs to run js with bun instead of node.js",
   "keywords": [
     "bun"
