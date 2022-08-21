@@ -1,6 +1,6 @@
 {
   "name": "@paperdave/logger",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Versitle logging with spinners and progress bars.",
   "keywords": [
     "logger",
@@ -21,7 +21,7 @@
     "build": "tsc && esbuild --outfile=./dist/index.js --target=esnext --format=esm --platform=node --sourcemap --bundle src/index.ts --external:wrap-ansi --external:chalk --external:@paperdave/utils --external:ansi-escapes"
   },
   "dependencies": {
-    "@paperdave/utils": "workspace:^1.2.0",
+    "@paperdave/utils": "workspace:^1.2.1",
     "ansi-escapes": "^5.0.0",
     "chalk": "4",
     "strip-ansi": "^7.0.1"

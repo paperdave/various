@@ -1,5 +1,11 @@
 # eslint-config-dave
 
+## 3.0.11
+
+### Patch Changes
+
+- add MIT license ([`2347a98`](https://github.com/paperdave/various/commit/2347a9898d87c41010f82f7675664efab21edc77))
+
 ## 3.0.10
 
 ### Patch Changes

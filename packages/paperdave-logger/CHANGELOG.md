@@ -1,5 +1,14 @@
 # @paperdave/logger
 
+## 2.2.3
+
+### Patch Changes
+
+- add MIT license ([`2347a98`](https://github.com/paperdave/various/commit/2347a9898d87c41010f82f7675664efab21edc77))
+
+- Updated dependencies [[`2347a98`](https://github.com/paperdave/various/commit/2347a9898d87c41010f82f7675664efab21edc77)]:
+  - @paperdave/utils@1.2.1
+
 ## 2.2.2
 
 ### Patch Changes

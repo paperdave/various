@@ -1,5 +1,11 @@
 # prettier-config-dave
 
+## 1.0.7
+
+### Patch Changes
+
+- add MIT license ([`2347a98`](https://github.com/paperdave/various/commit/2347a9898d87c41010f82f7675664efab21edc77))
+
 ## 1.0.6
 
 ### Patch Changes
