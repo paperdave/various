@@ -4,6 +4,6 @@ if [ -z "$*" ]; then
   exec bun
 fi
 NODUN_PATH=$(dirname $(realpath "$0"))
-chmod +x $NODUNPATH/node
+chmod +x $NODUN_PATH/node
 export PATH="$NODUN_PATH:$PATH"
 exec bun "$@"

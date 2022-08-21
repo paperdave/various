@@ -1,5 +1,9 @@
 # nodun
 
+## 1.0.2
+
+totally not a hotpatch
+
 ## 1.0.1
 
 ### Patch Changes
