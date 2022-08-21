@@ -1,5 +1,11 @@
 # @paperdave/logger
 
+## 2.2.2
+
+### Patch Changes
+
+- fix missing dependency ([`16d8f33`](https://github.com/paperdave/various/commit/16d8f33f4664f194f297445b7ef3cf6e8af01e95))
+
 ## 2.2.0
 
 ### Minor Changes
