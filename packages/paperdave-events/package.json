@@ -18,7 +18,7 @@
     "build": "tsc && esbuild --outfile=./dist/index.js --target=es2022 --format=esm --sourcemap --bundle src/index.ts"
   },
   "devDependencies": {
-    "@paperdave/utils": "workspace:^1.2.1",
+    "@paperdave/utils": "workspace:^1.3.0",
     "bun-types": "^0.1.2",
     "esbuild": "^0.14.39",
     "typescript": "^4.6.4"
