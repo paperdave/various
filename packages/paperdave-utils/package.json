@@ -14,17 +14,19 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "node": "./dist/index.cjs",
       "require": "./dist/index.cjs",
       "import": "./dist/index.js",
       "bun": "./dist/index.js"
     }
   },
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc && rm -rf dist && rollup -c",
+    "build": "rm -rf dist && tsc && rollup -c",
     "lint": "eslint . --max-warnings=0",
     "test": "bun wiptest"
   },
