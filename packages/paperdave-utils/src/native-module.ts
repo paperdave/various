@@ -1,11 +1,11 @@
-async function getNativeModule<X>(id: string): Promise<X> {
+function getNativeModule<X>(id: string): X {
   try {
-    return (await import(id)) as X;
+    return require(id) as X;
   } catch (error) {
     return null!;
   }
 }
 
-export const fs = await getNativeModule<typeof import('fs')>('fs');
-export const path = await getNativeModule<typeof import('path')>('path');
-export const nodeCrypto = await getNativeModule<typeof import('crypto')>('crypto');
+export const fs = getNativeModule<typeof import('fs')>('fs');
+export const path = getNativeModule<typeof import('path')>('path');
+export const nodeCrypto = getNativeModule<typeof import('crypto')>('crypto');
