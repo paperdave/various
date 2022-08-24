@@ -1,5 +1,19 @@
 # @paperdave/utils
 
+## 1.3.0
+
+### Minor Changes
+
+- add `IterableStream` ([#41](https://github.com/paperdave/various/pull/41))
+
+* add `streamToIter` ([#41](https://github.com/paperdave/various/pull/41))
+
+- Add `iterToArray` ([#41](https://github.com/paperdave/various/pull/41))
+
+### Patch Changes
+
+- fix importing issues ([#41](https://github.com/paperdave/various/pull/41))
+
 ## 1.2.1
 
 ### Patch Changes
