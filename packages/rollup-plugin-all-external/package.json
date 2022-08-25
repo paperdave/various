@@ -6,7 +6,7 @@
   "keywords": [
     "rollup"
   ],
-  "homepage": "https://github.com/paperdave/various/tree/master/packages/paperdave-events",
+  "homepage": "https://github.com/paperdave/various/tree/master/packages/rollup-plugin-all-external",
   "repository": "github:paperdave/various",
   "license": "MIT",
   "author": "Dave Caruso <dave@davecode.net>",
