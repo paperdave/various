@@ -1,0 +1,38 @@
+{
+  "name": "rollup-plugin-all-external",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Simple plugin to set externals for libraries.",
+  "keywords": [
+    "rollup"
+  ],
+  "homepage": "https://github.com/paperdave/various/tree/master/packages/paperdave-events",
+  "repository": "github:paperdave/various",
+  "license": "MIT",
+  "author": "Dave Caruso <dave@davecode.net>",
+  "type": "module",
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && esbuild --outfile=./dist/index.js --platform=node --target=es2022 --format=esm --sourcemap --bundle src/index.ts"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@types/node": "^18.0.3",
+    "esbuild": "^0.14.39",
+    "rollup": "^2.78.1",
+    "typescript": "^4.6.4"
+  },
+  "peerDependencies": {
+    "rollup": "^2.78.1"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "paperdave-status": "wip"
+}

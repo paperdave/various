@@ -4,3 +4,4 @@ build
 local
 *local*/
 node_modules
+*.snapshot.js
