@@ -1,10 +1,10 @@
-# various javascript/typescript libraries
+# Various Web Stuff
 
 <div>
 <img alt="Discord" src="https://img.shields.io/discord/516410163230539837?label=discord">
 </div>
 
-This is a monorepo of various packages I've authored. A handful of them are published under the `@paperdave` namespace, but not a hard requirement. Most of the packages are reusable utilities for my other projects, as well as configurations. I use a monorepo so I don't have dozens of repositories on GitHub, and I can centralize the automation and workflow- It makes my life easier.
+This is a monorepo of various libraries and programs I've authored, all surrounding TypeScript and other web technologies. A handful of them are published under the `@paperdave` namespace, but not a hard requirement. Most of the packages are reusable utilities for my other projects, as well as configurations. I use a monorepo so I don't have dozens of repositories on GitHub, and I can centralize the automation and workflow- It makes my life easier.
 
 All packages target:
 
