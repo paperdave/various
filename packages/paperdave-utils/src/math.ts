@@ -7,3 +7,7 @@ export function clamp(value: number, min: number, max: number): number {
 export function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
+
+export function lerpClamped(a: number, b: number, t: number): number {
+  return lerp(a, b, clamp(t, 0, 1));
+}
