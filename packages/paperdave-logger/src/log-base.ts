@@ -82,7 +82,7 @@ function format(fmt: any, ...args: any[]) {
     });
 
     if (index === 0 && args.length > 0) {
-      return result + stringify(...args);
+      return result + ' ' + stringify(...args);
     }
 
     return result;
@@ -135,13 +135,17 @@ export function createLogger(
     const data = format(fmt, ...args).replace(/\n/g, '\n ' + ' '.repeat(strippedName.length));
 
     clearWidgets();
-    writeSync(
-      error ? STDERR : STDOUT,
-      coloredName +
-        ' ' +
-        (coloredText ? (boldText ? colorFn.bold(data) : colorFn(data)) : data) +
-        '\n'
-    );
+    if (fmt === undefined && args.length === 0) {
+      writeSync(error ? STDERR : STDOUT, '\n');
+    } else {
+      writeSync(
+        error ? STDERR : STDOUT,
+        coloredName +
+          ' ' +
+          (coloredText ? (boldText ? colorFn.bold(data) : colorFn(data)) : data) +
+          '\n'
+      );
+    }
     redrawWidgets();
   };
   fn.__proto__ = LogFunction;
