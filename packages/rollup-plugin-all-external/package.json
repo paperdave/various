@@ -1,7 +1,6 @@
 {
   "name": "rollup-plugin-all-external",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
   "description": "Simple plugin to set externals for libraries.",
   "keywords": [
     "rollup"
@@ -34,5 +33,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "paperdave-status": "wip"
+  "paperdave-status": "stable"
 }

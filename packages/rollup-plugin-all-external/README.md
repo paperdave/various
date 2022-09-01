@@ -1,7 +1,7 @@
 # rollup-plugin-all-external
 
 <div>
-<a href="https://github.com/paperdave/various#project-status-meaning"><img alt="Status: WIP" src="https://img.shields.io/badge/status-wip-red"></a>
+<a href="https://github.com/paperdave/various#project-status-meaning"><img alt="Status: WIP" src="https://img.shields.io/badge/status-stable-brightgreen"></a>
 <a href="https://www.npmjs.com/package/rollup-plugin-all-external"><img alt="NPM Version" src="https://img.shields.io/npm/v/rollup-plugin-all-external.svg?label=latest%20release"></a>
 </div>
 <br>
