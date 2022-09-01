@@ -1,5 +1,14 @@
 # @paperdave/logger
 
+## 2.2.4
+
+### Patch Changes
+
+- Fix blank lines and stringification missing a space ([`aefec80`](https://github.com/paperdave/various/commit/aefec800ddab048867d10a3990350f8f4de2c5a9))
+
+- Updated dependencies [[`5548f17`](https://github.com/paperdave/various/commit/5548f1789f709e570691c0bfa7ae88cc8d550e3a)]:
+  - @paperdave/utils@1.4.1
+
 ## 2.2.3
 
 ### Patch Changes
