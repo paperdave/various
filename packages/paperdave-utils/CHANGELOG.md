@@ -1,5 +1,11 @@
 # @paperdave/utils
 
+## 1.4.1
+
+### Patch Changes
+
+- add `lerpClamped` ([`5548f17`](https://github.com/paperdave/various/commit/5548f1789f709e570691c0bfa7ae88cc8d550e3a))
+
 ## 1.3.0
 
 ### Minor Changes
