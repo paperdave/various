@@ -1,11 +1,23 @@
-/* eslint-disable no-console */
-export async function iterToArray<T>(iterator: AsyncIterator<T> | AsyncIterable<T>): Promise<T[]> {
+export async function asyncIterToArray<T>(
+  iterator: AsyncIterator<T> | AsyncIterable<T>
+): Promise<T[]> {
   const iter = (iterator as AsyncIterable<T>)[Symbol.asyncIterator]?.() ?? iterator;
   const result: T[] = [];
   let latest = await iter.next();
   while (!latest.done) {
     result.push(latest.value);
     latest = await iter.next();
+  }
+  return result;
+}
+
+export function iterToArray<T>(iterator: Iterator<T> | Iterable<T>): T[] {
+  const iter = (iterator as Iterable<T>)[Symbol.iterator]?.() ?? iterator;
+  const result: T[] = [];
+  let latest = iter.next();
+  while (!latest.done) {
+    result.push(latest.value);
+    latest = iter.next();
   }
   return result;
 }
