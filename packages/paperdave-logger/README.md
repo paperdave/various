@@ -18,9 +18,10 @@ This is the logger I use in some of my programs. For common cases, `info()` runs
 - Pretty error formatting, just pass an error object to any log function.
   - Colorized and simplified stack traces.
   - `CLIError`, which provides the ability to provide a long description and hide the stack trace - Good for displaying to end users.
+- Rexports `chalk` and `ansi-escapes` for easy usage in commonjs modules.
 - Bun and Node.js support.
 
-## Basic Example
+## Basic Examples
 
 ```ts
 import Logger from '@paperdave/logger';
@@ -94,9 +95,7 @@ The `Spinner` and `ProgressBar` bar classes instantly start rendering when const
 import { Spinner } from '@paperdave/logger';
 import { delay } from '@paperdave/utils';
 
-const spinner = new Spinner({
-  text: 'Loading...'
-});
+const spinner = new Spinner('Loading...');
 await delay(1000);
 spinner.update('Still Loading...');
 await delay(1000);
@@ -108,13 +107,13 @@ It may be more useful to put your logic in an async function and use the `withSp
 ```ts
 import { withSpinner } from '@paperdave/logger';
 
-await withSpinner(async(spinner) => {
+await withSpinner({
+  text: 'Doing this very cool operation.',
+  successText: 'Operation done.',
+}, async(spinner) => {
   await doSomething();
   spinner.update('part one done');
   await doSomethingElse();
-}, {
-  text: 'Doing this very cool operation.',
-  successText: 'Operation done.',
 });
 ```
 
@@ -133,7 +132,7 @@ export interface PrintableError extends Error {
 }
 ```
 
-One real world example of `CLIError` from [Purplet](https://github.com/CRBT-Team/Purplet) is how we handle a missing Discord Token:
+For ease of use, we provide the simple `CLIError` class which implements this interface. A real world example taken from [Purplet](https://github.com/CRBT-Team/Purplet) is how we handle a missing Discord Token:
 
 ```ts
 throw new CLIError(

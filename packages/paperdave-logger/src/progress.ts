@@ -123,8 +123,12 @@ export class Progress<Props extends Record<string, unknown>> extends LogWidget {
   #total: number;
   protected fps: number;
 
-  constructor(options: ProgressOptions<Props>) {
+  constructor(options: ProgressOptions<Props> | string) {
     super();
+
+    if (typeof options === 'string') {
+      options = { text: options };
+    }
 
     this.#text = options.text;
     this.#beforeText = options.beforeText ?? defaultOptions.beforeText;
@@ -273,10 +277,24 @@ export interface WithProgressOptions<Props extends Record<string, unknown>, T>
   failureText?: string | ((error: Error) => string);
 }
 
+/** Calls a function with a progress bar. */
+export async function withProgress<Props extends Record<string, unknown>, T>(
+  opts: WithProgressOptions<Props, T> | string,
+  fn: (bar: Progress<Props>) => Promise<T>
+): Promise<T>;
+/**
+ * @deprecated In logger v3, the order of these two parameters will be swapped. Options/label then
+ *   the function.
+ */
 export async function withProgress<Props extends Record<string, unknown>, T>(
   fn: (bar: Progress<Props>) => Promise<T>,
   opts: WithProgressOptions<Props, T>
-) {
+): Promise<T>;
+export async function withProgress(opts: any, fn: any) {
+  if (typeof opts === 'function') {
+    [opts, fn] = [fn, opts];
+  }
+
   const bar = new Progress(opts);
 
   try {
@@ -293,7 +311,7 @@ export async function withProgress<Props extends Record<string, unknown>, T>(
         : 'Completed'
     );
   } catch (error: any) {
-    bar.fail(
+    bar.error(
       typeof opts.failureText === 'function' ? opts.failureText(error) : opts.failureText ?? error
     );
     throw error;

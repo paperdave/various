@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import stripAnsi from 'strip-ansi';
-import type { Chalk } from 'chalk';
+import type { ChalkInstance } from 'chalk';
 import { writeSync } from 'fs';
 import { inspect } from 'util';
 import { formatErrorObj } from './error';
@@ -48,7 +48,7 @@ function selectColor(namespace: string) {
   return COLORS[Math.abs(hash) % COLORS.length];
 }
 
-function getColor(color: CustomLoggerColor): Chalk {
+function getColor(color: CustomLoggerColor): ChalkInstance {
   if (typeof color === 'string') {
     return color in chalk ? (chalk.bold as any)[color] : chalk.bold.hex(color);
   } else if (Array.isArray(color)) {

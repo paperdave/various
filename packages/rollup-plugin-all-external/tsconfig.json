@@ -10,7 +10,8 @@
     "strict": true,
     "declarationDir": "./dist",
     "declaration": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "module": "ESNext"
   },
   "exclude": ["**/dist", "**/test"]
 }

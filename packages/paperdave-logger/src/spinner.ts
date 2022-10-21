@@ -30,8 +30,11 @@ export class Spinner<Props extends Record<string, unknown> = EmptyObject> extend
   #props: Props;
   protected fps: number;
 
-  constructor(options: SpinnerOptions<Props>) {
+  constructor(options: SpinnerOptions<Props> | string) {
     super();
+    if (typeof options === 'string') {
+      options = { text: options };
+    }
     this.#text = options.text ?? defaultSpinnerOptions.text;
     this.#color = options.color ?? defaultSpinnerOptions.color;
     this.#frames = options.frames ?? defaultSpinnerOptions.frames;
@@ -109,27 +112,43 @@ export interface WithSpinnerOptions<Props extends Record<string, unknown>, T>
   failureText?: string | ((error: Error) => string);
 }
 
+/** Calls a function with a spinner. */
+export async function withSpinner<Props extends Record<string, unknown>, T>(
+  spinnerOptions: WithSpinnerOptions<Props, T> | string,
+  fn: (spinner: Spinner<Props>) => Promise<T>
+): Promise<T>;
+/**
+ * @deprecated In logger v3, the order of these two parameters will be swapped. Options/label then
+ *   the function.
+ */
 export async function withSpinner<Props extends Record<string, unknown>, T>(
   fn: (spinner: Spinner<Props>) => Promise<T>,
-  opts: WithSpinnerOptions<Props, T>
-) {
+  opts: WithSpinnerOptions<Props, T> | string
+): Promise<T>;
+export async function withSpinner(opts: any, fn: any) {
+  if (typeof opts === 'function') {
+    [opts, fn] = [fn, opts];
+  }
+
   const spinner = new Spinner(opts);
 
   try {
     const result = await fn(spinner);
-    spinner.success(
-      opts.successText
-        ? typeof opts.successText === 'function'
-          ? opts.successText(result)
-          : opts.successText
-        : opts.text
-        ? typeof opts.text === 'function'
-          ? opts.text(spinner.props)
+    if (spinner.active) {
+      spinner.success(
+        opts.successText
+          ? typeof opts.successText === 'function'
+            ? opts.successText(result)
+            : opts.successText
           : opts.text
-        : 'Completed'
-    );
+          ? typeof opts.text === 'function'
+            ? opts.text(spinner.props)
+            : opts.text
+          : 'Completed'
+      );
+    }
   } catch (error: any) {
-    spinner.fail(
+    spinner.error(
       typeof opts.failureText === 'function' ? opts.failureText(error) : opts.failureText ?? error
     );
     throw error;

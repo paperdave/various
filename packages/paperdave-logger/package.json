@@ -11,19 +11,24 @@
   "license": "MIT",
   "author": "Dave Caruso <dave@davecode.net>",
   "type": "module",
-  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "screenshot.png"
   ],
   "scripts": {
-    "build": "tsc && esbuild --outfile=./dist/index.js --target=esnext --format=esm --platform=node --sourcemap --bundle src/index.ts --external:wrap-ansi --external:chalk --external:@paperdave/utils --external:ansi-escapes"
+    "build": "tsc && esbuild --outfile=./dist/index.js --target=esnext --format=esm --platform=node --sourcemap --bundle src/index.ts --external:wrap-ansi --external:chalk --external:@paperdave/utils --external:ansi-escapes && esbuild --outfile=./dist/index.cjs --target=esnext --format=cjs --platform=node --sourcemap --bundle src/index.ts --external:wrap-ansi --external:@paperdave/utils"
   },
   "dependencies": {
     "@paperdave/utils": "workspace:^1.4.1",
-    "ansi-escapes": "^5.0.0",
-    "chalk": "4",
+    "ansi-escapes": "^6.0.0",
+    "chalk": "^5.1.2",
     "strip-ansi": "^7.0.1"
   },
   "devDependencies": {

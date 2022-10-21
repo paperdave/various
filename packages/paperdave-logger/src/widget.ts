@@ -7,7 +7,7 @@ import { STDERR, STDOUT } from './util';
 const widgets: LogWidget[] = [];
 let widgetLineCount = 0;
 let widgetTimer: Timer | undefined;
-let widgetDrawingDisabled = false;
+let widgetDrawingDisabled = 0;
 
 /**
  * A Log Widget is a piece of log content that is held at the bottom of the console log, and can be
@@ -88,9 +88,11 @@ export abstract class LogWidget {
    * some updates together without having to redraw the current widgets more than once per frame.
    */
   static batchRedraw(fn: () => void) {
-    widgetDrawingDisabled = true;
-    fn();
-    widgetDrawingDisabled = false;
+    widgetDrawingDisabled++;
+    try {
+      fn();
+    } catch {}
+    widgetDrawingDisabled--;
     redrawWidgets();
   }
 
@@ -114,6 +116,10 @@ export abstract class LogWidget {
   fail(message: string | Error) {
     this.error(message);
   }
+
+  get active() {
+    return widgets.includes(this);
+  }
 }
 
 export function clearWidgets() {
@@ -127,7 +133,7 @@ export function clearWidgets() {
 }
 
 export function redrawWidgets() {
-  if (!widgetTimer || widgetDrawingDisabled) {
+  if (!widgetTimer || widgetDrawingDisabled !== 0) {
     return;
   }
 
@@ -138,4 +144,16 @@ export function redrawWidgets() {
     clearWidgets();
     writeSync(STDERR, widgets.map(widget => widget['__internalGetText']()).join(''));
   }
+}
+
+export function errorAllWidgets() {
+  LogWidget.batchRedraw(() => {
+    for (const w of widgets) {
+      if ('text' in w) {
+        w.error((w as any).text);
+      } else {
+        w.stop();
+      }
+    }
+  });
 }

@@ -137,3 +137,7 @@ export async function hashDirectoryContents(
   }
   return sha1.digest();
 }
+
+export function isRootDirectory(str: string) {
+  return str === '/' || (str.length === 3 && str.endsWith(':\\'));
+}

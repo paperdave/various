@@ -1,49 +1,59 @@
+import path from 'path';
+import { isRootDirectory, pathExists, unique } from '@paperdave/utils';
 import type { Plugin } from 'rollup';
 import { builtinModules } from './list';
 
-const name = 'rollup-plugin-all-external';
-
 function external(): Plugin {
+  let sourceRoots: string[] = [];
   return {
-    name,
-    options(inputOptions) {
-      // As of writing, `options` is allowed to push MORE plugins, which is what we NEED in order to
-      // set a `pre` and `post` function on the same hook. We do this explicit ordering so the end
-      // user can specify the plugins in any order and still get desired results.
-      (inputOptions.plugins ??= []).push(
-        {
-          name: name + ':pre',
-          resolveId: {
-            order: 'pre',
-            handler(source) {
-              // Handle obviously external modules such as "path" and "fs", but also bun related
-              if (builtinModules.includes(source)) {
-                return { id: 'node:' + source, external: true };
-              }
-              if (source === 'bun' || source.startsWith('bun:') || source.startsWith('node:')) {
-                return { id: source, external: true };
-              }
-              return null;
-            },
-          },
-        },
-        // This is run AFTER all other plugins, so paths of stuff like `esbuild` are resolved
-        // to the exact file.
-        {
-          name: name + ':post',
-          resolveId: {
-            order: 'post',
-            handler(source) {
-              if (source.split('/').includes('node_modules')) {
-                return { id: source, external: true };
-              }
-              return null;
-            },
-          },
+    name: 'rollup-plugin-all-external',
+    async options({ input }) {
+      const inputFiles =
+        typeof input === 'string'
+          ? [input]
+          : Array.isArray(input)
+          ? input
+          : input
+          ? Object.values(input)
+          : [];
+      for (const file of inputFiles) {
+        let dir = path.resolve(process.cwd(), file);
+        while (dir && !isRootDirectory(dir)) {
+          if (await pathExists(path.join(dir, 'package.json'))) {
+            sourceRoots.push(dir);
+            break;
+          }
+          dir = path.dirname(dir);
         }
-      );
+      }
+      sourceRoots = unique(sourceRoots);
+    },
+    resolveId(id) {
+      // Handle obviously external modules such as "path" and "fs", but also bun related ones too
+      if (builtinModules.includes(id)) {
+        return { id: 'node:' + id, external: true };
+      }
+      if (id === 'bun' || id.startsWith('bun:') || id.startsWith('node:')) {
+        return { id, external: true };
+      }
 
-      return inputOptions;
+      // Node modules are external
+      if (id.split('/').includes('node_modules')) {
+        return { id, external: true };
+      }
+
+      // If detected a source root, external everything outside of it. This is used
+      // for monorepo situations where stuff gets bundled since their true filepath is
+      // outside of node_modules.
+      if (
+        sourceRoots.length &&
+        id.startsWith('/') &&
+        !sourceRoots.some(root => id.startsWith(root))
+      ) {
+        return { id, external: true };
+      }
+
+      return null;
     },
   };
 }

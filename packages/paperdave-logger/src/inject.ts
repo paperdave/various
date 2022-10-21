@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { debug, error, info, trace, warn, writeLine } from './log';
 import { Spinner } from './spinner';
+import { errorAllWidgets } from './widget';
 
 export interface InjectOptions {
   console?: typeof console;
@@ -104,6 +105,10 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
 
   if (uncaughtExceptions) {
     (injectProcess as any).on?.('uncaughtException', (exception: any) => {
+      if (exitOnError) {
+        errorAllWidgets();
+      }
+
       error(exception);
 
       if (exitOnError) {
@@ -115,6 +120,10 @@ export function injectLogger(opts: InjectOptions | typeof console = {}) {
   }
   if (unhandledRejections) {
     (injectProcess as any).on?.('unhandledRejection', (reason: any) => {
+      if (exitOnError) {
+        errorAllWidgets();
+      }
+
       error(reason);
 
       if (exitOnError) {

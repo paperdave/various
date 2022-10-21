@@ -7,5 +7,5 @@ export default {
     file: 'hello.js',
     format: 'cjs',
   },
-  plugins: [resolve(), external()],
+  plugins: [external(), resolve()],
 };

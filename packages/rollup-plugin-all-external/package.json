@@ -15,13 +15,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && esbuild --outfile=./dist/index.js --platform=node --target=es2022 --format=esm --sourcemap --bundle src/index.ts"
+    "build": "tsc && esbuild --outfile=./dist/index.js --platform=node --target=es2022 --format=esm --sourcemap --bundle src/index.ts --external:@paperdave/utils"
+  },
+  "dependencies": {
+    "@paperdave/utils": "workspace:^1.4.1"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
     "@types/node": "^18.0.3",
     "esbuild": "^0.14.39",
-    "rollup": "^2.78.1",
+    "rollup": "^3.2.3",
     "typescript": "^4.6.4"
   },
   "peerDependencies": {
