@@ -1,5 +1,28 @@
 # @paperdave/logger
 
+## 2.3.0
+
+### Minor Changes
+
+- re-export `chalk` and `ansiEscapes` for ease of use ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+
+* upgraded to chalk 5 ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+
+- allow passing a single string instead of an object to `Progress`, `Spinner`, `withSpinner`, `withProgress`, which is shorthand for `{ text: ... }`. ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+
+* **deprecation warning**: swapped the order of the arguments for `withSpinner` and `withProgress`. in v3 this will be enforced ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+
+### Patch Changes
+
+- build for commonjs so `require('@paperdave/logger')` works ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+
+* bugfix: clear widgets on error before exit. ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+
+- `LogWidget.batchRedraw` supports nesting now ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+
+- Updated dependencies [[`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61)]:
+  - @paperdave/utils@1.5.0
+
 ## 2.2.4
 
 ### Patch Changes
