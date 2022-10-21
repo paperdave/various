@@ -1,5 +1,11 @@
 # @paperdave/utils
 
+## 1.5.0
+
+### Minor Changes
+
+- Add `isRootDirectory` utility function. ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+
 ## 1.4.1
 
 ### Patch Changes

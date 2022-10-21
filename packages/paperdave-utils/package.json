@@ -1,6 +1,6 @@
 {
   "name": "@paperdave/utils",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Common utility functions and TypeScript types.",
   "keywords": [
     "utility",
