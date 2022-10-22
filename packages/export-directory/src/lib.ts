@@ -37,7 +37,7 @@ interface ResolvedOptions {
 
 const defaultOptions: Options = {
   quote: 'single',
-  semi: false,
+  semi: true,
   lineEnding: 'auto',
   ignore: ['node_modules', '.git', '*.test.*'],
 };

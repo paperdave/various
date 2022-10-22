@@ -8,7 +8,8 @@
   "author": "Dave Caruso <me@paperdave.net>",
   "type": "module",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./rollup": "./dist/rollup.js"
   },
   "types": "./dist/index.d.ts",
   "bin": "./dist/cli.js",

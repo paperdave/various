@@ -8,6 +8,7 @@ export default [
     input: {
       index: 'src/lib.ts',
       cli: 'src/cli.ts',
+      rollup: 'src/rollup.ts',
     },
     output: [
       {
