@@ -1,0 +1,49 @@
+{
+  "name": "export-directory",
+  "version": "0.1.0",
+  "description": "automatically manage index.js files that export all files in the directory",
+  "homepage": "https://github.com/paperdave/various/tree/master/packages/export-directory",
+  "repository": "github:paperdave/various",
+  "license": "MIT",
+  "author": "Dave Caruso <me@paperdave.net>",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "types": "./dist/index.d.ts",
+  "bin": "./dist/cli.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p . && rollup -c",
+    "lint": "eslint . --max-warnings=0"
+  },
+  "dependencies": {
+    "@paperdave/logger": "workspace:^2.2.4",
+    "@paperdave/utils": "workspace:^1.4.1",
+    "chokidar": "^3.5.3",
+    "picomatch": "^2.3.1",
+    "yargs": "^17.6.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@types/node": "^18.0.3",
+    "@types/picomatch": "^2.3.0",
+    "@types/yargs": "^17.0.13",
+    "bun-types": "^0.1.2",
+    "esbuild": "^0.14.49",
+    "mitata": "^0.1.6",
+    "rollup": "^2.78.1",
+    "rollup-plugin-add-shebang": "^0.3.1",
+    "rollup-plugin-all-external": "workspace:^1.1.0",
+    "rollup-plugin-esbuild": "^4.9.3",
+    "rollup-plugin-shebang": "^0.1.5",
+    "typescript": "^4.6.4"
+  },
+  "engines": {
+    "bun": ">=0.2.1",
+    "node": ">=16"
+  },
+  "paperdave-status": "stable"
+}
