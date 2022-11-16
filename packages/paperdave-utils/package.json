@@ -31,7 +31,8 @@
     "test": "bun wiptest"
   },
   "dependencies": {
-    "utility-types": "^3.10.0"
+    "utility-types": "^3.10.0",
+    "yaml": "^2.1.3"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.3.0",

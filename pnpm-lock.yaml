@@ -12,7 +12,7 @@ importers:
       '@changesets/cli': 2.24.3
       '@svitejs/changesets-changelog-github-compact': 0.1.1
       prettier: 2.7.1
-      turbo: 1.6.0
+      turbo: 1.6.3
 
   packages/eslint-config-dave:
     specifiers:
@@ -64,7 +64,6 @@ importers:
       '@paperdave/utils': link:../paperdave-utils
       chokidar: 3.5.3
       picomatch: 2.3.1
-      rollup-plugin-all-external: link:../rollup-plugin-all-external
       yargs: 17.6.0
     devDependencies:
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.78.1
@@ -76,6 +75,7 @@ importers:
       mitata: 0.1.6
       rollup: 2.78.1
       rollup-plugin-add-shebang: 0.3.1
+      rollup-plugin-all-external: link:../rollup-plugin-all-external
       rollup-plugin-esbuild: 4.9.3_wbd5g4iuz6pbhe54fw67tuqrpu
       rollup-plugin-shebang: 0.1.5_rollup@2.78.1
       typescript: 4.7.4
@@ -100,7 +100,7 @@ importers:
 
   packages/paperdave-logger:
     specifiers:
-      '@paperdave/utils': workspace:^1.4.1
+      '@paperdave/utils': workspace:^1.5.0
       '@types/node': ^18.0.3
       '@types/wrap-ansi': ^8.0.1
       ansi-escapes: ^6.0.0
@@ -134,8 +134,10 @@ importers:
       rollup-plugin-esbuild: ^4.9.3
       typescript: ^4.6.4
       utility-types: ^3.10.0
+      yaml: ^2.1.3
     dependencies:
       utility-types: 3.10.0
+      yaml: 2.1.3
     devDependencies:
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.78.1
       '@types/node': 18.0.3
@@ -175,7 +177,7 @@ importers:
 
   packages/rollup-plugin-all-external:
     specifiers:
-      '@paperdave/utils': workspace:^1.4.1
+      '@paperdave/utils': workspace:^1.5.0
       '@rollup/plugin-node-resolve': ^15.0.0
       '@types/node': ^18.0.3
       esbuild: ^0.14.39
@@ -3380,65 +3382,65 @@ packages:
       yargs: 17.5.1
     dev: false
 
-  /turbo-darwin-64/1.6.0:
-    resolution: {integrity: sha512-rQJruB6K3bdpK7T09Wg83irLvuZXnibLRakR3Qi0QbmfHbZgMsYfr0RcpuDdOauhDGOC4tuTbcn6Ab7znOPueQ==}
+  /turbo-darwin-64/1.6.3:
+    resolution: {integrity: sha512-QmDIX0Yh1wYQl0bUS0gGWwNxpJwrzZU2GIAYt3aOKoirWA2ecnyb3R6ludcS1znfNV2MfunP+l8E3ncxUHwtjA==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-darwin-arm64/1.6.0:
-    resolution: {integrity: sha512-Y82V2vDiz3+iL2UP6GBqfYUo9onP90jlureATqiCGN2MZ6+mz/xmAx0HPnexyQYDKAa5NvqmI7QBq8NcRzVhPw==}
+  /turbo-darwin-arm64/1.6.3:
+    resolution: {integrity: sha512-75DXhFpwE7CinBbtxTxH08EcWrxYSPFow3NaeFwsG8aymkWXF+U2aukYHJA6I12n9/dGqf7yRXzkF0S/9UtdyQ==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-linux-64/1.6.0:
-    resolution: {integrity: sha512-J+6xc0Jo5rCa3XHZVebILKKCQKw0Ka6SE3/fY2gZRGjJgrCl3mboBbX/xy35kPQuuBjcxmJj4x01UfLfaSYwQg==}
+  /turbo-linux-64/1.6.3:
+    resolution: {integrity: sha512-O9uc6J0yoRPWdPg9THRQi69K6E2iZ98cRHNvus05lZbcPzZTxJYkYGb5iagCmCW/pq6fL4T4oLWAd6evg2LGQA==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-linux-arm64/1.6.0:
-    resolution: {integrity: sha512-foxQzPRTjOTFQnaMRKa4uhlfZGYtFCzFr0lr61mJOQp9G+ygqpvyYvhMvhF69nvPh8STSnVSTJkQUNM+DUAA2w==}
+  /turbo-linux-arm64/1.6.3:
+    resolution: {integrity: sha512-dCy667qqEtZIhulsRTe8hhWQNCJO0i20uHXv7KjLHuFZGCeMbWxB8rsneRoY+blf8+QNqGuXQJxak7ayjHLxiA==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-windows-64/1.6.0:
-    resolution: {integrity: sha512-nyhp9LNgi1SiAqHZWRdZqcemwGrqeKSiro00lB0XkMYZiLL91E8ZClAoGuqSCfYHTXaffjTxdJRihfot2G/Y+g==}
+  /turbo-windows-64/1.6.3:
+    resolution: {integrity: sha512-lKRqwL3mrVF09b9KySSaOwetehmGknV9EcQTF7d2dxngGYYX1WXoQLjFP9YYH8ZV07oPm+RUOAKSCQuDuMNhiA==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-windows-arm64/1.6.0:
-    resolution: {integrity: sha512-ORLdBUxM/ob+E623CHjQyf1mxpvc3SF862ui4Q4BA5ZxqkpxHuDLCaVnC/62cez8GdXRW/Twl0qqLoIbAoWIsA==}
+  /turbo-windows-arm64/1.6.3:
+    resolution: {integrity: sha512-BXY1sDPEA1DgPwuENvDCD8B7Hb0toscjus941WpL8CVd10hg9pk/MWn9CNgwDO5Q9ks0mw+liDv2EMnleEjeNA==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo/1.6.0:
-    resolution: {integrity: sha512-QVl4tfKExeI88zAWbspEJUeMYfo6G751C2QvMl9EORci1VNtARJ2AtYXtJSrJta5n6xsCsusgXrVEHG1iPv5UA==}
+  /turbo/1.6.3:
+    resolution: {integrity: sha512-FtfhJLmEEtHveGxW4Ye/QuY85AnZ2ZNVgkTBswoap7UMHB1+oI4diHPNyqrQLG4K1UFtCkjOlVoLsllUh/9QRw==}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      turbo-darwin-64: 1.6.0
-      turbo-darwin-arm64: 1.6.0
-      turbo-linux-64: 1.6.0
-      turbo-linux-arm64: 1.6.0
-      turbo-windows-64: 1.6.0
-      turbo-windows-arm64: 1.6.0
+      turbo-darwin-64: 1.6.3
+      turbo-darwin-arm64: 1.6.3
+      turbo-linux-64: 1.6.3
+      turbo-linux-arm64: 1.6.3
+      turbo-windows-64: 1.6.3
+      turbo-windows-arm64: 1.6.3
     dev: false
 
   /type-check/0.4.0:
@@ -3626,6 +3628,11 @@ packages:
 
   /yallist/4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
+    dev: false
+
+  /yaml/2.1.3:
+    resolution: {integrity: sha512-AacA8nRULjKMX2DvWvOAdBZMOfQlypSFkjcOcu9FalllIDJ1kvlREzcdIZmidQUqqeMv7jorHjq2HlLv/+c2lg==}
+    engines: {node: '>= 14'}
     dev: false
 
   /yargs-parser/18.1.3:

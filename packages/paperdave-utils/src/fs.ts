@@ -1,15 +1,8 @@
+import type * as YAML from 'yaml';
+import { parse as parseYAML, stringify as stringifyYAML } from 'yaml';
 import { fs, nodeCrypto, path } from './native-module';
 
-type BufferEncoding =
-  | 'buffer'
-  | 'utf8'
-  | 'utf-8'
-  | 'ascii'
-  | 'utf16le'
-  | 'ucs2'
-  | 'ucs-2'
-  | 'latin1'
-  | 'binary';
+type BufferEncoding = 'utf8' | 'utf-8' | 'ascii' | 'utf16le' | 'ucs2' | 'ucs-2' | 'latin1';
 
 /** @param {string} file */
 export async function pathExists(file: string) {
@@ -21,7 +14,30 @@ export async function pathExists(file: string) {
   }
 }
 
-export interface WriteJSONOptions {
+export interface FileWriteOptionsBase {
+  /** Encoding of the file. Defaults to "utf8". */
+  encoding?: BufferEncoding;
+  /** Mode of the file. Defaults to 0o666. */
+  mode?: number;
+  /**
+   * Flag of the file. Defaults to "w",
+   * {@link https://nodejs.org/api/fs.html#file-system-flags List of all flags on nodejs.org}.
+   */
+  flag?: string;
+  /** Whether to create the directory if it doesn't exist. */
+  mkdir?: boolean;
+}
+export interface FileReadOptionsBase {
+  /** Encoding of the file. Defaults to "utf8". */
+  encoding?: BufferEncoding;
+  /**
+   * Flag of the file. Defaults to "r",
+   * {@link https://nodejs.org/api/fs.html#file-system-flags List of all flags on nodejs.org}.
+   */
+  flag?: string;
+}
+
+export interface WriteJSONOptions extends FileWriteOptionsBase {
   /**
    * Adds indentation, white space, and line break characters to the return-value JSON text to make
    * it easier to read.
@@ -34,43 +50,165 @@ export interface WriteJSONOptions {
    *   properties that will be stringified.
    * - A function that transforms the results.
    */
-  replacer: Parameters<typeof JSON.stringify>[1];
+  replacer?: Parameters<typeof JSON.stringify>[1];
 }
 
-export interface ReadJSONOptions {
+export interface ReadJSONOptions<T = unknown> extends FileReadOptionsBase {
   /**
    * A function that transforms the results. This function is called for each member of the object.
    * If a member contains nested objects, the nested objects are transformed before the parent object is.
    */
   reviver?: Parameters<typeof JSON.parse>[1];
-  /** Encoding of the file. Defaults to "utf8". */
-  encoding?: BufferEncoding;
+  /** If the file does not exist, return this value instead. */
+  default?: T | (() => T);
 }
 
-export function readJSONSync(file: string, options: ReadJSONOptions): unknown {
-  return JSON.parse(fs.readFileSync(file, options?.encoding ?? 'utf-8'), options?.reviver);
+export interface WriteYAMLOptions
+  extends FileWriteOptionsBase,
+    YAML.DocumentOptions,
+    YAML.SchemaOptions,
+    YAML.ParseOptions,
+    YAML.CreateNodeOptions,
+    YAML.ToStringOptions {}
+
+export interface ReadYAMLOptions<T = unknown>
+  extends FileReadOptionsBase,
+    YAML.ParseOptions,
+    YAML.DocumentOptions,
+    YAML.SchemaOptions,
+    YAML.ToJSOptions {
+  /** If the file does not exist, return this value instead. */
+  default?: T | (() => T);
 }
 
-export function writeJSONSync(file: string, data: unknown, options?: WriteJSONOptions) {
-  fs.writeFileSync(file, JSON.stringify(data, options?.replacer as any, options?.spaces as any));
-}
-
-export async function readJSON(file: string, options: ReadJSONOptions): Promise<unknown> {
-  return JSON.parse(
-    await fs.promises.readFile(file, options?.encoding ?? 'utf-8'),
-    options?.reviver
-  );
-}
-
-export async function writeJSON(file: string, data: unknown, options?: WriteJSONOptions) {
-  await fs.promises.writeFile(
-    file,
-    JSON.stringify(data, options?.replacer as any, options?.spaces as any)
-  );
+export function readJSONSync<T>(file: string, options: ReadJSONOptions<T> = {}): T {
+  try {
+    return JSON.parse(
+      fs.readFileSync(file, { encoding: options.encoding ?? 'utf8', flag: options.flag }),
+      options?.reviver
+    );
+  } catch (error) {
+    if ('default' in options) {
+      return typeof options.default === 'function'
+        ? // eslint-disable-next-line @typescript-eslint/ban-types
+          (options.default as Function)()
+        : options.default;
+    }
+    throw error;
+  }
 }
 
 export async function ensureDir(file: string) {
   await fs.promises.mkdir(file, { recursive: true });
+}
+
+export function ensureDirSync(file: string) {
+  fs.mkdirSync(file, { recursive: true });
+}
+
+export function writeJSONSync<T>(file: string, data: T, options: WriteJSONOptions = {}) {
+  if (options.mkdir) {
+    ensureDirSync(path.dirname(file));
+  }
+  fs.writeFileSync(file, JSON.stringify(data, options.replacer as any, options.spaces as any), {
+    encoding: options.encoding ?? 'utf8',
+    mode: options.mode,
+    flag: options.flag,
+  });
+}
+
+export async function readJSON<T>(file: string, options: ReadJSONOptions<T> = {}): Promise<T> {
+  try {
+    return JSON.parse(
+      await fs.promises.readFile(file, {
+        encoding: options?.encoding ?? 'utf8',
+        flag: options?.flag,
+      }),
+      options?.reviver
+    );
+  } catch (error) {
+    if ('default' in options) {
+      return typeof options.default === 'function'
+        ? // eslint-disable-next-line @typescript-eslint/ban-types
+          (options.default as Function)()
+        : options.default;
+    }
+    throw error;
+  }
+}
+
+export async function writeJSON<T>(file: string, data: T, options: WriteJSONOptions = {}) {
+  if (options.mkdir) {
+    await ensureDir(path.dirname(file));
+  }
+  await fs.promises.writeFile(
+    file,
+    JSON.stringify(data, options.replacer as any, options.spaces as any),
+    {
+      encoding: options.encoding ?? 'utf8',
+      mode: options.mode,
+      flag: options.flag,
+    }
+  );
+}
+
+export function readYAMLSync<T>(file: string, options: ReadYAMLOptions = {}): T {
+  const { encoding, flag, default: def, ...yamlOptions } = options;
+  try {
+    return parseYAML(fs.readFileSync(file, { encoding: encoding ?? 'utf8', flag }), yamlOptions);
+  } catch (error) {
+    if ('default' in options) {
+      return typeof def === 'function'
+        ? // eslint-disable-next-line @typescript-eslint/ban-types
+          (def as Function)()
+        : def;
+    }
+    throw error;
+  }
+}
+
+export function writeYAMLSync<T>(file: string, data: T, options: WriteYAMLOptions = {}) {
+  const { encoding, mode, flag, mkdir, ...yamlOptions } = options;
+  if (mkdir) {
+    ensureDirSync(path.dirname(file));
+  }
+
+  fs.writeFileSync(file, stringifyYAML(data, yamlOptions), {
+    encoding: encoding ?? 'utf8',
+    flag,
+    mode,
+  });
+}
+
+export async function readYAML<T>(file: string, options: ReadYAMLOptions = {}): Promise<T> {
+  const { encoding, flag, default: def, ...yamlOptions } = options;
+  try {
+    return parseYAML(
+      await fs.promises.readFile(file, { encoding: encoding ?? 'utf8', flag }),
+      yamlOptions
+    );
+  } catch (error) {
+    if ('default' in options) {
+      return typeof def === 'function'
+        ? // eslint-disable-next-line @typescript-eslint/ban-types
+          (def as Function)()
+        : def;
+    }
+    throw error;
+  }
+}
+
+export async function writeYAML<T>(file: string, data: T, options: WriteYAMLOptions = {}) {
+  const { encoding, mode, flag, mkdir, ...yamlOptions } = options;
+  if (mkdir) {
+    await ensureDir(path.dirname(file));
+  }
+
+  await fs.promises.writeFile(file, stringifyYAML(data, yamlOptions), {
+    encoding: encoding ?? 'utf8',
+    flag,
+    mode,
+  });
 }
 
 export interface WalkOptions {
