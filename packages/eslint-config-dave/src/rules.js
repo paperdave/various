@@ -60,7 +60,7 @@ const rules = {
   'no-unused-vars': 'off', // Overridden by @typescript-eslint
   'no-use-before-define': 'off', // Overridden by @typescript-eslint
   'no-useless-backreference': 'error',
-  'require-atomic-updates': 'error',
+  'require-atomic-updates': 'off', // Too many false positives
   'use-isnan': 'error',
   'valid-typeof': 'off', // TypeScript checker catches this
 
@@ -108,7 +108,7 @@ const rules = {
   'no-delete-var': 'error',
   'no-div-regex': 'error',
   'no-else-return': 'error',
-  'no-empty': ['warn', { allowEmptyCatch: true }],
+  'no-empty': 'off',
   'no-empty-function': 'off', // Eslint will count a filled function as ANYTHING, even a blank comment. For that reason, it's not worth having this rule.
   'no-eq-null': 'off', // Enabling this would contradict `eqeqeq`
   'no-eval': 'warn',
@@ -236,7 +236,13 @@ const rules = {
     'error',
     { fixMixedExportsWithInlineTypeSpecifier: true },
   ],
-  '@typescript-eslint/consistent-type-imports': ['error', { disallowTypeAnnotations: false }],
+  '@typescript-eslint/consistent-type-imports': [
+    'error',
+    {
+      prefer: 'no-type-imports',
+      disallowTypeAnnotations: false,
+    },
+  ],
   '@typescript-eslint/default-param-last': 'error',
   '@typescript-eslint/dot-notation': [
     'error',
@@ -277,7 +283,7 @@ const rules = {
   '@typescript-eslint/no-inferrable-types': 'error',
   '@typescript-eslint/no-invalid-this': 'off', // I thought the TypeScript compiler would catch this.
   '@typescript-eslint/no-invalid-void-type': 'off', // In type aliases, these are really useful.
-  '@typescript-eslint/no-loop-func': 'error',
+  '@typescript-eslint/no-loop-func': 'off', // Too many false positives
   '@typescript-eslint/no-loss-of-precision': 'error',
   '@typescript-eslint/no-magic-numbers': 'off', // TODO: get the sanity to handle using this
   '@typescript-eslint/no-meaningless-void-operator': 'error',
