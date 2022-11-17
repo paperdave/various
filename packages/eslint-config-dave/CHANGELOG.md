@@ -1,5 +1,11 @@
 # eslint-config-dave
 
+## 3.1.0
+
+### Minor Changes
+
+- disable rules as per my opinion ([`5ec3609`](https://github.com/paperdave/various/commit/5ec3609307c3fdba9af959cdf1757b178899050f))
+
 ## 3.0.11
 
 ### Patch Changes

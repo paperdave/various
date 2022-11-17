@@ -1,5 +1,17 @@
 # @paperdave/utils
 
+## 1.6.0
+
+### Minor Changes
+
+- Add `flag` to readJSON/readYAML, and add `flag`, `mkdir`, `mode` to writeJSON/writeYAML ([`b86edb3`](https://github.com/paperdave/various/commit/b86edb30faae8c0fc235b4f85a22823595b3e8d3))
+
+* Add `plural` ([`7cbb593`](https://github.com/paperdave/various/commit/7cbb59368b5f503c19e36c890b922e1836b6dc0b))
+
+- Add `hexToUint8Array` and `uint8ArrayToHex` ([`7cbb593`](https://github.com/paperdave/various/commit/7cbb59368b5f503c19e36c890b922e1836b6dc0b))
+
+* Add `readYAML` and `writeYAML` ([`b86edb3`](https://github.com/paperdave/various/commit/b86edb30faae8c0fc235b4f85a22823595b3e8d3))
+
 ## 1.5.0
 
 ### Minor Changes
