@@ -41,3 +41,12 @@ export const platformUnicodeSupported =
       process.env.TERM === 'alacritty' ||
       process.env.TERMINAL_EMULATOR === 'JetBrains-JediTerm'
     : process.env.TERM !== 'linux';
+
+const cwd = process.cwd();
+
+export function platformSimplifyErrorPath(filepath: string) {
+  if (filepath.startsWith(cwd)) {
+    return '.' + filepath.slice(cwd.length);
+  }
+  return filepath;
+}

@@ -10,6 +10,15 @@ let widgetLineCount = 0;
 let widgetTimer: Timer | undefined;
 let widgetDrawingDisabled = platformWidgetEnabled ? 0 : Infinity;
 
+export interface Key {
+  sequence?: string;
+  text?: string;
+  name?: string;
+  ctrl: boolean;
+  meta: boolean;
+  shift: boolean;
+}
+
 /**
  * A Log Widget is a piece of log content that is held at the bottom of the console log, and can be
  * animated/dynamically updated. It is used to create spinners, progress bars, and other rich visuals.

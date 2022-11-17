@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import path from 'node:path';
+import { platformSimplifyErrorPath } from '$platform';
 import { builtinModules } from 'node:module';
 
 /**
@@ -59,7 +60,7 @@ export function formatStackTrace(err: Error) {
         const fileSplit = /^(.*?):(\d+):(\d+)$/.exec(file);
         return {
           method: (['module code'].includes(method) ? '' : method) || '',
-          file: fileSplit ? fileSplit[1] : null,
+          file: fileSplit ? platformSimplifyErrorPath(fileSplit[1]) : null,
           line: fileSplit ? parseInt(fileSplit[2], 10) : null,
           column: fileSplit ? parseInt(fileSplit[3], 10) : null,
           native: file === '[native code]',
@@ -77,18 +78,24 @@ export function formatStackTrace(err: Error) {
   const sliceAt = parsed.findIndex(line => !line.native);
   if (sliceAt !== -1) {
     // remove the first native lines
-    parsed.splice(0, sliceAt, {
-      native: true,
-      method: '',
-      column: null,
-      line: null,
-      file: null,
-    });
+    parsed.splice(0, sliceAt);
   }
   parsed.reverse();
 
   return parsed
     .map(({ method, file, line, column, native }) => {
+      function getColoredDirname(filename: string) {
+        const dirname =
+          process.platform === 'win32'
+            ? path.dirname(filename).replace(/^file:\/\/\//g, '')
+            : path.dirname(filename).replace(/^file:\/\//g, '') + path.sep;
+
+        if (dirname === '/' || dirname === './') {
+          return dirname;
+        }
+        return chalk.cyan(dirname);
+      }
+
       const source = native
         ? `[native code]`
         : file
@@ -96,11 +103,7 @@ export function formatStackTrace(err: Error) {
           ? `(${chalk.magenta(file)})`
           : [
               '(',
-              chalk.cyan(
-                process.platform === 'win32'
-                  ? path.dirname(file).replace(/^file:\/\/\//g, '')
-                  : path.dirname(file).replace(/^file:\/\//g, '') + path.sep
-              ),
+              getColoredDirname(file),
               // Leave the first slash on linux.
               chalk.green(path.basename(file)),
               ':',
