@@ -1,4 +1,3 @@
-export * from './deprecated';
 export { LogWidget } from './widget';
 export { CLIError, type PrintableError } from './error';
 export { setLogFilter } from './filter';

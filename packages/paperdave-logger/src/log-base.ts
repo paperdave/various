@@ -1,13 +1,10 @@
-import chalk from 'chalk';
+import chalk, { ChalkInstance } from 'chalk';
 import stripAnsi from 'strip-ansi';
-import type { ChalkInstance } from 'chalk';
-import { writeSync } from 'fs';
+import { platformWrite } from '$platform';
 import { inspect } from 'util';
 import { formatErrorObj } from './error';
 import { isLogVisible } from './filter';
-import type { CustomLoggerColor, CustomLoggerOptions, StringLike } from './types';
-import { LogFunction } from './types';
-import { STDERR, STDOUT } from './util';
+import { CustomLoggerColor, CustomLoggerOptions, LogFunction, StringLike } from './types';
 import { clearWidgets, redrawWidgets } from './widget';
 
 /** Taken from https://github.com/debug-js/debug/blob/d1616622e4d404863c5a98443f755b4006e971dc/src/node.js#L35. */
@@ -50,11 +47,11 @@ function selectColor(namespace: string) {
 
 function getColor(color: CustomLoggerColor): ChalkInstance {
   if (typeof color === 'string') {
-    return color in chalk ? (chalk.bold as any)[color] : chalk.bold.hex(color);
+    return color in chalk ? (chalk as any)[color] : chalk.hex(color);
   } else if (Array.isArray(color)) {
-    return chalk.bold.rgb(color[0], color[1], color[2]);
+    return chalk.rgb(color[0], color[1], color[2]);
   }
-  return chalk.bold.ansi256(color);
+  return chalk.ansi256(color);
 }
 
 const formatImplementation = {
@@ -114,7 +111,7 @@ export function createLogger(
     color = undefined,
     coloredText = false,
     boldText = false,
-    error = false,
+    type = 'info',
     debug = false,
   } = opts;
 
@@ -124,7 +121,7 @@ export function createLogger(
     ? chalk
     : color
     ? getColor(color)
-    : chalk.bold.ansi256(selectColor(name));
+    : chalk.ansi256(selectColor(name));
   const coloredName = colorFn.bold(name);
 
   const fn = (fmt: unknown, ...args: any[]) => {
@@ -136,14 +133,10 @@ export function createLogger(
 
     clearWidgets();
     if (fmt === undefined && args.length === 0) {
-      writeSync(error ? STDERR : STDOUT, '\n');
+      platformWrite[type]('');
     } else {
-      writeSync(
-        error ? STDERR : STDOUT,
-        coloredName +
-          ' ' +
-          (coloredText ? (boldText ? colorFn.bold(data) : colorFn(data)) : data) +
-          '\n'
+      platformWrite[type](
+        coloredName + ' ' + (coloredText ? (boldText ? colorFn.bold(data) : colorFn(data)) : data)
       );
     }
     redrawWidgets();
