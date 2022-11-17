@@ -11,3 +11,4 @@ export * from './promise';
 export * from './rng';
 export * from './string';
 export * from './types';
+export * from './u8int';

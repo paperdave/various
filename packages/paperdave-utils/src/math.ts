@@ -11,3 +11,7 @@ export function lerp(a: number, b: number, t: number): number {
 export function lerpClamped(a: number, b: number, t: number): number {
   return lerp(a, b, clamp(t, 0, 1));
 }
+
+export function step(value: number, target: number, increment: number): number {
+  return value < target ? Math.min(value + increment, target) : Math.max(value - increment, target);
+}
