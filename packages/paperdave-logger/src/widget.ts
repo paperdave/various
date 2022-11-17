@@ -1,13 +1,14 @@
 import ansi from 'ansi-escapes';
-import type { Timer } from '@paperdave/utils';
+import { platformWidgetEnabled, platformWrite } from '$platform';
+import { Timer } from '@paperdave/utils';
 import { writeSync } from 'fs';
 import { error, success } from './log';
-import { STDERR, STDOUT } from './util';
+import { STDOUT } from './util';
 
 const widgets: LogWidget[] = [];
 let widgetLineCount = 0;
 let widgetTimer: Timer | undefined;
-let widgetDrawingDisabled = 0;
+let widgetDrawingDisabled = platformWidgetEnabled ? 0 : Infinity;
 
 /**
  * A Log Widget is a piece of log content that is held at the bottom of the console log, and can be
@@ -19,7 +20,6 @@ export abstract class LogWidget {
 
     if (!widgetTimer) {
       widgetTimer = setInterval(redrawWidgets, 1000 / 60);
-      // writeSync(STDERR, ansi.cursorHide);
     }
   }
 
@@ -119,8 +119,7 @@ export abstract class LogWidget {
 
 export function clearWidgets() {
   if (widgetLineCount) {
-    writeSync(
-      STDERR,
+    platformWrite.widget(
       ansi.eraseLine + (ansi.cursorUp(1) + ansi.eraseLine).repeat(widgetLineCount) + '\r'
     );
     widgetLineCount = 0;
@@ -137,7 +136,7 @@ export function redrawWidgets() {
 
   if (hasUpdate || widgetLineCount === 0) {
     clearWidgets();
-    writeSync(STDERR, widgets.map(widget => widget['__internalGetText']()).join(''));
+    platformWrite.widget(widgets.map(widget => widget['__internalGetText']()).join(''));
   }
 }
 

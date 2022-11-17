@@ -14,7 +14,10 @@
     "allowJs": true,
     "checkJs": true,
     "strict": true,
-    "declarationDir": "dist"
+    "declarationDir": "dist",
+    "paths": {
+      "$platform": ["./src/platform/node-bun.ts"]
+    }
   },
   "exclude": ["**/dist"],
   "include": ["src/**/*.ts", "src/**/*.js"]

@@ -122,7 +122,7 @@ export function formatErrorObj(err: Error | PrintableError) {
     hideName ? '' : (name ?? 'Error') + ': ',
     message ?? 'Unknown error',
     description ? '\n' + description : '',
-    hideStack || !stack ? '' : '\n' + formatStackTrace(err),
+    hideStack || !stack ? '' : '\n' + chalk.reset(formatStackTrace(err)),
     description || (!hideStack && stack) ? '\n' : '',
   ].join('');
 }

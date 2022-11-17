@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import type { EmptyObject } from '@paperdave/utils';
+import { EmptyObject } from '@paperdave/utils';
 import { Color } from './util';
 import { LogWidget } from './widget';
 

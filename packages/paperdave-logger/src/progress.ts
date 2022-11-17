@@ -1,9 +1,9 @@
 import chalk from 'chalk';
-import type { EmptyObject } from '@paperdave/utils';
+import { EmptyObject } from '@paperdave/utils';
 import { convertHSVtoRGB } from './hsv';
 import { defaultSpinnerOptions } from './spinner';
 import { isUnicodeSupported } from './unicode';
-import type { Color } from './util';
+import { Color } from './util';
 import { LogWidget } from './widget';
 
 const boxChars = [' ', '▏', '▎', '▍', '▌', '▋', '▊', '▉'];

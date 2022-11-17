@@ -21,13 +21,15 @@ export type CustomLoggerColor =
   | number
   | [number, number, number];
 
+export type LogType = 'info' | 'warn' | 'debug' | 'error';
+
 export interface CustomLoggerOptions {
   id?: string;
   color?: CustomLoggerColor;
   coloredText?: boolean;
   boldText?: boolean;
   level?: number;
-  error?: boolean;
+  type?: LogType;
   debug?: boolean;
 }
 
