@@ -99,11 +99,6 @@ export class Spinner<Props extends Record<string, unknown> = EmptyObject> extend
   error(message?: string | Error): void {
     super.error(message ?? this.text);
   }
-
-  /** @deprecated Use `error` instead. */
-  fail(message?: string | Error): void {
-    super.error(message ?? this.text);
-  }
 }
 
 export interface WithSpinnerOptions<Props extends Record<string, unknown>, T>
@@ -117,19 +112,7 @@ export async function withSpinner<Props extends Record<string, unknown>, T>(
   spinnerOptions: WithSpinnerOptions<Props, T> | string,
   fn: (spinner: Spinner<Props>) => Promise<T>
 ): Promise<T>;
-/**
- * @deprecated In logger v3, the order of these two parameters will be swapped. Options/label then
- *   the function.
- */
-export async function withSpinner<Props extends Record<string, unknown>, T>(
-  fn: (spinner: Spinner<Props>) => Promise<T>,
-  opts: WithSpinnerOptions<Props, T> | string
-): Promise<T>;
 export async function withSpinner(opts: any, fn: any) {
-  if (typeof opts === 'function') {
-    [opts, fn] = [fn, opts];
-  }
-
   const spinner = new Spinner(opts);
 
   try {

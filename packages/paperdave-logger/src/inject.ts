@@ -18,23 +18,7 @@ export interface InjectOptions {
  * For accessing some special functions, use the `log` object directly.
  */
 export function injectLogger(opts?: InjectOptions): void;
-/**
- * ```ts
- * injectLogger({
- *   console: customConsoleObject,
- * });
- * ```
- *
- * @deprecated Please pass an options object to `injectLogger`, seen above.
- */
-export function injectLogger(opts: typeof console): void;
-export function injectLogger(opts: InjectOptions | typeof console = {}) {
-  if (typeof (opts as typeof console).log === 'function') {
-    opts = {
-      console: opts as typeof console,
-    };
-  }
-
+export function injectLogger(opts: InjectOptions = {}) {
   const {
     console: injectConsole = globalThis.console,
     process: injectProcess = globalThis.process,
