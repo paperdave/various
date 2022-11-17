@@ -112,11 +112,6 @@ export abstract class LogWidget {
     });
   }
 
-  /** @deprecated Use `error` instead. */
-  fail(message: string | Error) {
-    this.error(message);
-  }
-
   get active() {
     return widgets.includes(this);
   }

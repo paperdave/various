@@ -1,6 +1,6 @@
 import * as logBuiltins from './log';
 import { createLogger } from './log-base';
-import type { CustomLoggerOptions, LogFunction } from './types';
+import { CustomLoggerOptions, LogFunction } from './types';
 
 type LogConstructor = {
   /**
