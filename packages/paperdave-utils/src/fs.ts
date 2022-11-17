@@ -83,10 +83,13 @@ export interface ReadYAMLOptions<T = unknown>
 
 export function readJSONSync<T>(file: string, options: ReadJSONOptions<T> = {}): T {
   try {
-    return JSON.parse(
-      fs.readFileSync(file, { encoding: options.encoding ?? 'utf8', flag: options.flag }),
-      options?.reviver
-    );
+    // This cannot be inlined due to https://github.com/oven-sh/bun/issues/1516
+    const fsOpts = { encoding: options.encoding ?? 'utf8' };
+    if (options.flag) {
+      // @ts-expect-error .
+      fsOpts.flag = flag;
+    }
+    return JSON.parse(fs.readFileSync(file, fsOpts), options?.reviver);
   } catch (error) {
     if ('default' in options) {
       return typeof options.default === 'function'
@@ -110,11 +113,19 @@ export function writeJSONSync<T>(file: string, data: T, options: WriteJSONOption
   if (options.mkdir) {
     ensureDirSync(path.dirname(file));
   }
-  fs.writeFileSync(file, JSON.stringify(data, options.replacer as any, options.spaces as any), {
-    encoding: options.encoding ?? 'utf8',
-    mode: options.mode,
-    flag: options.flag,
-  });
+  // This cannot be inlined due to https://github.com/oven-sh/bun/issues/1516
+  const fsOpts: any = { encoding: options.encoding ?? 'utf8' };
+  if (options.mode) {
+    fsOpts.mode = options.mode;
+  }
+  if (options.flag) {
+    fsOpts.flag = options.flag;
+  }
+  fs.writeFileSync(
+    file,
+    JSON.stringify(data, options.replacer as any, options.spaces as any),
+    fsOpts
+  );
 }
 
 export async function readJSON<T>(file: string, options: ReadJSONOptions<T> = {}): Promise<T> {
@@ -141,21 +152,33 @@ export async function writeJSON<T>(file: string, data: T, options: WriteJSONOpti
   if (options.mkdir) {
     await ensureDir(path.dirname(file));
   }
+
+  // This cannot be inlined due to https://github.com/oven-sh/bun/issues/1516
+  const fsOpts: any = { encoding: options.encoding ?? 'utf8' };
+  if (options.mode) {
+    fsOpts.mode = options.mode;
+  }
+  if (options.flag) {
+    fsOpts.flag = options.flag;
+  }
+
   await fs.promises.writeFile(
     file,
     JSON.stringify(data, options.replacer as any, options.spaces as any),
-    {
-      encoding: options.encoding ?? 'utf8',
-      mode: options.mode,
-      flag: options.flag,
-    }
+    options
   );
 }
 
 export function readYAMLSync<T>(file: string, options: ReadYAMLOptions = {}): T {
   const { encoding, flag, default: def, ...yamlOptions } = options;
   try {
-    return parseYAML(fs.readFileSync(file, { encoding: encoding ?? 'utf8', flag }), yamlOptions);
+    // This cannot be inlined due to https://github.com/oven-sh/bun/issues/1516
+    const fsOpts = { encoding: encoding ?? 'utf8' };
+    if (flag) {
+      // @ts-expect-error .
+      fsOpts.flag = flag;
+    }
+    return parseYAML(fs.readFileSync(file, fsOpts), yamlOptions);
   } catch (error) {
     if ('default' in options) {
       return typeof def === 'function'
@@ -173,20 +196,29 @@ export function writeYAMLSync<T>(file: string, data: T, options: WriteYAMLOption
     ensureDirSync(path.dirname(file));
   }
 
-  fs.writeFileSync(file, stringifyYAML(data, yamlOptions), {
-    encoding: encoding ?? 'utf8',
-    flag,
-    mode,
-  });
+  // This cannot be inlined due to https://github.com/oven-sh/bun/issues/1516
+  const fsOpts: any = { encoding: encoding ?? 'utf8' };
+  if (mode) {
+    fsOpts.mode = mode;
+  }
+  if (flag) {
+    fsOpts.flag = flag;
+  }
+
+  fs.writeFileSync(file, stringifyYAML(data, yamlOptions), fsOpts);
 }
 
 export async function readYAML<T>(file: string, options: ReadYAMLOptions = {}): Promise<T> {
   const { encoding, flag, default: def, ...yamlOptions } = options;
   try {
-    return parseYAML(
-      await fs.promises.readFile(file, { encoding: encoding ?? 'utf8', flag }),
-      yamlOptions
-    );
+    // This cannot be inlined due to https://github.com/oven-sh/bun/issues/1516
+    const fsOpts = { encoding: encoding ?? 'utf8' };
+    if (flag) {
+      // @ts-expect-error .
+      fsOpts.flag = flag;
+    }
+
+    return parseYAML(await fs.promises.readFile(file, fsOpts), yamlOptions);
   } catch (error) {
     if ('default' in options) {
       return typeof def === 'function'
@@ -204,11 +236,16 @@ export async function writeYAML<T>(file: string, data: T, options: WriteYAMLOpti
     await ensureDir(path.dirname(file));
   }
 
-  await fs.promises.writeFile(file, stringifyYAML(data, yamlOptions), {
-    encoding: encoding ?? 'utf8',
-    flag,
-    mode,
-  });
+  // This cannot be inlined due to https://github.com/oven-sh/bun/issues/1516
+  const fsOpts: any = { encoding: encoding ?? 'utf8' };
+  if (mode) {
+    fsOpts.mode = mode;
+  }
+  if (flag) {
+    fsOpts.flag = flag;
+  }
+
+  await fs.promises.writeFile(file, stringifyYAML(data, yamlOptions), fsOpts);
 }
 
 export interface WalkOptions {
