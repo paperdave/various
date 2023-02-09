@@ -1,7 +1,9 @@
 # nodun
 
+**This feature is now available in Bun 0.4 itself with the `bun --bun run ...` command**
+
 <div>
-<a href="https://github.com/paperdave/various#project-status-meaning"><img alt="Status: Stable" src="https://img.shields.io/badge/status-stable-brightgreen"></a>
+<a href="https://github.com/paperdave/various#project-status-meaning"><img alt="Status: Stable" src="https://img.shields.io/badge/status-dead-red"></a>
 <a href="https://www.npmjs.com/package/nodun"><img alt="NPM Version" src="https://img.shields.io/npm/v/nodun.svg?label=latest%20release"></a>
 </div>
 <br>

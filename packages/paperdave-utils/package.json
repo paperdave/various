@@ -10,7 +10,7 @@
   "homepage": "https://github.com/paperdave/various/tree/master/packages/paperdave-utils",
   "repository": "github:paperdave/various",
   "license": "MIT",
-  "author": "Dave Caruso <dave@davecode.net>",
+  "author": "Dave Caruso <me@paperdave.net>",
   "type": "module",
   "exports": {
     ".": {

@@ -43,7 +43,6 @@
     "typescript": "^4.6.4"
   },
   "engines": {
-    "bun": ">=0.2.1",
     "node": ">=16"
   },
   "paperdave-status": "stable"
