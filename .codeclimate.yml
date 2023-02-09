@@ -1,0 +1,5 @@
+exclude_patterns:
+  # generated files
+  - packages/paperdave-utils/src/pipe.nowrap.ts
+  # dead/lts packages
+  - packages/nodun

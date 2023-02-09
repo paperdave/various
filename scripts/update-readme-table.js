@@ -17,6 +17,11 @@ const packageJSONs = packages
   .map(packageName => JSON.parse(fs.readFileSync(`./packages/${packageName}/package.json`)))
   .filter(pkg => !pkg.private)
   .sort((a, b) => {
+    if (a['paperdave-status'] === 'dead' && b['paperdave-status'] !== 'dead') {
+      return 1;
+    } else if (a['paperdave-status'] !== 'dead' && b['paperdave-status'] === 'dead') {
+      return -1;
+    }
     const aSort = a['paperdave-readme-sort'];
     const bSort = b['paperdave-readme-sort'];
     if (aSort && bSort) {
