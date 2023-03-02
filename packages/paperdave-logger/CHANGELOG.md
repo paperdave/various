@@ -1,5 +1,26 @@
 # @paperdave/logger
 
+## 3.0.0
+
+### Major Changes
+
+- Removed v3 deprecations: ([#50](https://github.com/paperdave/various/pull/50))
+
+  - `log()` removed. use `new Logger()` for custom log names
+  - `fail` is renamed to `error` in all cases.
+  - `LogLevel` removed
+  - `level` export removed
+  - `setLevel()` removed. Use named logger strings with `setLogFilter` instead.
+  - `injectLogger()` no longer takes console as an argument, pass it as a property of the options object.
+
+* In options passed to `new Logger()` Remove `error` in favor of `type: "error"` ([#50](https://github.com/paperdave/various/pull/50))
+
+### Minor Changes
+
+- `writeLine` now accepts no arguments to default to printing a fully blank line ([#50](https://github.com/paperdave/various/pull/50))
+
+* Fix color issues with printing errors, warn(), and many other places. ([#50](https://github.com/paperdave/various/pull/50))
+
 ## 2.3.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "export-directory",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "automatically manage index.js files that export all files in the directory",
   "homepage": "https://github.com/paperdave/various/tree/master/packages/export-directory",
   "repository": "github:paperdave/various",
@@ -21,7 +21,7 @@
     "lint": "eslint . --max-warnings=0"
   },
   "dependencies": {
-    "@paperdave/logger": "workspace:^2.2.4",
+    "@paperdave/logger": "workspace:^3.0.0",
     "@paperdave/utils": "workspace:^1.4.1",
     "chokidar": "^3.5.3",
     "picomatch": "^2.3.1",
