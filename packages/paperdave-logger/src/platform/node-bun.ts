@@ -34,12 +34,12 @@ export const platformWrite = {
 export const platformUnicodeSupported =
   process.platform === 'win32'
     ? Boolean(process.env.CI) ||
-      Boolean(process.env.WT_SESSION) || // Windows Terminal
-      process.env.ConEmuTask === '{cmd::Cmder}' || // ConEmu and cmder
-      process.env.TERM_PROGRAM === 'vscode' ||
-      process.env.TERM === 'xterm-256color' ||
-      process.env.TERM === 'alacritty' ||
-      process.env.TERMINAL_EMULATOR === 'JetBrains-JediTerm'
+    Boolean(process.env.WT_SESSION) || // Windows Terminal
+    process.env.ConEmuTask === '{cmd::Cmder}' || // ConEmu and cmder
+    process.env.TERM_PROGRAM === 'vscode' ||
+    process.env.TERM === 'xterm-256color' ||
+    process.env.TERM === 'alacritty' ||
+    process.env.TERMINAL_EMULATOR === 'JetBrains-JediTerm'
     : process.env.TERM !== 'linux';
 
 const cwd = process.cwd();
@@ -50,3 +50,5 @@ export function platformSimplifyErrorPath(filepath: string) {
   }
   return filepath;
 }
+
+export { builtinModules } from 'module'
