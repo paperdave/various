@@ -1,7 +1,6 @@
 import chalk from 'chalk';
-import path from 'node:path';
-import { platformSimplifyErrorPath } from '$platform';
-import { builtinModules } from 'node:module';
+import path from 'path';
+import { platformSimplifyErrorPath, builtinModules } from '$platform';
 
 /**
  * A PrintableError is an error that defines some extra fields. `@paperdave/logger` handles these
@@ -29,43 +28,43 @@ export function formatStackTrace(err: Error) {
   const v8firstLine = `${err.name}${err.message ? ': ' + err.message : ''}\n`;
   const parsed = err.stack.startsWith(v8firstLine)
     ? err.stack
-        .slice(v8firstLine.length)
-        .split('\n')
-        .map(line => {
-          const match = /at (.*) \((.*):(\d+):(\d+)\)/.exec(line);
-          if (!match) {
-            const match2 = /at (.*):(\d+):(\d+)/.exec(line);
-            if (match2) {
-              return {
-                method: '<top level>',
-                file: match2[1],
-                line: match2[2],
-                column: match2[3],
-              };
-            }
-            return { method: '<unknown>', file: null, line: null, column: null };
+      .slice(v8firstLine.length)
+      .split('\n')
+      .map(line => {
+        const match = /at (.*) \((.*):(\d+):(\d+)\)/.exec(line);
+        if (!match) {
+          const match2 = /at (.*):(\d+):(\d+)/.exec(line);
+          if (match2) {
+            return {
+              method: '<top level>',
+              file: match2[1],
+              line: match2[2],
+              column: match2[3],
+            };
           }
-          return {
-            method: match[1],
-            file: match[2],
-            line: parseInt(match[3], 10),
-            column: parseInt(match[4], 10),
-            native: line.includes('[native code]'),
-          };
-        })
-    : err.stack.split('\n').map(line => {
-        const at = line.indexOf('@');
-        const method = line.slice(0, at);
-        const file = line.slice(at + 1);
-        const fileSplit = /^(.*?):(\d+):(\d+)$/.exec(file);
+          return { method: '<unknown>', file: null, line: null, column: null };
+        }
         return {
-          method: (['module code'].includes(method) ? '' : method) || '',
-          file: fileSplit ? platformSimplifyErrorPath(fileSplit[1]) : null,
-          line: fileSplit ? parseInt(fileSplit[2], 10) : null,
-          column: fileSplit ? parseInt(fileSplit[3], 10) : null,
-          native: file === '[native code]',
+          method: match[1],
+          file: match[2],
+          line: parseInt(match[3], 10),
+          column: parseInt(match[4], 10),
+          native: line.includes('[native code]'),
         };
-      });
+      })
+    : err.stack.split('\n').map(line => {
+      const at = line.indexOf('@');
+      const method = line.slice(0, at);
+      const file = line.slice(at + 1);
+      const fileSplit = /^(.*?):(\d+):(\d+)$/.exec(file);
+      return {
+        method: (['module code'].includes(method) ? '' : method) || '',
+        file: fileSplit ? platformSimplifyErrorPath(fileSplit[1]) : null,
+        line: fileSplit ? parseInt(fileSplit[2], 10) : null,
+        column: fileSplit ? parseInt(fileSplit[3], 10) : null,
+        native: file === '[native code]',
+      };
+    });
 
   const nodeModuleJobIndex = parsed.findIndex(
     line => line.file === 'node:internal/modules/esm/module_job'
@@ -99,9 +98,9 @@ export function formatStackTrace(err: Error) {
       const source = native
         ? `[native code]`
         : file
-        ? isBuiltin(file)
-          ? `(${chalk.magenta(file)})`
-          : [
+          ? isBuiltin(file)
+            ? `(${chalk.magenta(file)})`
+            : [
               '(',
               getColoredDirname(file),
               // Leave the first slash on linux.
@@ -110,7 +109,7 @@ export function formatStackTrace(err: Error) {
               line + ':' + column,
               ')',
             ].join('')
-        : '<unknown>';
+          : '<unknown>';
 
       return chalk.blackBright(`  at ${method === '' ? '' : `${method} `}${source}`);
     })

@@ -1,7 +1,6 @@
 import ansi from 'ansi-escapes';
 import { platformWidgetEnabled, platformWrite } from '$platform';
 import { Timer } from '@paperdave/utils';
-import { writeSync } from 'fs';
 import { error, success } from './log';
 import { STDOUT } from './util';
 
@@ -30,6 +29,10 @@ export abstract class LogWidget {
     if (!widgetTimer) {
       widgetTimer = setInterval(redrawWidgets, 1000 / 60);
     }
+
+    if (!platformWidgetEnabled) {
+      console.warn('LogWidget does not work in the browser.');
+    }
   }
 
   /**
@@ -51,7 +54,7 @@ export abstract class LogWidget {
     }
     clearWidgets();
     if (finalMessage) {
-      writeSync(STDOUT, finalMessage + '\n');
+      platformWrite.info(STDOUT, finalMessage + '\n');
     }
     if (widgets.length === 0) {
       clearInterval(widgetTimer);
@@ -100,7 +103,7 @@ export abstract class LogWidget {
     widgetDrawingDisabled++;
     try {
       fn();
-    } catch {}
+    } catch { }
     widgetDrawingDisabled--;
     redrawWidgets();
   }

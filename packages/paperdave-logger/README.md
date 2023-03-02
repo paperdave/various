@@ -6,20 +6,21 @@
 </div>
 <br>
 
-This is the logger I use in some of my programs. For common cases, `info()` runs faster than Node.js's `console.log()`, plus:
+This is the logger I use in my programs. It unifies ideas from many other console io packages into one coherent interface.
 
-- Customizable log levels, with the same automatic color system the `debug` package uses.
-- Built in log levels: `info`, `warn`, `debug`, `error`, `success`, and `trace`.
+- Customizable log levels
+  - Built in: `info`, `warn`, `debug`, `error`, `success`, `trace`
+  - Custom log names with the same automatic color system the `debug` package uses.
 - Injecting the global `console` object to force all logs to be formatted consistantly.
-- Widgets, dynamic and animatable things that stick to the bottom of your log:
+- Widgets: dynamic, animatable, and interactive things that stick to the bottom of your log:
   - Spinners (replaces `ora`)
-  - Progress Bars (replaces `cli-progress` and alternatives)
-  - Simple API for other widgets (specify and `fps` and implement a `format` function).
+  - Progress Bars (replaces `cli-progress`)
+  - Text/Selector Input (replaces `prompt`)
 - Pretty error formatting, just pass an error object to any log function.
   - Colorized and simplified stack traces.
-  - `CLIError`, which provides the ability to provide a long description and hide the stack trace - Good for displaying to end users.
+  - Easy interface to add long descriptions onto errors the end user may see.
 - Rexports `chalk` and `ansi-escapes` for easy usage in commonjs modules.
-- Bun and Node.js support.
+- Bun and Node.js support. Technically works in browser, but limited features and it's a huge bundle (13kb node, 51kb browser).
 
 ## Basic Examples
 

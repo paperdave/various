@@ -16,8 +16,7 @@
     "strict": true,
     "declarationDir": "dist",
     "paths": {
-      "$platform": ["./src/platform/browser.ts"],
-      "path": ["./node_modules/path-browserify"]
+      "$platform": ["./src/platform/node-bun.ts"]
     }
   },
   "exclude": ["**/dist"],

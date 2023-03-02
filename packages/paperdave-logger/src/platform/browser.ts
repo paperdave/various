@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const _console = { ...console };
 
-export function platformWriteWidgetText() {}
+export function platformWriteWidgetText() { }
 
 export const platformWidgetEnabled = false;
 
@@ -12,4 +12,10 @@ export const platformWrite = {
   debug: _console.debug,
 };
 
+export function platformSimplifyErrorPath(filepath: string) {
+  return filepath;
+}
+
 export const platformUnicodeSupported = true;
+
+export const builtinModules: string[] = [];
