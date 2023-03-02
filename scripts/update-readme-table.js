@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 import fs from 'fs';
-import log, { withSpinner } from '../packages/paperdave-logger/dist/index.js';
+import log, { withSpinner } from '../packages/logger/src';
 
 log.info('Updating README.md with package information.');
 
@@ -33,6 +33,13 @@ const packageJSONs = packages
     }
     return a.name.localeCompare(b.name);
   });
+
+// Dead Packages
+packageJSONs.push({
+  name: 'nodun',
+  description: 'tricks programs to run js with bun instead of node.js',
+  'paperdave-status': 'dead',
+});
 
 const headers = ['Package', 'Status', 'Description'];
 
@@ -68,6 +75,10 @@ fs.writeFileSync('./README.md', readmeWithTable);
 log.success('Updated README.md with package information.');
 
 await withSpinner(
+  {
+    text: 'Formatting README.md',
+    successText: 'Formatted README.md',
+  },
   () =>
     new Promise((resolve, reject) => {
       const proc = spawn('./node_modules/.bin/prettier', ['--write', './README.md']);
@@ -78,9 +89,5 @@ await withSpinner(
           reject(new Error('Prettier failed'));
         }
       });
-    }),
-  {
-    text: 'Formatting README.md',
-    successText: 'Formatted README.md',
-  }
+    })
 );

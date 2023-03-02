@@ -36,3 +36,5 @@ pnpm esbuild $ESBUILD_OPTS_ESM \
   --platform=browser \
   src/index.ts \
   --outfile=./dist/browser.js
+
+cp tsconfig.node.json tsconfig.json

@@ -1,9 +1,6 @@
 {
   "private": true,
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "build": "turbo run build",
     "bump": "changeset version",
