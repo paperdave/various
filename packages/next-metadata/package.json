@@ -1,6 +1,6 @@
 {
   "name": "next-metadata",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Port of Next.js' metadata object API to use in other frameworks.",
   "keywords": [
     "nextjs",
