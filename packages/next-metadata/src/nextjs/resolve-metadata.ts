@@ -293,10 +293,10 @@ export async function accumulateMetadata(
       const currentResolvedMetadata: ResolvedMetadata =
         process.env.NODE_ENV === 'development'
           ? Object.freeze(
-              require('next/dist/compiled/@edge-runtime/primitives/structured-clone').structuredClone(
-                resolvedMetadata
-              )
+            require('next/dist/compiled/@edge-runtime/primitives/structured-clone').structuredClone(
+              resolvedMetadata
             )
+          )
           : resolvedMetadata
 
       // This resolve should unblock the generateMetadata function if it awaited the parent

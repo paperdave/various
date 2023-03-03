@@ -1,6 +1,7 @@
 import * as logBuiltins from './log';
 import { createLogger } from './log-base';
 import { CustomLoggerOptions, LogFunction } from './types';
+import type { info, warn, debug, error, success, trace, writeLine } from './log';
 
 type LogConstructor = {
   /**
@@ -14,7 +15,7 @@ type LogConstructor = {
    * - Passing a color argument with a RGB value [0, 0, 255]
    * - Using chalk or another formatter on the namespace name.
    */
-  new (name: string, options?: CustomLoggerOptions): LogFunction;
+  new(name: string, options?: CustomLoggerOptions): LogFunction;
   /**
    * Creates a logger function with a psuedo-random color based off the namespace.
    *
@@ -27,7 +28,15 @@ type LogConstructor = {
    * - Using chalk or another formatter on the namespace name.
    */
   (name: string, options?: CustomLoggerOptions): LogFunction;
-} & typeof logBuiltins;
+
+  info: typeof info;
+  warn: typeof warn;
+  debug: typeof debug;
+  error: typeof error;
+  success: typeof success;
+  trace: typeof trace;
+  writeLine: typeof writeLine;
+};
 
 for (const key in logBuiltins) {
   (createLogger as any)[key] = (logBuiltins as any)[key];

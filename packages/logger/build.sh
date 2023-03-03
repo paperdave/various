@@ -38,3 +38,5 @@ pnpm esbuild $ESBUILD_OPTS_ESM \
   --outfile=./dist/browser.js
 
 cp tsconfig.node.json tsconfig.json
+
+pnpm dts-bundle-generator src/index.ts -o ./dist/index.d.ts

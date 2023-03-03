@@ -54,7 +54,7 @@ export abstract class LogWidget {
     }
     clearWidgets();
     if (finalMessage) {
-      platformWrite.info(STDOUT, finalMessage + '\n');
+      platformWrite.info(finalMessage + '\n');
     }
     if (widgets.length === 0) {
       clearInterval(widgetTimer);
