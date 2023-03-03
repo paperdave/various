@@ -1,0 +1,42 @@
+{
+  "name": "next-metadata",
+  "version": "0.1.0",
+  "description": "Port of Next.js' metadata object API to use in other frameworks.",
+  "keywords": [
+    "nextjs",
+    "metadata"
+  ],
+  "homepage": "https://github.com/paperdave/various/tree/master/packages/next-metadata",
+  "repository": "github:paperdave/various",
+  "license": "MIT",
+  "author": "Dave Caruso <me@paperdave.net>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/*",
+    "readme.md"
+  ],
+  "scripts": {
+    "build": "bash build.sh"
+  },
+  "devDependencies": {
+    "dts-bundle-generator": "^7.2.0",
+    "esbuild": "^0.17.10",
+    "typescript": "^4.9.5"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "paperdave-status": "wip"
+}

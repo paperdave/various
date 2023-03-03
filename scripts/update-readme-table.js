@@ -8,7 +8,7 @@ const statusColors = {
   stable: 'brightgreen',
   lts: 'blue',
   dead: 'red',
-  wip: 'grey',
+  wip: 'yellow',
 };
 
 const packages = fs.readdirSync('./packages');
@@ -20,6 +20,11 @@ const packageJSONs = packages
     if (a['paperdave-status'] === 'dead' && b['paperdave-status'] !== 'dead') {
       return 1;
     } else if (a['paperdave-status'] !== 'dead' && b['paperdave-status'] === 'dead') {
+      return -1;
+    }
+    if (a['paperdave-status'] === 'wip' && b['paperdave-status'] !== 'wip') {
+      return 1;
+    } else if (a['paperdave-status'] !== 'wip' && b['paperdave-status'] === 'wip') {
       return -1;
     }
     const aSort = a['paperdave-readme-sort'];
