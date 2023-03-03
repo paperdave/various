@@ -28,6 +28,7 @@
     "build": "bash build.sh"
   },
   "devDependencies": {
+    "@types/node": "^18.0.3",
     "dts-bundle-generator": "^7.2.0",
     "esbuild": "^0.17.10",
     "typescript": "^4.9.5"
