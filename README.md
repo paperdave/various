@@ -26,6 +26,7 @@ The exception of the above would be packages that don't make sense in some envir
 | [![npm](https://img.shields.io/npm/v/@paperdave/logger.svg?label=%40paperdave%2Flogger)](https://www.npmjs.com/package/@paperdave/logger) | [![brightgreen](https://img.shields.io/badge/status-stable-brightgreen.svg)](#project-status-meaning) | Versitle logging with spinners and progress bars. |
 | [![npm](https://img.shields.io/npm/v/export-directory.svg?label=export-directory)](https://www.npmjs.com/package/export-directory) | [![brightgreen](https://img.shields.io/badge/status-stable-brightgreen.svg)](#project-status-meaning) | automatically manage index.js files that export all files in the directory |
 | [![npm](https://img.shields.io/npm/v/rollup-plugin-all-external.svg?label=rollup-plugin-all-external)](https://www.npmjs.com/package/rollup-plugin-all-external) | [![brightgreen](https://img.shields.io/badge/status-stable-brightgreen.svg)](#project-status-meaning) | Simple plugin to set externals for libraries. |
+| [![npm](https://img.shields.io/npm/v/next-metadata.svg?label=next-metadata)](https://www.npmjs.com/package/next-metadata) | [![yellow](https://img.shields.io/badge/status-wip-yellow.svg)](#project-status-meaning) | Port of Next.js' metadata object API to use in other frameworks. |
 | [![npm](https://img.shields.io/npm/v/nodun.svg?label=nodun)](https://www.npmjs.com/package/nodun) | [![red](https://img.shields.io/badge/status-dead-red.svg)](#project-status-meaning) | tricks programs to run js with bun instead of node.js |
 
 <!-- END-README-TABLE -->

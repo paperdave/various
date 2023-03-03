@@ -1,5 +1,6 @@
 exclude_patterns:
   # generated files
-  - packages/paperdave-utils/src/pipe.nowrap.ts
+  - packages/utils/src/pipe.nowrap.ts
+  - packages/next-metadata/src/nextjs
   # dead/lts packages
   - packages/nodun
