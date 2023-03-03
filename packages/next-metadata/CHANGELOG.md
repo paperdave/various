@@ -1,5 +1,11 @@
 # next-metadata
 
+## 0.1.2
+
+### Patch Changes
+
+- Fix a bug with ExtendMeta, breaking some opengraph meta
+
 ## 0.1.1
 
 ### Patch Changes

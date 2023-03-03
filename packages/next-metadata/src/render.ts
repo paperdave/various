@@ -49,7 +49,7 @@ function ExtendMeta(prefix: string, content: any) {
     return MetaProp(prefix, content);
   } else {
     let str = '';
-    for (const [prop, value] of content) {
+    for (const [prop, value] of Object.entries(content)) {
       if (value) {
         str += MetaProp(
           prefix === 'og:image' && prop === 'url' ? 'og:image' : prefix + ':' + prop,
