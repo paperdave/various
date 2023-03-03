@@ -1,5 +1,12 @@
 # @paperdave/logger
 
+## 3.0.1
+
+### Patch Changes
+
+- Fix widget bug
+  ([`64b6cce`](https://github.com/paperdave/various/commit/64b6cce276b0aa5da7da1c150643fca31df01894))
+
 ## 3.0.0
 
 ### Major Changes
@@ -11,62 +18,81 @@
   - `LogLevel` removed
   - `level` export removed
   - `setLevel()` removed. Use named logger strings with `setLogFilter` instead.
-  - `injectLogger()` no longer takes console as an argument, pass it as a property of the options object.
+  - `injectLogger()` no longer takes console as an argument, pass it as a property of the options
+    object.
 
-* In options passed to `new Logger()` Remove `error` in favor of `type: "error"` ([#50](https://github.com/paperdave/various/pull/50))
+* In options passed to `new Logger()` Remove `error` in favor of `type: "error"`
+  ([#50](https://github.com/paperdave/various/pull/50))
 
 ### Minor Changes
 
-- `writeLine` now accepts no arguments to default to printing a fully blank line ([#50](https://github.com/paperdave/various/pull/50))
+- `writeLine` now accepts no arguments to default to printing a fully blank line
+  ([#50](https://github.com/paperdave/various/pull/50))
 
-* Fix color issues with printing errors, warn(), and many other places. ([#50](https://github.com/paperdave/various/pull/50))
+* Fix color issues with printing errors, warn(), and many other places.
+  ([#50](https://github.com/paperdave/various/pull/50))
 
 ## 2.3.0
 
 ### Minor Changes
 
-- re-export `chalk` and `ansiEscapes` for ease of use ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+- re-export `chalk` and `ansiEscapes` for ease of use
+  ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
 
-* upgraded to chalk 5 ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+* upgraded to chalk 5
+  ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
 
-- allow passing a single string instead of an object to `Progress`, `Spinner`, `withSpinner`, `withProgress`, which is shorthand for `{ text: ... }`. ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+- allow passing a single string instead of an object to `Progress`, `Spinner`, `withSpinner`,
+  `withProgress`, which is shorthand for `{ text: ... }`.
+  ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
 
-* **deprecation warning**: swapped the order of the arguments for `withSpinner` and `withProgress`. in v3 this will be enforced ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+* **deprecation warning**: swapped the order of the arguments for `withSpinner` and `withProgress`.
+  in v3 this will be enforced
+  ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
 
 ### Patch Changes
 
-- build for commonjs so `require('@paperdave/logger')` works ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+- build for commonjs so `require('@paperdave/logger')` works
+  ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
 
-* bugfix: clear widgets on error before exit. ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+* bugfix: clear widgets on error before exit.
+  ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
 
-- `LogWidget.batchRedraw` supports nesting now ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
+- `LogWidget.batchRedraw` supports nesting now
+  ([`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61))
 
-- Updated dependencies [[`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61)]:
+- Updated dependencies
+  [[`d0f6986`](https://github.com/paperdave/various/commit/d0f6986a6000a4d8888bf86a9cf5f566d0318e61)]:
   - @paperdave/utils@1.5.0
 
 ## 2.2.4
 
 ### Patch Changes
 
-- Fix blank lines and stringification missing a space ([`aefec80`](https://github.com/paperdave/various/commit/aefec800ddab048867d10a3990350f8f4de2c5a9))
+- Fix blank lines and stringification missing a space
+  ([`aefec80`](https://github.com/paperdave/various/commit/aefec800ddab048867d10a3990350f8f4de2c5a9))
 
-- Updated dependencies [[`5548f17`](https://github.com/paperdave/various/commit/5548f1789f709e570691c0bfa7ae88cc8d550e3a)]:
+- Updated dependencies
+  [[`5548f17`](https://github.com/paperdave/various/commit/5548f1789f709e570691c0bfa7ae88cc8d550e3a)]:
   - @paperdave/utils@1.4.1
 
 ## 2.2.3
 
 ### Patch Changes
 
-- add MIT license ([`2347a98`](https://github.com/paperdave/various/commit/2347a9898d87c41010f82f7675664efab21edc77))
+- add MIT license
+  ([`2347a98`](https://github.com/paperdave/various/commit/2347a9898d87c41010f82f7675664efab21edc77))
 
-- Updated dependencies [[`2347a98`](https://github.com/paperdave/various/commit/2347a9898d87c41010f82f7675664efab21edc77)]:
+- Updated dependencies
+  [[`2347a98`](https://github.com/paperdave/various/commit/2347a9898d87c41010f82f7675664efab21edc77)]:
   - @paperdave/utils@1.2.1
 
 ## 2.2.2
 
 ### Patch Changes
 
-- fix missing dependency ([`16d8f33`](https://github.com/paperdave/various/commit/16d8f33f4664f194f297445b7ef3cf6e8af01e95))
+- fix missing dependency
+  ([`16d8f33`](https://github.com/paperdave/various/commit/16d8f33f4664f194f297445b7ef3cf6e8af01e95))
 
 ## 2.2.0
 
@@ -74,51 +100,67 @@
 
 - Add `trace` ([#32](https://github.com/paperdave/various/pull/32))
 
-* All log functions accept and format error objects. ([#34](https://github.com/paperdave/various/pull/34))
+* All log functions accept and format error objects.
+  ([#34](https://github.com/paperdave/various/pull/34))
 
-- injection can handle uncaught errors automatically ([#32](https://github.com/paperdave/various/pull/32))
+- injection can handle uncaught errors automatically
+  ([#32](https://github.com/paperdave/various/pull/32))
 
-* deprecate `level`, `setLevel`, `LogLevel`, `fail`. ([#34](https://github.com/paperdave/various/pull/34))
+* deprecate `level`, `setLevel`, `LogLevel`, `fail`.
+  ([#34](https://github.com/paperdave/various/pull/34))
 
-- add custom namespaces using new `createLogger` function. ([#34](https://github.com/paperdave/various/pull/34))
+- add custom namespaces using new `createLogger` function.
+  ([#34](https://github.com/paperdave/various/pull/34))
 
   - all the built in log functions are created through this API.
 
-* Add `trace`, `time`, `timeEnd`, `timeLog`, `count`, `countReset`, and `assert` to the injected console. ([#32](https://github.com/paperdave/various/pull/32))
+* Add `trace`, `time`, `timeEnd`, `timeLog`, `count`, `countReset`, and `assert` to the injected
+  console. ([#32](https://github.com/paperdave/various/pull/32))
 
-- `error` now prints with an X symbol, and this is the standard for printing errors. ([#34](https://github.com/paperdave/various/pull/34))
+- `error` now prints with an X symbol, and this is the standard for printing errors.
+  ([#34](https://github.com/paperdave/various/pull/34))
 
-  `success` is now seen as the opposite of an `error`. I used to say to avoid calling success too much, but with Spinners and Progress bars ending on a `success` check or `error` X message, these should probably be used more often, instead of `info` on a successful action being done.
+  `success` is now seen as the opposite of an `error`. I used to say to avoid calling success too
+  much, but with Spinners and Progress bars ending on a `success` check or `error` X message, these
+  should probably be used more often, instead of `info` on a successful action being done.
 
 ### Patch Changes
 
-- Explicitly define nodejs and bun version support. ([`5d0bd0d`](https://github.com/paperdave/various/commit/5d0bd0de6a8429802a66e393134a798b6ea2ff4f))
+- Explicitly define nodejs and bun version support.
+  ([`5d0bd0d`](https://github.com/paperdave/various/commit/5d0bd0de6a8429802a66e393134a798b6ea2ff4f))
 
-* injectConsole preferably takes an object instead of a console object, but this is not required yet. in v3, it will require for an object. ([#32](https://github.com/paperdave/various/pull/32))
+* injectConsole preferably takes an object instead of a console object, but this is not required
+  yet. in v3, it will require for an object. ([#32](https://github.com/paperdave/various/pull/32))
 
-- Add some badges to the readme indicating project status and release data ([`5d0bd0d`](https://github.com/paperdave/various/commit/5d0bd0de6a8429802a66e393134a798b6ea2ff4f))
+- Add some badges to the readme indicating project status and release data
+  ([`5d0bd0d`](https://github.com/paperdave/various/commit/5d0bd0de6a8429802a66e393134a798b6ea2ff4f))
 
 * removed line wrapping ([#34](https://github.com/paperdave/various/pull/34))
 
-- proper writing to standard error for errors and warnings and interactive content ([#34](https://github.com/paperdave/various/pull/34))
+- proper writing to standard error for errors and warnings and interactive content
+  ([#34](https://github.com/paperdave/various/pull/34))
 
 ## 2.1.0
 
 ### Minor Changes
 
-- switch from using internal ansi library to `chalk@4` ([`9334160`](https://github.com/paperdave/various/commit/933416077f4201e52b9f4bebeec93cae0350deab))
+- switch from using internal ansi library to `chalk@4`
+  ([`9334160`](https://github.com/paperdave/various/commit/933416077f4201e52b9f4bebeec93cae0350deab))
 
 ### Patch Changes
 
-- Fix `fail` writing to stdin instead of stdout ([`257963a`](https://github.com/paperdave/various/commit/257963a4d6572402b0ef904a6cf7978cf56b5c21))
+- Fix `fail` writing to stdin instead of stdout
+  ([`257963a`](https://github.com/paperdave/various/commit/257963a4d6572402b0ef904a6cf7978cf56b5c21))
 
-* fix error stack traces printing a weird symbol in some consoles ([`9334160`](https://github.com/paperdave/various/commit/933416077f4201e52b9f4bebeec93cae0350deab))
+* fix error stack traces printing a weird symbol in some consoles
+  ([`9334160`](https://github.com/paperdave/various/commit/933416077f4201e52b9f4bebeec93cae0350deab))
 
 ## 2.0.6
 
 ### Patch Changes
 
-- Using ES6 instead of ES2020 to prevent usage of nullish coalescing operator ([#28](https://github.com/paperdave/various/pull/28))
+- Using ES6 instead of ES2020 to prevent usage of nullish coalescing operator
+  ([#28](https://github.com/paperdave/various/pull/28))
 
 ## 2.0.5
 
@@ -130,19 +172,22 @@
 
 ### Patch Changes
 
-- fix: write to the correct fd ([`a6d9b3f`](https://github.com/paperdave/various/commit/a6d9b3fb0040a18300c6b7c9d1fdd30f88b7d3ca))
+- fix: write to the correct fd
+  ([`a6d9b3f`](https://github.com/paperdave/various/commit/a6d9b3fb0040a18300c6b7c9d1fdd30f88b7d3ca))
 
 ## 2.0.3
 
 ### Patch Changes
 
-- allow errors to be passed to `fail`, and also style them slightly nicer ([`2bc98a3`](https://github.com/paperdave/various/commit/2bc98a33e12367cf4968adda0a76f5f05667fe07))
+- allow errors to be passed to `fail`, and also style them slightly nicer
+  ([`2bc98a3`](https://github.com/paperdave/various/commit/2bc98a33e12367cf4968adda0a76f5f05667fe07))
 
 ## 2.0.2
 
 ### Patch Changes
 
-- update readme/metadata ([`83afd2a`](https://github.com/paperdave/various/commit/83afd2a419e32fe3f9c7e55f756fb063eb9257ca))
+- update readme/metadata
+  ([`83afd2a`](https://github.com/paperdave/various/commit/83afd2a419e32fe3f9c7e55f756fb063eb9257ca))
 
 * Fixed typos, and added commas ([#15](https://github.com/paperdave/various/pull/15))
 

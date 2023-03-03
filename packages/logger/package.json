@@ -1,6 +1,6 @@
 {
   "name": "@paperdave/logger",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Versitle logging with spinners and progress bars.",
   "keywords": [
     "logger",
