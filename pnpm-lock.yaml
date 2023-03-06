@@ -128,11 +128,13 @@ importers:
   packages/next-metadata:
     specifiers:
       '@types/node': ^18.0.3
+      bun-types: ^0.1.2
       dts-bundle-generator: ^7.2.0
       esbuild: ^0.17.10
       typescript: ^4.9.5
     devDependencies:
       '@types/node': 18.14.3
+      bun-types: 0.1.11
       dts-bundle-generator: 7.2.0
       esbuild: 0.17.10
       typescript: 4.9.5

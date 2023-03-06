@@ -32,8 +32,8 @@ const resolveUrl = (url: string | URL) =>
 
 function IconLink(rel: string, icon: Icon) {
   if (typeof icon === 'object' && !(icon instanceof URL)) {
-    const { url, rel, ...props } = icon;
-    return `<link rel="${esc(rel)}" href="${esc(resolveUrl(url))}" ${Object.keys(props).map(key => `${key}="${esc(props[key])}"`).join(' ')} />`;
+    const { url, rel: _, ...props } = icon;
+    return `<link rel="${esc(rel)}" href="${esc(resolveUrl(url))}"${Object.keys(props).map(key => ` ${key}="${esc(props[key])}"`).join('')}>`;
   } else {
     const href = resolveUrl(icon)
     return Link(rel, href);
