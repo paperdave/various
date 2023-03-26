@@ -14,7 +14,7 @@
     "strict": true,
     "noImplicitAny": false,
     "baseUrl": "src/",
-    "types": ["node", "bun-types"]
+    "types": []
   },
   "include": ["src/"],
   "exclude": ["**/*.test.ts", "**/*.tsx"]

@@ -1,6 +1,6 @@
 import { createArray, IterableStream } from '@paperdave/utils';
 import { LogProbs, RawLogProbs } from 'log-probs';
-import { getAPIKey } from './api-key';
+import { AuthOverride, getAuthHeaders } from './api-key';
 import { ChatModel, PRICING_TEXT, TextModel } from './models';
 import { CompletionUsage, FinishReason, RawCompletionUsage, td } from './shared';
 import { countTokens } from './tokenization';
@@ -134,6 +134,8 @@ export interface TextCompletionOptions<
 
   /** Number of retries before giving up. Defaults to 3. */
   retry?: number;
+
+  auth?: AuthOverride;
 }
 
 export interface TextCompletionMetadata {
@@ -184,13 +186,13 @@ export async function generateTextCompletion<
 >(
   options: TextCompletionOptions<Stream, N, NumLogProbs>
 ): Promise<TextCompletionResultFromOptions<Stream, N, NumLogProbs>> {
-  const { retry: retryCount, ...gptOptions } = options;
+  const { retry: retryCount, auth, ...gptOptions } = options;
 
   const response = await fetch('https://api.openai.com/v1/completions', {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAPIKey()}`,
+      ...getAuthHeaders(auth),
     },
     body: JSON.stringify(gptOptions),
   });
