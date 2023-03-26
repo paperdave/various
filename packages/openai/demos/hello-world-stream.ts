@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { generateChatCompletion, GPTMessage } from '../src/chat';
+import { generateChatCompletion, GPTMessage } from '@paperdave/utils';
 
 const messages: GPTMessage[] = [
   { role: 'system', content: 'You are a helpful assistant.' },
@@ -7,15 +6,14 @@ const messages: GPTMessage[] = [
 ];
 
 const stream = await generateChatCompletion({
-  model: 'gpt-3.5-turbo',
+  model: 'gpt-4',
   messages,
   stream: true,
 });
 
+// Stream each token as it is generated.
 for await (const text of stream.content) {
   process.stdout.write(text);
 }
 
-process.stdout.write('\n');
-
-console.log(await stream.data);
+console.log('\n\n', await stream.data); // metadata from generation
