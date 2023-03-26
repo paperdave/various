@@ -37,21 +37,22 @@ export class IterableStream<T> implements AsyncIterableIterator<T> {
   }
 
   async next(): Promise<IteratorResult<T>> {
-    if (this.#ended) {
-      return { done: true, value: undefined };
-    }
     if (this.#buffer.length > 0) {
       return { done: false, value: this.#buffer.shift()! };
+    }
+    if (this.#ended) {
+      return { done: true, value: undefined };
     }
     return new Promise((resolve, reject) => this.#listeners.add({ resolve, reject }));
   }
 
   push(value: T) {
     if (this.#listeners.size > 0) {
-      for (const listener of this.#listeners) {
+      const listeners = [...this.#listeners];
+      this.#listeners.clear();
+      for (const listener of listeners) {
         listener.resolve({ done: false, value });
       }
-      this.#listeners.clear();
     } else {
       this.#buffer.push(value);
     }
