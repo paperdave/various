@@ -25,7 +25,7 @@ export function getAuthHeaders(override?: AuthOverride) {
   }
 
   const key = override?.apiKey ?? defaultKey;
-  const org = override?.apiKey ?? defaultKey;
+  const org = override?.organization ?? defaultOrg;
 
   if (!key) {
     throw new Error(
