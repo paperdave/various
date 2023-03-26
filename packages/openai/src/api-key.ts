@@ -33,8 +33,11 @@ export function getAuthHeaders(override?: AuthOverride) {
     );
   }
 
-  return {
+  const headers = {
     Authorization: `Bearer ${key}`,
-    'OpenAI-Organization': org,
   } as Record<string, string>;
+  if (org) {
+    headers['OpenAI-Organization'] = org;
+  }
+  return headers;
 }
