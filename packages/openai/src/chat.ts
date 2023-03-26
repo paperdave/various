@@ -1,4 +1,5 @@
 import { createArray, IterableStream } from '@paperdave/utils';
+import { countChatPromptTokens, countTokens } from 'tokenization';
 import { getAPIKey } from './api-key';
 import { ChatModel, PRICING_CHAT } from './models';
 
@@ -275,7 +276,10 @@ export async function generateChatCompletion<Stream extends boolean, N extends n
         reader.releaseLock();
       }
       streams.forEach(stream => stream.end());
-      // TODO: count the tokens
+      metadata.usage.promptTokens = countChatPromptTokens(gptOptions.model, gptOptions.messages);
+      metadata.usage.completionTokens = choices
+        .map(x => countTokens(gptOptions.model, x))
+        .reduce((a, b) => a + b, 0);
       metadata.usage.totalTokens = metadata.usage.promptTokens + metadata.usage.completionTokens;
       metadata.usage.price = PRICING_CHAT[metadata.model as ChatModel] * metadata.usage.totalTokens;
       if (choices.length === 1) {
