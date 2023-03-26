@@ -28,6 +28,7 @@
     "build": "bash build.sh"
   },
   "dependencies": {
+    "@dqbd/tiktoken": "^1.0.2",
     "@paperdave/utils": "workspace:^1.6.1",
     "ansi-styles": "^6.2.1",
     "chalk": "^5.1.2"
