@@ -9,7 +9,7 @@ export const PRICING_CHAT = {
 
 export type ChatModel = keyof typeof PRICING_CHAT;
 
-export const PRICING_COMPLETION = {
+export const PRICING_TEXT = {
   'text-davinci-003': 0.02 / 1000,
   'text-davinci-002': 0.02 / 1000,
   'text-curie-001': 0.002 / 1000,
@@ -21,7 +21,7 @@ export const PRICING_COMPLETION = {
   ada: 0.0004 / 1000,
 };
 
-export type TextModel = keyof typeof PRICING_COMPLETION;
+export type TextModel = keyof typeof PRICING_TEXT;
 
 export const PRICING_IMAGE = {
   1024: 0.02,
