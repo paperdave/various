@@ -1,70 +1,59 @@
 import { createArray, IterableStream } from '@paperdave/utils';
-import { FinishReason, RawCompletionUsage } from 'shared';
-import { countChatPromptTokens, countTokens } from 'tokenization';
+import { LogProbs, RawLogProbs } from 'log-probs';
 import { getAPIKey } from './api-key';
-import { ChatModel, PRICING_CHAT, PRICING_TEXT } from './models';
+import { ChatModel, PRICING_TEXT, TextModel } from './models';
+import { CompletionUsage, FinishReason, RawCompletionUsage, td } from './shared';
+import { countTokens } from './tokenization';
 
-export type GPTMessageRole = 'system' | 'user' | 'assistant';
-
-export interface GPTMessage {
-  /** The role of the author of this message. */
-  role: GPTMessageRole;
-  /** The contents of the message. */
-  content: string;
-  /** The name of the user in a multi-user chat. */
-  name?: string;
-}
-
-export interface RawChatCompletion {
+export interface RawTextCompletion {
   id: string;
-  object: 'chat.completion';
+  object: 'text_completion';
   /** Unix time in seconds. */
   created: number;
-  model: ChatModel;
+  model: TextModel;
   usage: RawCompletionUsage;
-  choices: RawChatCompletionChoice[];
+  choices: RawTextCompletionChoice[];
 }
 
-export interface RawChatCompletionChoice {
-  message: GPTMessage;
+export interface RawTextCompletionChoice {
+  text: string;
+  index: number;
+  logprobs?: RawLogProbs | null;
   finish_reason: FinishReason;
-  index: number;
 }
 
-export interface RawChatCompletionChunk {
+interface RawTextCompletionChunk {
   id: string;
-  object: 'chat.completion.chunk';
-  /** Unix time in seconds. */
+  object: 'text_completion';
   created: number;
-  model: ChatModel;
-  choices: RawChatCompletionChunkChoice[];
+  choices: RawTextCompletionChoice[];
+  model: TextModel;
 }
 
-export interface RawChatCompletionChunkChoice {
-  delta: Partial<GPTMessage>;
-  finish_reason: FinishReason | null;
-  index: number;
-}
-
-export interface ChatCompletionOptions<
+export interface TextCompletionOptions<
   Stream extends boolean = boolean,
-  N extends number = number
+  N extends number = number,
+  NumLogProbs extends number = number
 > {
   /**
    * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
    * see all of your available models, or see our [Model overview](/docs/models/overview) for
    * descriptions of them.
    */
-  model: ChatModel;
+  model: TextModel;
   /**
-   * The messages to generate chat completions for, in the [chat
-   * format](https://platform.openai.com/docs/guides/chat/introduction).
+   * The prompt(s) to generate completions for, encoded as a string.
+   *
+   * Note that <|endoftext|> is the document separator that the model sees during training, so if a
+   * prompt is not specified the model will generate as if from the beginning of a new document.
    */
-  messages: GPTMessage[];
+  prompt: string;
+  /** The suffix that comes after a completion of inserted text. */
+  suffix?: string | null;
   /**
    * If set, partial message deltas will be sent, like in ChatGPT. Instead of being given a string,
    * you are given an async iterator of strings. Other metadata is available as a promise given on
-   * the result object. See `ChatCompletionStream` for more details.
+   * the result object. See `TextCompletionStream` for more details.
    */
   stream?: Stream;
   /**
@@ -92,8 +81,18 @@ export interface ChatCompletionOptions<
    * have reasonable settings for `max_tokens` and `stop`.
    */
   n?: N | null;
+  /**
+   * Include the log probabilities on the `logprobs` most likely tokens, as well the chosen tokens.
+   * For example, if `logprobs` is 5, the API will return a list of the 5 most likely tokens. The
+   * API will always return the `logprob` of the sampled token, so there may be up to `logprobs+1`
+   * elements in the response. The maximum value for `logprobs` is 5. If you need more than this,
+   * please contact us through our [Help center](https://help.openai.com) and describe your use case.
+   */
+  logprobs?: NumLogProbs | null;
   /** Up to 4 sequences where the API will stop generating further tokens. */
   stop?: string | string[] | null;
+  /** Echo back the prompt in addition to the completion. */
+  echo?: boolean | null;
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
    * in the text so far, increasing the model's likelihood to talk about new topics. [See more
@@ -108,6 +107,15 @@ export interface ChatCompletionOptions<
    */
   frequency_penalty?: number | null;
   /**
+   * Generates `best_of` completions server-side and returns the "best" (the one with the highest
+   * log probability per token). Results cannot be streamed. When used with `n`, `best_of` controls
+   * the number of candidate completions and `n` specifies how many to return – `best_of` must be
+   * greater than `n`. **Note:** Because this parameter generates many completions, it can quickly
+   * consume your token quota. Use carefully and ensure that you have reasonable settings for
+   * `max_tokens` and `stop`.
+   */
+  best_of?: number | null;
+  /**
    * Modify the likelihood of specified tokens appearing in the completion. Accepts a json object
    * that maps tokens (specified by their token ID in the GPT tokenizer) to an associated bias value
    * from -100 to 100. You can use this [tokenizer tool](/tokenizer?view=bpe) (which works for both
@@ -117,69 +125,68 @@ export interface ChatCompletionOptions<
    * should result in a ban or exclusive selection of the relevant token. As an example, you can
    * pass `{\"50256\": -100}` to prevent the <|endoftext|> token from being generated.
    */
-  logit_bias?: Record<string, number> | null;
+  logit_bias?: object | null;
   /**
    * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
    * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
    */
   user?: string;
+
   /** Number of retries before giving up. Defaults to 3. */
   retry?: number;
 }
 
-export interface ChatCompletionMetadata {
+export interface TextCompletionMetadata {
   created: Date;
-  model: ChatModel;
+  model: TextModel;
   usage: CompletionUsage;
 }
 
-export interface CompletionUsage {
-  promptTokens: number;
-  completionTokens: number;
-  totalTokens: number;
-  price: number;
+export type TextCompletion<NumLogProbs extends number = number> = TextCompletionMetadata &
+  TextCompletionChoice<NumLogProbs>;
+
+export interface TextCompletionMulti<NumLogProbs extends number = number>
+  extends TextCompletionMetadata {
+  choices: TextCompletionChoice<NumLogProbs>[];
 }
 
-export interface ChatCompletion extends ChatCompletionMetadata, ChatCompletionChoice {}
-
-export interface ChatCompletionMulti extends ChatCompletionMetadata {
-  choices: ChatCompletionChoice[];
-}
-
-export interface ChatCompletionStream {
+export interface TextCompletionStream<NumLogProbs extends number = number> {
   content: AsyncIterableIterator<string>;
-  data: Promise<ChatCompletion>;
+  data: Promise<TextCompletion<NumLogProbs>>;
 }
 
-export interface ChatCompletionMultiStream {
+export interface TextCompletionMultiStream<NumLogProbs extends number = number> {
   choices: AsyncIterableIterator<string>[];
-  data: Promise<ChatCompletionMulti>;
+  data: Promise<TextCompletionMulti<NumLogProbs>>;
 }
 
-export interface ChatCompletionChoice {
+export type TextCompletionChoice<NumLogProbs extends number = number> = {
   content: string;
   finishReason: FinishReason;
-}
+} & (0 extends NumLogProbs ? {} : { logProbs: LogProbs });
 
-export type ChatCompletionResultFromOptions<
+export type TextCompletionResultFromOptions<
   Stream extends boolean = false,
-  N extends number = 1
+  N extends number = 1,
+  NumLogProbs extends number = 0
 > = false extends Stream
   ? 1 extends N
-    ? ChatCompletion
-    : ChatCompletionMulti
+    ? TextCompletion<NumLogProbs>
+    : TextCompletionMulti<NumLogProbs>
   : 1 extends N
-  ? ChatCompletionStream
-  : ChatCompletionMultiStream;
+  ? TextCompletionStream<NumLogProbs>
+  : TextCompletionMultiStream<NumLogProbs>;
 
-const td = /* @__PURE__ */ new TextDecoder();
-
-export async function generateChatCompletion<Stream extends boolean, N extends number>(
-  options: ChatCompletionOptions<Stream, N>
-): Promise<ChatCompletionResultFromOptions<Stream, N>> {
+export async function generateTextCompletion<
+  Stream extends boolean,
+  N extends number,
+  NumLogProbs extends number
+>(
+  options: TextCompletionOptions<Stream, N, NumLogProbs>
+): Promise<TextCompletionResultFromOptions<Stream, N, NumLogProbs>> {
   const { retry: retryCount, ...gptOptions } = options;
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  const response = await fetch('https://api.openai.com/v1/completions', {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -211,7 +218,9 @@ export async function generateChatCompletion<Stream extends boolean, N extends n
         created: null as any,
         model: null as any,
         usage: {
-          promptTokens: 0,
+          promptTokens:
+            countTokens(gptOptions.model, String(gptOptions.prompt)) +
+            (gptOptions.suffix ? countTokens(gptOptions.model, gptOptions.suffix) : 0),
           completionTokens: 0,
           totalTokens: 0,
           price: 0,
@@ -227,7 +236,7 @@ export async function generateChatCompletion<Stream extends boolean, N extends n
             if (line.startsWith('data: ')) {
               const data = line.slice(6);
               if (data !== '[DONE]') {
-                const obj = JSON.parse(data) as RawChatCompletionChunk;
+                const obj = JSON.parse(data) as RawTextCompletionChunk;
                 if (obj.model && !metadata.model) {
                   metadata.model = obj.model;
                 }
@@ -235,12 +244,28 @@ export async function generateChatCompletion<Stream extends boolean, N extends n
                   metadata.created = new Date(obj.created * 1000);
                 }
                 for (const choice of obj.choices) {
-                  if (choice.delta.content) {
-                    streams[choice.index].push(choice.delta.content);
-                    choices[choice.index].content += choice.delta.content;
+                  if (choice.text) {
+                    streams[choice.index].push(choice.text);
+                    choices[choice.index].content += choice.text;
                   }
                   if (choice.finish_reason) {
                     choices[choice.index].finishReason = choice.finish_reason;
+                  }
+                  if (choice.logprobs) {
+                    choices[choice.index].logProbs ??= {
+                      tokens: [],
+                      token_logprobs: [],
+                      top_logprobs: [],
+                      text_offset: [],
+                    };
+                    choices[choice.index].logProbs.tokens.push(...choice.logprobs.tokens);
+                    choices[choice.index].logProbs.token_logprobs.push(
+                      ...choice.logprobs.token_logprobs
+                    );
+                    choices[choice.index].logProbs.top_logprobs.push(
+                      ...choice.logprobs.top_logprobs
+                    );
+                    choices[choice.index].logProbs.text_offset.push(...choice.logprobs.text_offset);
                   }
                 }
               }
@@ -252,7 +277,6 @@ export async function generateChatCompletion<Stream extends boolean, N extends n
         reader.releaseLock();
       }
       streams.forEach(stream => stream.end());
-      metadata.usage.promptTokens = countChatPromptTokens(gptOptions.model, gptOptions.messages);
       metadata.usage.completionTokens = choices
         .map(x => countTokens(gptOptions.model, x.content))
         .reduce((a, b) => a + b, 0);
@@ -262,22 +286,32 @@ export async function generateChatCompletion<Stream extends boolean, N extends n
         metadata.content = choices[0].content;
         metadata.finishReason = choices[0].finishReason;
       } else {
-        metadata.choices = choices;
+        metadata.choices = choices.map(choice => {
+          if (choice.logProbs) {
+            choice.logProbs = new LogProbs(choice.logProbs);
+          }
+          return choice;
+        });
       }
       return metadata;
     })();
     return completion;
   }
 
-  const json = (await response.json()) as RawChatCompletion;
+  const json = (await response.json()) as RawTextCompletion;
 
-  const completion: ChatCompletion | ChatCompletionMulti = {
+  const completion: TextCompletion | TextCompletionMulti = {
     ...(json.choices.length === 1
-      ? { content: json.choices[0].message.content, finishReason: json.choices[0].finish_reason }
+      ? {
+          content: json.choices[0].text,
+          finishReason: json.choices[0].finish_reason,
+          ...(json.choices[0].logprobs ? { logProbs: new LogProbs(json.choices[0].logprobs) } : {}),
+        }
       : {
           choices: json.choices.map(x => ({
-            content: x.message.content,
+            content: x.text,
             finishReason: x.finish_reason,
+            ...(x.logprobs ? { logProbs: new LogProbs(x.logprobs) } : {}),
           })),
         }),
     created: new Date(json.created * 1000),
@@ -286,7 +320,7 @@ export async function generateChatCompletion<Stream extends boolean, N extends n
       promptTokens: json.usage.prompt_tokens,
       completionTokens: json.usage.completion_tokens,
       totalTokens: json.usage.total_tokens,
-      price: json.usage.total_tokens * PRICING_CHAT[json.model],
+      price: json.usage.total_tokens * PRICING_TEXT[json.model],
     },
   };
 
