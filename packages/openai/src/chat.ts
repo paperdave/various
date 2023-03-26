@@ -1,8 +1,8 @@
 import { createArray, IterableStream } from '@paperdave/utils';
-import { FinishReason, RawCompletionUsage } from 'shared';
-import { countChatPromptTokens, countTokens } from 'tokenization';
-import { getAPIKey } from './api-key';
+import { AuthOverride, getAuthHeaders } from './api-key';
 import { ChatModel, PRICING_CHAT, PRICING_TEXT } from './models';
+import { FinishReason, RawCompletionUsage, td } from './shared';
+import { countChatPromptTokens, countTokens } from './tokenization';
 
 export type GPTMessageRole = 'system' | 'user' | 'assistant';
 
@@ -125,6 +125,7 @@ export interface ChatCompletionOptions<
   user?: string;
   /** Number of retries before giving up. Defaults to 3. */
   retry?: number;
+  auth?: AuthOverride;
 }
 
 export interface ChatCompletionMetadata {
@@ -172,18 +173,16 @@ export type ChatCompletionResultFromOptions<
   ? ChatCompletionStream
   : ChatCompletionMultiStream;
 
-const td = /* @__PURE__ */ new TextDecoder();
-
 export async function generateChatCompletion<Stream extends boolean, N extends number>(
   options: ChatCompletionOptions<Stream, N>
 ): Promise<ChatCompletionResultFromOptions<Stream, N>> {
-  const { retry: retryCount, ...gptOptions } = options;
+  const { retry: retryCount, auth, ...gptOptions } = options;
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAPIKey()}`,
+      ...getAuthHeaders(auth),
     },
     body: JSON.stringify(gptOptions),
   });

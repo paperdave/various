@@ -2,13 +2,13 @@
 
 <div>
 <a href="https://github.com/paperdave/various#project-status-meaning"><img alt="Status: WIP" src="https://img.shields.io/badge/status-wip-yellow"></a>
-<a href="https://www.npmjs.com/package/@paperdave/openai"><img alt="NPM Version" src="https://img.shields.io/npm/v/next-metadata.svg?label=latest%20release"></a>
+<a href="https://www.npmjs.com/package/@paperdave/openai"><img alt="NPM Version" src="https://img.shields.io/npm/v/@paperdave/openai.svg?label=latest%20release"></a>
 </div>
 <br>
 
 This library allows you to interact with the OpenAI API. Instead of being a simple wrapper like the official `openai` package, it is a smarter abstraction that makes developing AI tools in TypeScript much easier to do. It is currently a large work in progress, only covering some of the API.
 
-**Example: Generating a Chat Completion with GPT-4**
+**Example: Generating a Chat Completion with GPT-4**:
 
 ```ts
 import { GPTMessage, generateChatCompletion } from '@paperdave/openai';
@@ -26,7 +26,7 @@ const completion = await generateChatCompletion({
 console.log(completion.content);
 ```
 
-Pass `stream: true` to get an async iterator of tokens.
+Pass `stream: true` to get an async iterator and replicate the "ChatGPT typing" effect.
 
 ```ts
 const completion = await generateChatCompletion({
@@ -41,7 +41,9 @@ for await (const token of completion.content) {
 process.stdout.write('\n');
 ```
 
-By default, this library reads your api key and organization from the `OPENAI_API_KEY` and `OPENAI_ORGANIZATION` environment variables. You can override this with your own via `setAPIKey` and `setOrganization`, and override them per-request by passing a separate `auth` object to most functions.
+## Authentication
+
+By default, this library reads your api key and organization from the `OPENAI_API_KEY` and `OPENAI_ORGANIZATION` environment variables. **If using Node.js, you may need to use [dotenv](https://www.npmjs.com/package/dotenv) to load a `.env` file**. You can override this with your own via `setAPIKey` and `setOrganization`, or override them per-request by passing a separate `auth` object to most functions.
 
 ```ts
 import { setAPIKey, setOrganization, generateChatCompletion } from '@paperdave/openai';
@@ -171,7 +173,7 @@ interface ChatCompletionMultiStream {
 
 ## Text Completions
 
-Coming Soon
+Implemented, Docs coming soon.
 
 ## Text Edits
 
@@ -210,3 +212,7 @@ Coming Soon
 ## Moderation
 
 Coming Soon
+
+## Counting Tokens
+
+Implemented, Docs coming soon.
