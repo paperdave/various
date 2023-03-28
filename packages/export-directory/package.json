@@ -2,7 +2,7 @@
   "name": "export-directory",
   "version": "0.1.1",
   "description": "automatically manage index.js files that export all files in the directory",
-  "homepage": "https://github.com/paperdave/various/tree/master/packages/export-directory",
+  "homepage": "https://github.com/paperdave/various/tree/main/packages/export-directory",
   "repository": "github:paperdave/various",
   "license": "MIT",
   "author": "Dave Caruso <me@paperdave.net>",

@@ -1,7 +1,7 @@
 # next-metadata
 
 <div>
-<a href="https://github.com/paperdave/various#project-status-meaning"><img alt="Status: WIP" src="https://img.shields.io/badge/status-wip-yellow"></a>
+<a href="https://github.com/paperdave/various#project-status-meaning"><img alt="Status: WIP" src="https://img.shields.io/badge/status-stable-brightgreen"></a>
 <a href="https://www.npmjs.com/package/next-metadata"><img alt="NPM Version" src="https://img.shields.io/npm/v/next-metadata.svg?label=latest%20release"></a>
 </div>
 <br>

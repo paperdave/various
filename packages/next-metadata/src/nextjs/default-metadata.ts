@@ -1,3 +1,4 @@
+
 import type { ResolvedMetadata } from './types/metadata-interface'
 
 export const createDefaultMetadata = (): ResolvedMetadata => {
@@ -42,3 +43,4 @@ export const createDefaultMetadata = (): ResolvedMetadata => {
     other: {},
   }
 }
+

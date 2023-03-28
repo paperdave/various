@@ -5,7 +5,7 @@
   "keywords": [
     "utility"
   ],
-  "homepage": "https://github.com/paperdave/various/tree/master/packages/prettier-config-dave",
+  "homepage": "https://github.com/paperdave/various/tree/main/packages/prettier-config-dave",
   "repository": "github:paperdave/various",
   "license": "MIT",
   "author": "Dave Caruso <me@paperdave.net>",

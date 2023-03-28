@@ -1,12 +1,12 @@
 {
   "name": "next-metadata",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Port of Next.js' metadata object API to use in other frameworks.",
   "keywords": [
     "nextjs",
     "metadata"
   ],
-  "homepage": "https://github.com/paperdave/various/tree/master/packages/next-metadata",
+  "homepage": "https://github.com/paperdave/various/tree/main/packages/next-metadata",
   "repository": "github:paperdave/various",
   "license": "MIT",
   "author": "Dave Caruso <me@paperdave.net>",
@@ -40,5 +40,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "paperdave-status": "wip"
+  "paperdave-status": "stable"
 }

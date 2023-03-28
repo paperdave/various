@@ -7,7 +7,7 @@
     "types",
     "utils"
   ],
-  "homepage": "https://github.com/paperdave/various/tree/master/packages/paperdave-utils",
+  "homepage": "https://github.com/paperdave/various/tree/main/packages/paperdave-utils",
   "repository": "github:paperdave/various",
   "license": "MIT",
   "author": "Dave Caruso <me@paperdave.net>",

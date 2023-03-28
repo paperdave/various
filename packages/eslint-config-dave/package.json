@@ -8,7 +8,7 @@
     "config",
     "styleguide"
   ],
-  "homepage": "https://github.com/paperdave/various/tree/master/packages/eslint-config-dave",
+  "homepage": "https://github.com/paperdave/various/tree/main/packages/eslint-config-dave",
   "repository": "github:paperdave/various",
   "license": "MIT",
   "author": "Dave Caruso <me@paperdave.net>",

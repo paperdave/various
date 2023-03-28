@@ -15,6 +15,6 @@
     "noImplicitAny": false,
     "baseUrl": "src/"
   },
-  "include": ["src/"],
+  "include": ["src/", "test/render.test.ts"],
   "exclude": ["**/*.test.ts", "**/*.tsx"]
 }
