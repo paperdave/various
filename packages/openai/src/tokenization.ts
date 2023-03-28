@@ -31,6 +31,17 @@ const modelAliases: Record<Exclude<ChatModel | TextModel, TiktokenModel>, Tiktok
   'gpt-4-32k-0314': 'gpt-4',
 };
 
+export function getTokenizerForModel(
+  model: ChatModel | TextModel,
+  extraTokens?: Record<string, number>
+) {
+  return encoding_for_model(modelAliases[model] ?? model, extraTokens);
+}
+
+export function getTokenizer(encoding: TiktokenEncoding, extraTokens?: Record<string, number>) {
+  return get_encoding(encoding, extraTokens);
+}
+
 export function countTokens(model: ChatModel | TextModel, text: string) {
   return encoding_for_model(modelAliases[model] ?? model).encode(text).length;
 }

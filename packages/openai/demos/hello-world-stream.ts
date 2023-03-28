@@ -1,8 +1,9 @@
-import { generateChatCompletion, GPTMessage } from '@paperdave/utils';
+// @ts-nocheck
+import { generateChatCompletion, GPTMessage } from '../src';
 
 const messages: GPTMessage[] = [
   { role: 'system', content: 'You are a helpful assistant.' },
-  { role: 'user', content: 'Write a short poem about TypeScript' },
+  { role: 'user', content: 'Write a short poem about TypeScript.' },
 ];
 
 const stream = await generateChatCompletion({
