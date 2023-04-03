@@ -1,6 +1,20 @@
 /** Returns a (copied) array with just the unique items in it. */
-export function unique<T>(arr: T[]) {
+export function unique<T>(arr: Iterable<T>) {
   return Array.from(new Set(arr));
+}
+
+/** Returns a (copied) array with just the unique items in it. */
+export function uniqueBy<T>(arr: Iterable<T>, identify: (x: T) => any) {
+  const set = new Set();
+  const out = [];
+  for (const item of arr) {
+    const id = identify(item);
+    if (!set.has(id)) {
+      set.add(id);
+      out.push(id);
+    }
+  }
+  return out;
 }
 
 /** In place shuffle function for an array. */
