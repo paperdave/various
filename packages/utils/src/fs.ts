@@ -316,3 +316,25 @@ export async function hashDirectoryContents(
 export function isRootDirectory(str: string) {
   return str === '/' || (str.length === 3 && str.endsWith(':\\'));
 }
+
+export async function emptyDir(dir: string) {
+  if (!(await pathExists(dir))) {
+    return fs.promises.mkdir(dir);
+  } else {
+    return Promise.all(
+      (await fs.promises.readdir(dir)).map(x =>
+        fs.promises.rm(path.join(dir, x), { recursive: true })
+      )
+    );
+  }
+}
+
+export function emptyDirSync(dir: string) {
+  if (!fs.existsSync(dir)) {
+    return fs.mkdirSync(dir);
+  } else {
+    return Promise.all(
+      fs.readdirSync(dir).map(x => fs.rmSync(path.join(dir, x), { recursive: true }))
+    );
+  }
+}

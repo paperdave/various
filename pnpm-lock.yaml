@@ -215,7 +215,8 @@ importers:
     specifiers:
       '@rollup/plugin-node-resolve': ^13.3.0
       '@types/node': ^18.0.3
-      bun-types: ^0.5.8
+      bun-types: ^0.1.2
+      dts-bundle-generator: ^7.2.0
       esbuild: ^0.14.39
       mitata: ^0.1.6
       rollup: ^2.78.1
@@ -229,7 +230,8 @@ importers:
     devDependencies:
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.79.1
       '@types/node': 18.14.3
-      bun-types: 0.5.8
+      bun-types: 0.1.11
+      dts-bundle-generator: 7.2.0
       esbuild: 0.14.54
       mitata: 0.1.6
       rollup: 2.79.1
@@ -1263,10 +1265,6 @@ packages:
 
   /bun-types/0.1.11:
     resolution: {integrity: sha512-a5G9LZtF5qBsDMjGnS5FfTvIeg1bS0PzI3Q2LqShEjJWdhZTB56xO8ewqZ83J+3my5rW/PPPWT/udAofRQ3zdg==}
-    dev: true
-
-  /bun-types/0.5.8:
-    resolution: {integrity: sha512-VHwD0MAHo3wraYAeqTWH2NDmXOdGfC3wWWOnZvK93ytI6yq/LkgsCjDudWNmN7MlfPvJb2zoLMnkzhjxNwLsLw==}
     dev: true
 
   /call-bind/1.0.2:
