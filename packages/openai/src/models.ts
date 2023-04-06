@@ -20,8 +20,15 @@ export const PRICING_TEXT = {
   babbage: 0.0005 / 1000,
   ada: 0.0004 / 1000,
 };
-
 export type TextModel = keyof typeof PRICING_TEXT;
+
+/** "During this initial beta period, usage of the edits endpoint is free." */
+export const PRICING_TEXT_EDIT = {
+  'text-davinci-edit-001': 0,
+  'code-davinci-edit-001': 0,
+};
+
+export type TextEditModel = keyof typeof PRICING_TEXT_EDIT;
 
 export const PRICING_IMAGE = {
   1024: 0.02,

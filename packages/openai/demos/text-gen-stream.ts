@@ -2,10 +2,10 @@ import { generateTextCompletion } from '../src/text';
 
 const stream = await generateTextCompletion({
   model: 'ada',
-  prompt: 'say this is a test.',
+  prompt: '',
   stream: true,
-  max_tokens: 10,
-  temperature: 1.25,
+  max_tokens: 500,
+  temperature: 2,
 });
 
 for await (const text of stream.content) {

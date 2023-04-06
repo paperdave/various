@@ -1,6 +1,6 @@
 import { encoding_for_model, get_encoding, TiktokenEncoding, TiktokenModel } from '@dqbd/tiktoken';
-import { GPTMessage } from 'chat';
-import { ChatModel, TextModel } from 'models';
+import { GPTMessage } from './chat';
+import { ChatModel, TextModel } from './models';
 
 const chatTokenRules: Record<
   string,

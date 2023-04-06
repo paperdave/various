@@ -1,9 +1,9 @@
 export type FinishReason = 'stop' | 'length';
 
 export interface RawCompletionUsage {
-  prompt_tokens: 10;
-  completion_tokens: 10;
-  total_tokens: 20;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
 }
 
 export interface CompletionUsage {

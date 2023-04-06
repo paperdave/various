@@ -1,6 +1,6 @@
 import { createArray, IterableStream } from '@paperdave/utils';
-import { LogProbs, RawLogProbs } from 'log-probs';
-import { AuthOverride, getAuthHeaders } from './api-key';
+import { fetchOpenAI, FetchOptions } from './fetch';
+import { LogProbs, RawLogProbs } from './log-probs';
 import { ChatModel, PRICING_TEXT, TextModel } from './models';
 import { CompletionUsage, FinishReason, RawCompletionUsage, td } from './shared';
 import { countTokens } from './tokenization';
@@ -34,7 +34,7 @@ export interface TextCompletionOptions<
   Stream extends boolean = boolean,
   N extends number = number,
   NumLogProbs extends number = number
-> {
+> extends FetchOptions {
   /**
    * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
    * see all of your available models, or see our [Model overview](/docs/models/overview) for
@@ -131,11 +131,6 @@ export interface TextCompletionOptions<
    * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
    */
   user?: string;
-
-  /** Number of retries before giving up. Defaults to 3. */
-  retry?: number;
-
-  auth?: AuthOverride;
 }
 
 export interface TextCompletionMetadata {
@@ -186,15 +181,14 @@ export async function generateTextCompletion<
 >(
   options: TextCompletionOptions<Stream, N, NumLogProbs>
 ): Promise<TextCompletionResultFromOptions<Stream, N, NumLogProbs>> {
-  const { retry: retryCount, auth, ...gptOptions } = options;
+  const { retry, auth, ...gptOptions } = options;
 
-  const response = await fetch('https://api.openai.com/v1/completions', {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeaders(auth),
-    },
-    body: JSON.stringify(gptOptions),
+  const response = await fetchOpenAI({
+    endpoint: '/completions',
+    method: 'POST',
+    body: gptOptions,
+    auth,
+    retry,
   });
 
   if (!response.ok) {

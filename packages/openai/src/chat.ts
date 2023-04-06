@@ -1,7 +1,8 @@
 import { createArray, IterableStream } from '@paperdave/utils';
-import { AuthOverride, getAuthHeaders } from './api-key';
+import { AuthOverride } from './api-key';
+import { fetchOpenAI, FetchOptions } from './fetch';
 import { ChatModel, PRICING_CHAT, PRICING_TEXT } from './models';
-import { FinishReason, RawCompletionUsage, td } from './shared';
+import { CompletionUsage, FinishReason, RawCompletionUsage, td } from './shared';
 import { countChatPromptTokens, countTokens } from './tokenization';
 
 export type GPTMessageRole = 'system' | 'user' | 'assistant';
@@ -46,10 +47,8 @@ export interface RawChatCompletionChunkChoice {
   index: number;
 }
 
-export interface ChatCompletionOptions<
-  Stream extends boolean = boolean,
-  N extends number = number
-> {
+export interface ChatCompletionOptions<Stream extends boolean = boolean, N extends number = number>
+  extends FetchOptions {
   /**
    * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
    * see all of your available models, or see our [Model overview](/docs/models/overview) for
@@ -72,7 +71,7 @@ export interface ChatCompletionOptions<
    * your prompt plus `max_tokens` cannot exceed the model's context length. Most models have a
    * context length of 2048 tokens (except for the newest models, which support 4096).
    */
-  max_tokens?: number | null;
+  maxTokens?: number | null;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
    * more random, while lower values like 0.2 will make it more focused and deterministic. We
@@ -85,7 +84,7 @@ export interface ChatCompletionOptions<
    * the top 10% probability mass are considered. We generally recommend altering this or
    * `temperature` but not both.
    */
-  top_p?: number | null;
+  topP?: number | null;
   /**
    * How many completions to generate for each prompt. **Note:** Because this parameter generates
    * many completions, it can quickly consume your token quota. Use carefully and ensure that you
@@ -99,14 +98,14 @@ export interface ChatCompletionOptions<
    * in the text so far, increasing the model's likelihood to talk about new topics. [See more
    * information about frequency and presence penalties.](/docs/api-reference/parameter-details)
    */
-  presence_penalty?: number | null;
+  presencePenalty?: number | null;
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing
    * frequency in the text so far, decreasing the model's likelihood to repeat the same line
    * verbatim. [See more information about frequency and presence
    * penalties.](/docs/api-reference/parameter-details)
    */
-  frequency_penalty?: number | null;
+  frequencyPenalty?: number | null;
   /**
    * Modify the likelihood of specified tokens appearing in the completion. Accepts a json object
    * that maps tokens (specified by their token ID in the GPT tokenizer) to an associated bias value
@@ -117,7 +116,7 @@ export interface ChatCompletionOptions<
    * should result in a ban or exclusive selection of the relevant token. As an example, you can
    * pass `{\"50256\": -100}` to prevent the <|endoftext|> token from being generated.
    */
-  logit_bias?: Record<string, number> | null;
+  logitBias?: Record<string, number> | null;
   /**
    * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
    * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
@@ -132,13 +131,6 @@ export interface ChatCompletionMetadata {
   created: Date;
   model: ChatModel;
   usage: CompletionUsage;
-}
-
-export interface CompletionUsage {
-  promptTokens: number;
-  completionTokens: number;
-  totalTokens: number;
-  price: number;
 }
 
 export interface ChatCompletion extends ChatCompletionMetadata, ChatCompletionChoice {}
@@ -176,21 +168,27 @@ export type ChatCompletionResultFromOptions<
 export async function generateChatCompletion<Stream extends boolean, N extends number>(
   options: ChatCompletionOptions<Stream, N>
 ): Promise<ChatCompletionResultFromOptions<Stream, N>> {
-  const { retry: retryCount, auth, ...gptOptions } = options;
+  const { retry, auth, ...gptOptions } = options;
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeaders(auth),
+  const response = await fetchOpenAI({
+    endpoint: '/chat/completions',
+    method: 'POST',
+    body: {
+      model: gptOptions.model,
+      prompt: gptOptions.messages,
+      max_tokens: gptOptions.maxTokens ?? (gptOptions as any).max_tokens,
+      temperature: gptOptions.temperature,
+      top_p: gptOptions.topP ?? (gptOptions as any).top_p,
+      n: gptOptions.n,
+      stop: gptOptions.stop,
+      presence_penalty: gptOptions.presencePenalty ?? (gptOptions as any).presence_penalty,
+      frequency_penalty: gptOptions.frequencyPenalty ?? (gptOptions as any).frequency_penalty,
+      logit_bias: gptOptions.logitBias ?? (gptOptions as any).logit_bias,
+      user: gptOptions.user,
     },
-    body: JSON.stringify(gptOptions),
+    auth,
+    retry,
   });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(`${response.status} ${response.statusText}: ${JSON.stringify(error)}`);
-  }
 
   if (gptOptions.stream) {
     const reader = (response as any).body.getReader();

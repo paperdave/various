@@ -82,16 +82,15 @@ const response = await generateChatCompletion({
 
   // Optional: See OpenAI Docs
   stream: boolean,
-  max_tokens: number,
+  maxTokens: number,
   temperature: number,
-  top_p: number,
+  topP: number,
   n: number,
-  logprobs: number,
   stop: string | string[],
-  presence_penalty: number,
-  frequency_penalty: number,
-  best_of: number,
-  logit_bias: object,
+  presencePenalty: number,
+  frequencyPenalty: number,
+  bestOf: number,
+  logitBias: Record<string, number>,
   user: string,
 });
 ```
@@ -171,13 +170,75 @@ interface ChatCompletionMultiStream {
 }
 ```
 
-## Text Completions
+## Text Completions / Insertions
 
-Implemented, Docs coming soon.
+Text completions allow you to complete a text prompt. [OpenAI's Guide](https://platform.openai.com/docs/guides/completion)
+
+One function is given to call this api: `generateTextCompletion`, which functions almost identically to `generateChatCompletion`, except that instead of a `messages` array, you pass a `prompt` string.
+
+```ts
+import { generateTextCompletion } from '@paperdave/openai';
+
+const response = await generateTextCompletion({
+  // Required arguments, see OpenAI Docs
+  model: TextModel,
+  prompt: string,
+
+  // Optionally override API key and organization.
+  auth: AuthOverride,
+  // Number of times to retry due to network/ratelimit issues, default 3
+  retry: number,
+
+  // Optional: See OpenAI Docs
+  suffix: string,
+  max_tokens: number,
+  temperature: number,
+  topP: number,
+  n: number,
+  logProbs: number,
+  stop: string | string[],
+  echo: boolean,
+  presencePenalty: number,
+  frequencyPenalty: number,
+  bestOf: number,
+  logitBias: Record<string, number>,
+  user: string,
+});
+```
+
+The return type is almost identical to `generateChatCompletion`. To understand exactly how it works and how to stream results, see the [Chat Completions](#chat-completions) section above.
+
+In addition, you can pass `logProbs: number` to get a `logProbs` object on the response.
 
 ## Text Edits
 
-Coming Soon
+The edits endpoint can be used to edit text, rather than just completing it. [OpenAI's Guide](https://platform.openai.com/docs/guides/completion/editing-text)
+
+Editing text is done with the `generateTextEdit` function, which accepts the following arguments:
+
+```ts
+import { generateTextEdit } from '@paperdave/openai';
+
+const response = await generateTextEdit({
+  // Required arguments, see OpenAI Docs
+  model: TextEditModel,
+  input?: string,
+  instruction: string,
+
+  // Optionally override API key and organization.
+  auth: AuthOverride,
+  // Number of times to retry due to network/ratelimit issues, default 3
+  retry: number,
+
+  // Optional: See OpenAI Docs
+  temperature: number,
+  topP: number,
+  n: number,
+  // user: string, // OpenAI should have this, but they dont
+});
+```
+
+Other than the lack of streaming, the return type is nearly identical to `generateChatCompletion`. To understand exactly how it works, see the [Chat Completions](#chat-completions) section above.
 
 ## Images
 

@@ -13,7 +13,7 @@
     "checkJs": false,
     "strict": true,
     "noImplicitAny": false,
-    "baseUrl": "src/",
+    "baseUrl": ".",
     "types": []
   },
   "include": ["src/"],

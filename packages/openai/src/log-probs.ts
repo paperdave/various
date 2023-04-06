@@ -21,8 +21,6 @@ export class LogProbs {
     this.topLogProbs = raw.top_logprobs;
     this.textOffsets = raw.text_offset;
   }
-
-  // TODO: methods to make this more interesting
 }
 
 // hidden please
