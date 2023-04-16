@@ -299,8 +299,8 @@ importers:
         specifier: ^18.0.3
         version: 18.14.3
       bun-types:
-        specifier: ^0.1.2
-        version: 0.1.11
+        specifier: ^0.5.8
+        version: 0.5.8
       dts-bundle-generator:
         specifier: ^7.2.0
         version: 7.2.0
@@ -1347,6 +1347,10 @@ packages:
 
   /bun-types@0.1.11:
     resolution: {integrity: sha512-a5G9LZtF5qBsDMjGnS5FfTvIeg1bS0PzI3Q2LqShEjJWdhZTB56xO8ewqZ83J+3my5rW/PPPWT/udAofRQ3zdg==}
+    dev: true
+
+  /bun-types@0.5.8:
+    resolution: {integrity: sha512-VHwD0MAHo3wraYAeqTWH2NDmXOdGfC3wWWOnZvK93ytI6yq/LkgsCjDudWNmN7MlfPvJb2zoLMnkzhjxNwLsLw==}
     dev: true
 
   /call-bind@1.0.2:

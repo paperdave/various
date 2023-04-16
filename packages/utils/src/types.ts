@@ -112,3 +112,5 @@ export type FIXME = any;
  * `NodeJS.Timeout`.
  */
 export type Timer = ReturnType<typeof setTimeout>;
+
+export type Func<R = any> = (...args: any[]) => R;

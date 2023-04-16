@@ -1,4 +1,5 @@
 import { deferred } from './promise';
+import { Func } from './types';
 
 export interface IQueue<T> {
   enqueue(item: T): void;
@@ -24,12 +25,7 @@ Queue.prototype.enqueue = Array.prototype.push;
 Queue.prototype.dequeue = Array.prototype.shift;
 
 export type QueuedFunctionItem =
-  | [
-      fn: (...args: any[]) => Promise<any>,
-      resolve: (value: any) => void,
-      reject: (error: any) => void,
-      args: any[]
-    ]
+  | [fn: Func<Promise<any>>, resolve: Func, reject: Func, args: any[]]
   | [true];
 
 export interface QueuedFunctionOptions<Args extends unknown[], Ret> {

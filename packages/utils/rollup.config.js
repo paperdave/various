@@ -15,5 +15,6 @@ export default [
       },
     ],
     plugins: [resolve(), esbuild()],
+    external: ['yaml'],
   },
 ];
