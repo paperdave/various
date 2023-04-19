@@ -43,11 +43,11 @@ function resolveImages(
   resolvedImages?.forEach((item, index, array) => {
     if (isStringOrURL(item)) {
       array[index] = {
-        url: metadataBase ? resolveUrl(item, metadataBase)! : item,
+        url: resolveUrl(item, metadataBase)!,
       }
     } else {
       // Update image descriptor url
-      item.url = metadataBase ? resolveUrl(item.url, metadataBase)! : item.url
+      item.url = resolveUrl(item.url, metadataBase)!
     }
   })
   return resolvedImages
@@ -73,10 +73,10 @@ function getFieldsByOgType(ogType: OpenGraphType | undefined) {
   }
 }
 
-export function resolveOpenGraph(
+export const resolveOpenGraph: FieldResolverWithMetadataBase<'openGraph'> = (
   openGraph: Metadata['openGraph'],
   metadataBase: ResolvedMetadata['metadataBase']
-): ResolvedMetadata['openGraph'] {
+) => {
   if (!openGraph) return null
 
   const url = resolveUrl(openGraph.url, metadataBase)

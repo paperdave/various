@@ -1,5 +1,8 @@
 import type { Icon, ResolvedMetadata } from './types';
-import { escapeHTML as esc } from './utils';
+
+function esc(str: any) {
+  return String(str).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 function Meta(name: string, content: any) {
   return `<meta name="${esc(name)}" content="${esc(content)}">`;
@@ -55,14 +58,14 @@ function ExtendMeta(prefix: string, content: any) {
 const formatDetectionKeys = ['telephone', 'date', 'address', 'email', 'url'] as const;
 
 export function renderMetadata(meta: ResolvedMetadata): string {
-  var str = '';
+  let str = '';
 
   // <BasicMetadata/>
   if (meta.title?.absolute) str += `<title>${esc(meta.title.absolute)}</title>`;
   if (meta.description) str += Meta('description', meta.description);
   if (meta.applicationName) str += Meta('application-name', meta.applicationName);
   if (meta.authors)
-    for (var author of meta.authors) {
+    for (const author of meta.authors) {
       if (author.url) str += Link('author', author.url);
       if (author.name) str += Meta('author', author.name);
     }
@@ -70,7 +73,7 @@ export function renderMetadata(meta: ResolvedMetadata): string {
   if (meta.generator) str += Meta('generator', meta.generator);
   if (meta.referrer) str += Meta('referrer', meta.referrer);
   if (meta.themeColor)
-    for (var themeColor of meta.themeColor) {
+    for (const themeColor of meta.themeColor) {
       str += !themeColor.media
         ? Meta('theme-color', themeColor.color)
         : MetaMedia('theme-color', themeColor.color, themeColor.media);
@@ -83,55 +86,41 @@ export function renderMetadata(meta: ResolvedMetadata): string {
   if (meta.robots?.googleBot) str += Meta('googlebot', meta.robots.googleBot);
   if (meta.abstract) str += Meta('abstract', meta.abstract);
   if (meta.archives)
-    for (var archive of meta.archives) {
+    for (const archive of meta.archives) {
       str += Link('archives', archive);
     }
   if (meta.assets)
-    for (var asset of meta.assets) {
+    for (const asset of meta.assets) {
       str += Link('assets', asset);
     }
   if (meta.bookmarks)
-    for (var bookmark of meta.bookmarks) {
+    for (const bookmark of meta.bookmarks) {
       str += Link('bookmarks', bookmark);
     }
   if (meta.category) str += Meta('category', meta.category);
   if (meta.classification) str += Meta('classification', meta.classification);
   if (meta.other)
-    for (var [name, content] of Object.entries(meta.other)) {
+    for (const [name, content] of Object.entries(meta.other)) {
       if (content) {
         str += Meta(name, Array.isArray(content) ? content.join(',') : content);
       }
     }
 
   // <AlternatesMetadata />
-  var alternates = meta.alternates;
+  const alternates = meta.alternates;
   if (alternates) {
     if (alternates.canonical) str += Link('canonical', alternates.canonical);
     if (alternates.languages)
-      for (var [locale, urls] of Object.entries(alternates.languages)) {
-        for (var { url, title } of urls) {
-          str += `<link rel="alternate" hreflang="${esc(locale)}" href="${esc(url.toString())}"${
-            title ? ` title="${esc(title)}"` : ''
-          }>`;
-        }
+      for (const [locale, url] of Object.entries(alternates.languages)) {
+        str += `<link rel="alternate" hreflang="${esc(locale)}" href="${esc(url)}">`;
       }
     if (alternates.media)
-      for (var [media, urls2] of Object.entries(alternates.media)) {
-        if (urls2)
-          for (var { url, title } of urls2) {
-            str += `<link rel="alternate" media="${esc(media)}" href="${esc(url.toString())}"${
-              title ? ` title="${esc(title)}"` : ''
-            }>`;
-          }
+      for (const [media, url] of Object.entries(alternates.media)) {
+        str += `<link rel="alternate" media="${esc(media)}" href="${esc(url)}">`;
       }
     if (alternates.types)
-      for (var [type, urls2] of Object.entries(alternates.types)) {
-        if (urls2)
-          for (var { url, title } of urls2) {
-            str += `<link rel="alternate" type="${esc(type)}" href="${esc(url.toString())}"${
-              title ? ` title="${esc(title)}"` : ''
-            }>`;
-          }
+      for (const [type, url] of Object.entries(alternates.types)) {
+        str += `<link rel="alternate" type="${esc(type)}" href="${esc(url)}">`;
       }
   }
 
@@ -147,38 +136,38 @@ export function renderMetadata(meta: ResolvedMetadata): string {
 
   // <FormatDetectionMeta />
   if (meta.formatDetection) {
-    var contentStr = '';
-    for (var key of formatDetectionKeys) {
+    let content = '';
+    for (const key of formatDetectionKeys) {
       if (key in meta.formatDetection) {
-        if (contentStr) contentStr += ', ';
-        contentStr += `${key}=no`;
+        if (content) content += ', ';
+        content += `${key}=no`;
       }
     }
-    str += Meta('format-detection', contentStr);
+    str += Meta('format-detection', content);
   }
 
   // <VerificationMeta />
   if (meta.verification) {
     if (meta.verification.google)
-      for (var verificationKey of meta.verification.google) {
-        str += Meta('google-site-verification', verificationKey);
+      for (const key of meta.verification.google) {
+        str += Meta('google-site-verification', key);
       }
     if (meta.verification.yahoo)
-      for (var verificationKey of meta.verification.yahoo) {
-        str += Meta('y_key', verificationKey);
+      for (const key of meta.verification.yahoo) {
+        str += Meta('y_key', key);
       }
     if (meta.verification.yandex)
-      for (var verificationKey of meta.verification.yandex) {
-        str += Meta('yandex-verification', verificationKey);
+      for (const key of meta.verification.yandex) {
+        str += Meta('yandex-verification', key);
       }
     if (meta.verification.me)
-      for (var verificationKey of meta.verification.me) {
-        str += Meta('me', verificationKey);
+      for (const key of meta.verification.me) {
+        str += Meta('me', key);
       }
     if (meta.verification.other) {
-      for (var [verificationKey2, values] of Object.entries(meta.verification.other)) {
-        for (var value of values) {
-          str += Meta(verificationKey2, value);
+      for (const [key, values] of Object.entries(meta.verification.other)) {
+        for (const value of values) {
+          str += Meta(key, value);
         }
       }
     }
@@ -401,32 +390,32 @@ export function renderMetadata(meta: ResolvedMetadata): string {
   // <AppLinksMeta />
   if (meta.appLinks) {
     if (meta.appLinks.ios)
-      for (var item of meta.appLinks.ios) {
+      for (const item of meta.appLinks.ios) {
         str += ExtendMeta('al:ios', item);
       }
     if (meta.appLinks.iphone)
-      for (var item of meta.appLinks.iphone) {
+      for (const item of meta.appLinks.iphone) {
         str += ExtendMeta('al:iphone', item);
       }
     if (meta.appLinks.ipad)
-      for (var item of meta.appLinks.ipad) {
+      for (const item of meta.appLinks.ipad) {
         str += ExtendMeta('al:ipad', item);
       }
     if (meta.appLinks.android)
-      for (var item2 of meta.appLinks.android) {
-        str += ExtendMeta('al:android', item2);
+      for (const item of meta.appLinks.android) {
+        str += ExtendMeta('al:android', item);
       }
     if (meta.appLinks.windows_phone)
-      for (var item3 of meta.appLinks.windows_phone) {
-        str += ExtendMeta('al:windows_phone', item3);
+      for (const item of meta.appLinks.windows_phone) {
+        str += ExtendMeta('al:windows_phone', item);
       }
     if (meta.appLinks.windows)
-      for (var item3 of meta.appLinks.windows) {
-        str += ExtendMeta('al:windows', item3);
+      for (const item of meta.appLinks.windows) {
+        str += ExtendMeta('al:windows', item);
       }
     if (meta.appLinks.windows_universal)
-      for (var item4 of meta.appLinks.windows_universal) {
-        str += ExtendMeta('al:windows_universal', item4);
+      for (const item of meta.appLinks.windows_universal) {
+        str += ExtendMeta('al:windows_universal', item);
       }
     if (meta.appLinks.web)
       for (const item of meta.appLinks.web) {
@@ -437,19 +426,19 @@ export function renderMetadata(meta: ResolvedMetadata): string {
   // <IconsMetadata />
   if (meta.icons) {
     if (meta.icons.shortcut)
-      for (var icon of meta.icons.shortcut) {
+      for (const icon of meta.icons.shortcut) {
         str += IconLink('shortcut icon', icon);
       }
     if (meta.icons.icon)
-      for (var icon of meta.icons.icon) {
+      for (const icon of meta.icons.icon) {
         str += IconLink('icon', icon);
       }
     if (meta.icons.apple)
-      for (var icon of meta.icons.apple) {
+      for (const icon of meta.icons.apple) {
         str += IconLink('apple-touch-icon', icon);
       }
     if (meta.icons.other)
-      for (var icon of meta.icons.other) {
+      for (const icon of meta.icons.other) {
         str += IconLink(icon.rel ?? 'icon', icon);
       }
   }

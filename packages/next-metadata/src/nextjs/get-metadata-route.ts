@@ -1,4 +1,23 @@
-import { isMetadataRoute } from './is-metadata-route'
+import { isMetadataRoute, isMetadataRouteFile } from './is-metadata-route'
+import path from '../../shared/lib/isomorphic/path'
+import { djb2Hash } from '../../shared/lib/hash'
+
+/*
+ * If there's special convention like (...) or @ in the page path,
+ * Give it a unique hash suffix to avoid conflicts
+ *
+ * e.g.
+ * /app/open-graph.tsx -> /open-graph/route
+ * /app/(post)/open-graph.tsx -> /open-graph/route-[0-9a-z]{6}
+ */
+export function getMetadataRouteSuffix(page: string) {
+  let suffix = ''
+
+  if ((page.includes('(') && page.includes(')')) || page.includes('@')) {
+    suffix = djb2Hash(page).toString(36).slice(0, 6)
+  }
+  return suffix
+}
 
 /**
  * Map metadata page key to the corresponding route
@@ -12,8 +31,10 @@ import { isMetadataRoute } from './is-metadata-route'
 export function normalizeMetadataRoute(page: string) {
   let route = page
   if (isMetadataRoute(page)) {
-    // TODO-METADATA: add dynamic routes for metadata images.
-    // Better to move the extension appending to early phase.
+    // Remove the file extension, e.g. /route-path/robots.txt -> /route-path
+    const pathnamePrefix = page.slice(0, -(path.basename(page).length + 1))
+    const suffix = getMetadataRouteSuffix(pathnamePrefix)
+
     if (route === '/sitemap') {
       route += '.xml'
     }
@@ -24,9 +45,23 @@ export function normalizeMetadataRoute(page: string) {
       route += '.webmanifest'
     }
     // Support both /<metadata-route.ext> and custom routes /<metadata-route>/route.ts.
-    // If it's a metadata file route, we need to append /route to the page.
+    // If it's a metadata file route, we need to append /[id]/route to the page.
     if (!route.endsWith('/route')) {
-      route = `${route}/route`
+      const isStaticMetadataFile = isMetadataRouteFile(route, [], true)
+      const { dir, name: baseName, ext } = path.parse(route)
+
+      const isSingleRoute =
+        page.startsWith('/sitemap') ||
+        page.startsWith('/robots') ||
+        page.startsWith('/manifest') ||
+        isStaticMetadataFile
+
+      route = path.join(
+        dir,
+        `${baseName}${suffix ? `-${suffix}` : ''}${ext}`,
+        isSingleRoute ? '' : '[[...__metadata_id__]]',
+        'route'
+      )
     }
   }
   return route
