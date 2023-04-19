@@ -18,15 +18,17 @@ export function capitalize(string: string) {
  * depending on how much data is being escaped and whether there is non-ascii text.
  */
 export const escapeHTML =
-  (Bun.escapeHTML as (string: string) => string) ??
-  ((string: string) => {
-    return string
-      .replaceAll('"', '&quot;')
-      .replaceAll('&', '&amp;')
-      .replaceAll("'", '&#x27;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;');
-  });
+  /* @__PURE__ */
+  typeof Bun === 'undefined'
+    ? (string: string) => {
+        return string
+          .replaceAll('"', '&quot;')
+          .replaceAll('&', '&amp;')
+          .replaceAll("'", '&#x27;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;');
+      }
+    : Bun.escapeHTML;
 
 export function escapeRegex(string: string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
