@@ -1,4 +1,4 @@
-export type FinishReason = 'stop' | 'length';
+export type FinishReason = 'stop' | 'length' | 'function_call';
 
 export interface RawCompletionUsage {
   prompt_tokens: number;

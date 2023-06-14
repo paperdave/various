@@ -1,19 +1,44 @@
-import { createArray, IterableStream } from '@paperdave/utils';
+import { createArray, deferred, IterableStream } from '@paperdave/utils';
+import { AnyZodObject, SafeParseReturnType, z } from 'zod';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 import { AuthOverride } from './api-key';
+import { OpenAIEventSource } from './event-source-parser';
 import { fetchOpenAI, FetchOptions } from './fetch';
-import { ChatModel, PRICING_CHAT, PRICING_TEXT } from './models';
-import { CompletionUsage, FinishReason, RawCompletionUsage, td } from './shared';
-import { countChatPromptTokens, countTokens } from './tokenization';
+import { ChatModel, PRICING_CHAT } from './models';
+import { CompletionUsage, FinishReason, RawCompletionUsage } from './shared';
 
-export type GPTMessageRole = 'system' | 'user' | 'assistant';
+export interface ChatCompletionUsage extends CompletionUsage {
+  /** GenerateChatCompletion may run multiple generations if functions are used. */
+  generations: number;
+  /** When multiple functions are used, this count has just the initial prompt tokens. */
+  initialPromptTokens: number;
+}
 
-export interface GPTMessage {
+export type GPTMessageRole = 'system' | 'user' | 'assistant' | 'function';
+
+export type GPTMessage = GPTMessageString | GPTMessageFunctionCall;
+
+export interface GPTMessageString {
   /** The role of the author of this message. */
   role: GPTMessageRole;
   /** The contents of the message. */
   content: string;
-  /** The name of the user in a multi-user chat. */
+  /** The name of the user in a multi-user chat, or the name of the function called. */
   name?: string;
+}
+
+export interface GPTMessageFunctionCall {
+  /** The role of the author of this message. */
+  role: 'assistant';
+  content: null;
+  function_call: RawGPTFunctionCall;
+}
+
+export interface RawGPTFunctionCall {
+  /** The name of the function called. */
+  name: string;
+  /** The parameters passed to the function. */
+  arguments: string;
 }
 
 export interface RawChatCompletion {
@@ -47,8 +72,14 @@ export interface RawChatCompletionChunkChoice {
   index: number;
 }
 
-export interface ChatCompletionOptions<Stream extends boolean = boolean, N extends number = number>
-  extends FetchOptions {
+export interface ChatCompletionOptions<
+  Stream extends boolean = boolean,
+  N extends number = number,
+  F extends Record<string, ChatCompletionFunctionOption> = Record<
+    string,
+    ChatCompletionFunctionOption
+  >
+> extends FetchOptions {
   /**
    * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
    * see all of your available models, or see our [Model overview](/docs/models/overview) for
@@ -122,9 +153,25 @@ export interface ChatCompletionOptions<Stream extends boolean = boolean, N exten
    * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
    */
   user?: string;
+
+  /**
+   * A list of functions the model may generate JSON inputs for. If you pass `run` to any function,
+   * it will be run automatically.
+   */
+  functions?: F;
+
   /** Number of retries before giving up. Defaults to 3. */
   retry?: number;
   auth?: AuthOverride;
+}
+
+export interface ChatCompletionFunctionOption<P extends AnyZodObject = AnyZodObject> {
+  /** A description of what this function does. */
+  description: string;
+  /** The parameters this function accepts, as a zod object. */
+  params: P;
+  /** The function to run. */
+  run?: (params: z.infer<P>) => Promise<any>;
 }
 
 export interface ChatCompletionMetadata {
@@ -140,7 +187,7 @@ export interface ChatCompletionMulti extends ChatCompletionMetadata {
 }
 
 export interface ChatCompletionStream {
-  content: AsyncIterableIterator<string>;
+  tokens: AsyncIterableIterator<string>;
   data: Promise<ChatCompletion>;
 }
 
@@ -149,8 +196,11 @@ export interface ChatCompletionMultiStream {
   data: Promise<ChatCompletionMulti>;
 }
 
-export interface ChatCompletionChoice {
-  content: string;
+export interface ChatCompletionChoice<
+  F extends ChatCompletionFunctionOption = ChatCompletionFunctionOption
+> {
+  content?: string;
+  function?: ChatCompletionFunctionCall<F>;
   finishReason: FinishReason;
 }
 
@@ -165,127 +215,332 @@ export type ChatCompletionResultFromOptions<
   ? ChatCompletionStream
   : ChatCompletionMultiStream;
 
-export async function generateChatCompletion<Stream extends boolean, N extends number>(
-  options: ChatCompletionOptions<Stream, N>
+function functionsToJSON(functions: Record<string, ChatCompletionFunctionOption>) {
+  const fns: any[] = [];
+  for (const key in functions) {
+    const { params, ...rest } = functions[key];
+    const schema = zodToJsonSchema(params) as any;
+    delete schema.$schema;
+    if (!schema.additionalProperties) delete schema.additionalProperties;
+    fns.push({
+      name: key,
+      description: rest.description,
+      parameters: schema,
+    });
+  }
+  return fns;
+}
+
+/** Helper class for chat function call objects. Has lazy evaluation for the parsed params. */
+export class ChatCompletionFunctionCall<
+  T extends ChatCompletionFunctionOption = ChatCompletionFunctionOption
+> {
+  /** Name of the function called. */
+  name: string;
+  /** Raw params JSON string from OpenAI. */
+  arguments: string;
+  /** The function definition. */
+  function: T;
+  /** The underlying message. */
+  message: GPTMessageFunctionCall;
+
+  constructor(msg: GPTMessageFunctionCall, functions?: any) {
+    const { name, arguments: args } = msg.function_call;
+
+    this.message = msg;
+    this.name = name;
+    this.arguments = args;
+
+    this.function = functions?.[name] as T;
+  }
+
+  /** Runs json + zod parse on the arguments. */
+  parse(): z.infer<T['params']> {
+    const jsonParsed = JSON.parse(this.arguments);
+    const { function: fn } = this;
+    if (fn) {
+      return fn.params.parse(jsonParsed);
+    } else {
+      return jsonParsed;
+    }
+  }
+
+  /** Runs json + zod parse on the arguments without throwing. */
+  safeParse(): SafeParseReturnType<z.input<T['params']>, z.output<T['params']>> {
+    try {
+      var jsonParsed = JSON.parse(this.arguments);
+    } catch (error: any) {
+      return {
+        success: false,
+        error: z.ZodError.create([
+          z.makeIssue({
+            data: this.arguments,
+            path: ['arguments'],
+            errorMaps: [],
+            issueData: {
+              code: 'custom',
+              message: error?.message ?? 'Invalid JSON',
+            },
+          }),
+        ]),
+      };
+    }
+    const { function: fn } = this;
+    if (fn) {
+      return fn.params.safeParse(jsonParsed);
+    } else {
+      return {
+        success: true,
+        data: jsonParsed,
+      };
+    }
+  }
+
+  createResponseMessage(result: any): GPTMessage {
+    return createResponseMessage(this.name, result);
+  }
+}
+
+function createResponseMessage(name: string, result: any): GPTMessage {
+  return {
+    role: 'function',
+    name,
+    content: JSON.stringify(result),
+  };
+}
+
+function mapChoice(choice: RawChatCompletionChoice, functionDefinitions?: any) {
+  const message = choice.message;
+  if ('function_call' in choice.message) {
+    return {
+      content: null,
+      function: new ChatCompletionFunctionCall(choice.message, functionDefinitions),
+      finishReason: choice.finish_reason,
+    };
+  }
+  return {
+    content: message.content,
+    finishReason: choice.finish_reason,
+  };
+}
+
+export async function generateChatCompletion<
+  Stream extends boolean,
+  N extends number,
+  F extends Record<string, ChatCompletionFunctionOption>
+>(
+  options: ChatCompletionOptions<Stream, N, F>
 ): Promise<ChatCompletionResultFromOptions<Stream, N>> {
-  const { retry, auth, ...gptOptions } = options;
+  let { retry, auth, functions, messages, ...gptOptions } = options;
+
+  const inputBody = {
+    model: gptOptions.model,
+    messages: messages,
+    max_tokens: gptOptions.maxTokens ?? (gptOptions as any).max_tokens,
+    temperature: gptOptions.temperature,
+    top_p: gptOptions.topP ?? (gptOptions as any).top_p,
+    n: gptOptions.n,
+    stop: gptOptions.stop,
+    presence_penalty: gptOptions.presencePenalty ?? (gptOptions as any).presence_penalty,
+    frequency_penalty: gptOptions.frequencyPenalty ?? (gptOptions as any).frequency_penalty,
+    logit_bias: gptOptions.logitBias ?? (gptOptions as any).logit_bias,
+    user: gptOptions.user,
+    functions: functions ? functionsToJSON(functions) : undefined,
+    stream: gptOptions.stream,
+  };
+
+  if (gptOptions.stream && (gptOptions.n ?? 1) !== 1 && functions) {
+    throw new Error(
+      'calling generateChatCompletion with { n > 1, stream: true, functions } is not yet supported.'
+    );
+  }
 
   const response = await fetchOpenAI({
     endpoint: '/chat/completions',
     method: 'POST',
-    body: {
-      model: gptOptions.model,
-      prompt: gptOptions.messages,
-      max_tokens: gptOptions.maxTokens ?? (gptOptions as any).max_tokens,
-      temperature: gptOptions.temperature,
-      top_p: gptOptions.topP ?? (gptOptions as any).top_p,
-      n: gptOptions.n,
-      stop: gptOptions.stop,
-      presence_penalty: gptOptions.presencePenalty ?? (gptOptions as any).presence_penalty,
-      frequency_penalty: gptOptions.frequencyPenalty ?? (gptOptions as any).frequency_penalty,
-      logit_bias: gptOptions.logitBias ?? (gptOptions as any).logit_bias,
-      user: gptOptions.user,
-    },
+    body: inputBody,
     auth,
     retry,
   });
 
   if (gptOptions.stream) {
-    const reader = (response as any).body.getReader();
-    if (!reader) {
-      throw new Error('No Response');
-    }
-    const streams = createArray(gptOptions.n ?? 1, () => new IterableStream<string>());
-    const completion: any = {};
-    if (streams.length === 1) {
-      completion.content = streams[0];
-    } else {
-      completion.choices = streams;
-    }
-    completion.data = (async () => {
-      const choices = createArray(streams.length, () => ({ content: '' })) as any;
-      const metadata: any = {
-        created: null as any,
-        model: null as any,
-        usage: {
-          promptTokens: 0,
-          completionTokens: 0,
-          totalTokens: 0,
-          price: 0,
-        },
-      };
-      try {
-        let { done, value } = await reader.read();
-        let buf = '';
-        do {
-          const lines = (td.decode(value) + buf).split('\n');
-          buf = lines.pop()!;
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6);
-              if (data !== '[DONE]') {
-                const obj = JSON.parse(data) as RawChatCompletionChunk;
-                if (obj.model && !metadata.model) {
-                  metadata.model = obj.model;
-                }
-                if (obj.created && !metadata.created) {
-                  metadata.created = new Date(obj.created * 1000);
-                }
-                for (const choice of obj.choices) {
-                  if (choice.delta.content) {
-                    streams[choice.index].push(choice.delta.content);
-                    choices[choice.index].content += choice.delta.content;
-                  }
-                  if (choice.finish_reason) {
-                    choices[choice.index].finishReason = choice.finish_reason;
-                  }
-                }
-              }
-            }
-          }
-          ({ done, value } = await reader.read());
-        } while (!done);
-      } finally {
-        reader.releaseLock();
-      }
-      streams.forEach(stream => stream.end());
-      metadata.usage.promptTokens = countChatPromptTokens(gptOptions.model, gptOptions.messages);
-      metadata.usage.completionTokens = choices
-        .map(x => countTokens(gptOptions.model, x.content))
-        .reduce((a, b) => a + b, 0);
-      metadata.usage.totalTokens = metadata.usage.promptTokens + metadata.usage.completionTokens;
-      metadata.usage.price = PRICING_TEXT[metadata.model as ChatModel] * metadata.usage.totalTokens;
-      if (choices.length === 1) {
-        metadata.content = choices[0].content;
-        metadata.finishReason = choices[0].finishReason;
-      } else {
-        metadata.choices = choices;
-      }
-      return metadata;
-    })();
-    return completion;
+    return finishChatCompletionStream(response, inputBody, options);
   }
 
-  const json = (await response.json()) as RawChatCompletion;
+  let json = (await response.json()) as RawChatCompletion;
+
+  const usage = {
+    promptTokens: ((options as any)._usage?.promptTokens ?? 0) + json.usage.prompt_tokens,
+    completionTokens:
+      ((options as any)._usage?.completionTokens ?? 0) + json.usage.completion_tokens,
+    totalTokens: ((options as any)._usage?.totalTokens ?? 0) + json.usage.total_tokens,
+    initialPromptTokens: (options as any)._usage?.initialPromptTokens ?? json.usage.prompt_tokens,
+    generations: ((options as any)._usage?.generations ?? 0) + 1,
+  };
+
+  // We support autocalling functions if there is only one choice and it is a function call
+  if (json.choices.length === 1 && json.choices[0].finish_reason === 'function_call') {
+    const callMessage = json.choices[0].message as GPTMessageFunctionCall;
+    const fn = functions?.[callMessage.function_call.name];
+    if (fn?.run) {
+      // TODO: error handling
+      const params = fn.params.parse(JSON.parse(callMessage.function_call.arguments));
+      const result = await fn.run(params);
+      const responseMessage = createResponseMessage(callMessage.function_call.name, result);
+
+      return generateChatCompletion({
+        ...options,
+        messages: [...messages, callMessage, responseMessage],
+        maxTokens: options.maxTokens ? options.maxTokens - json.usage.completion_tokens : undefined,
+        _functionMessages: [
+          ...((options as any)._functionMessages ?? []),
+          callMessage,
+          responseMessage,
+        ],
+        _usage: usage,
+      } as any);
+    }
+  }
 
   const completion: ChatCompletion | ChatCompletionMulti = {
     ...(json.choices.length === 1
-      ? { content: json.choices[0].message.content, finishReason: json.choices[0].finish_reason }
+      ? mapChoice(json.choices[0], functions)
       : {
-          choices: json.choices.map(x => ({
-            content: x.message.content,
-            finishReason: x.finish_reason,
-          })),
+          choices: json.choices.map(x => mapChoice(x, functions)),
         }),
     created: new Date(json.created * 1000),
     model: json.model,
     usage: {
-      promptTokens: json.usage.prompt_tokens,
-      completionTokens: json.usage.completion_tokens,
-      totalTokens: json.usage.total_tokens,
+      ...usage,
       price: json.usage.total_tokens * PRICING_CHAT[json.model],
     },
   };
 
   return completion as any;
+}
+
+type ChatCompletionStreamToken =
+  | {
+      type: 'text';
+      value: string;
+    }
+  | {
+      type: 'function_call';
+      name: string;
+      arguments: any;
+    }
+  | {
+      type: 'function_result';
+      name: string;
+      result: any;
+    };
+
+function finishChatCompletionStream(
+  response: Response,
+  inputBody: any,
+  options: ChatCompletionOptions
+) {
+  console.log('stream?');
+  const messages = inputBody.messages.slice() as GPTMessage[];
+  const streams = createArray(
+    inputBody.n ?? 1,
+    () => new IterableStream<ChatCompletionStreamToken>()
+  );
+  const completion: any = {};
+  if (streams.length === 1) {
+    completion.tokens = streams[0];
+  } else {
+    completion.choices = streams;
+  }
+
+  const choices = createArray(streams.length, () => ({ content: '' })) as any;
+  const metadata: any = {
+    created: null as any,
+    model: null as any,
+    usage: {
+      promptTokens: 0,
+      completionTokens: 0,
+      totalTokens: 0,
+      price: 0,
+    },
+  };
+
+  const [dataPromise, onFinish] = deferred<void>();
+
+  const reader = response.body?.getReader();
+  if (!reader) return;
+  const eventSource = new OpenAIEventSource(reader);
+  eventSource.onData = (data: RawChatCompletionChunk) => {
+    if (data.model && !metadata.model) {
+      metadata.model = data.model;
+    }
+    if (data.created && !metadata.created) {
+      metadata.created = new Date(data.created * 1000);
+    }
+    for (const choice of data.choices) {
+      if (choice.delta.content) {
+        streams[choice.index].push({
+          type: 'text',
+          value: choice.delta.content,
+        });
+        choices[choice.index].content += choice.delta.content;
+      }
+      if (choice.finish_reason) {
+        choices[choice.index].finishReason = choice.finish_reason;
+      }
+    }
+  };
+  // This is probably gonna be a function call
+  eventSource.onNonStreamValue = async (data: RawChatCompletion) => {
+    if (data.choices.length !== 1) {
+      throw new Error('Not Implemented');
+    }
+    const choice = data.choices[0];
+    if (choice.finish_reason === 'function_call') {
+      const callMessage = choice.message as GPTMessageFunctionCall;
+      const fn = options.functions?.[callMessage.function_call.name];
+
+      if (fn?.run) {
+        const args = fn.params.parse(JSON.parse(callMessage.function_call.arguments));
+        streams[0].push({
+          type: 'function_call',
+          name: callMessage.function_call.name,
+          arguments: args,
+        });
+        const result = await fn.run(args);
+        streams[0].push({
+          type: 'function_result',
+          name: callMessage.function_call.name,
+          result,
+        });
+        const responseMessage = createResponseMessage(callMessage.function_call.name, result);
+        messages.push(callMessage, responseMessage);
+
+        response = await fetchOpenAI({
+          endpoint: '/chat/completions',
+          method: 'POST',
+          body: {
+            ...inputBody,
+            messages,
+            max_tokens: options.maxTokens
+              ? options.maxTokens - data.usage.completion_tokens
+              : undefined,
+            stream: true,
+          },
+        });
+
+        const newReader = response.body?.getReader();
+        if (!newReader) return onFinish();
+        eventSource.continue(newReader);
+      } else {
+        onFinish();
+      }
+    }
+  };
+
+  completion.data = dataPromise.then(() => {
+    return metadata;
+  });
+
+  return completion;
 }
