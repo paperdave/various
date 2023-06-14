@@ -1,10 +1,15 @@
+// TODO: this is actually wrong, input and output have different costs
 export const PRICING_CHAT = {
   'gpt-4': 0.03 / 1000,
-  'gpt-4-0314': 0.03 / 1000,
+  'gpt-4-0613': 0.03 / 1000,
   'gpt-4-32k': 0.06 / 1000,
-  'gpt-4-32k-0314': 0.06 / 1000,
+  'gpt-4-32k-0613': 0.06 / 1000,
   'gpt-3.5-turbo': 0.002 / 1000,
-  'gpt-3.5-turbo-0301': 0.002 / 1000,
+  'gpt-3.5-turbo-0613': 0.002 / 1000,
+  // deprecated
+  'gpt-4-0314': 0.03 / 1000,
+  'gpt-4-32k-0314': 0.06 / 1000,
+  'gpt-3.5-turbo-0301': 0.0015 / 1000,
 };
 
 export type ChatModel = keyof typeof PRICING_CHAT;

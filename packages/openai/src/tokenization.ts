@@ -10,18 +10,20 @@ const chatTokenRules: Record<
     perName: number;
   }
 > = {
-  'gpt-3.5-turbo-0301': {
+  'gpt-3.5-turbo-0613': {
     encoding: 'cl100k_base',
     perMessage: 4, // every message follows {role/name}\n{content}\n
     perName: -1, // if there's a name, the role is omitted
   },
-  'gpt-4-0314': {
+  'gpt-4-0613': {
     encoding: 'cl100k_base',
     perMessage: 3,
     perName: 1,
   },
 };
+chatTokenRules['gpt-3.5-turbo-0316'] = chatTokenRules['gpt-3.5-turbo-0613'];
 chatTokenRules['gpt-3.5-turbo'] = chatTokenRules['gpt-3.5-turbo-0301'];
+chatTokenRules['gpt-4-0314'] = chatTokenRules['gpt-4-0613'];
 chatTokenRules['gpt-4'] = chatTokenRules['gpt-4-0314'];
 chatTokenRules['gpt-4-32k'] = chatTokenRules['gpt-4'];
 chatTokenRules['gpt-4-32k-0314'] = chatTokenRules['gpt-4-0314'];
@@ -43,11 +45,16 @@ export function getTokenizer(encoding: TiktokenEncoding, extraTokens?: Record<st
 }
 
 export function countTokens(model: ChatModel | TextModel, text: string) {
+  return 0;
+
   return encoding_for_model(modelAliases[model] ?? model).encode(text).length;
 }
 
 export function countChatPromptTokens(model: ChatModel, messages: GPTMessage[]): number {
-  const { encoding, perMessage, perName } = chatTokenRules[model];
+  // todo:
+  return 0;
+  const rules = chatTokenRules[model];
+  const { encoding, perMessage, perName } = rules;
   const encoder = get_encoding(encoding);
 
   let count = 0;

@@ -2,6 +2,8 @@ let defaultKey: string | undefined;
 let defaultOrg: string | undefined;
 let hasSetDefaults = false;
 
+declare var process: any;
+
 export function setAPIKey(key: string | undefined | null) {
   defaultKey = key ?? undefined;
 }
