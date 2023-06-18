@@ -1,5 +1,13 @@
 import { createArray, deferred, IterableStream } from '@paperdave/utils';
-import { AnyZodObject, SafeParseReturnType, z } from 'zod';
+import {
+  AnyZodObject,
+  infer as _infer,
+  input,
+  makeIssue,
+  output,
+  SafeParseReturnType,
+  ZodError,
+} from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { AuthOverride } from './api-key';
 import { OpenAIEventSource } from './event-source-parser';
@@ -177,7 +185,7 @@ export interface ChatCompletionFunctionOption<P extends AnyZodObject = AnyZodObj
   /** The parameters this function accepts, as a zod object. */
   params: P;
   /** The function to run. */
-  run?: (params: z.infer<P>) => Promise<any>;
+  run?: (params: _infer<P>) => Promise<any>;
 }
 
 export interface ChatCompletionMetadata {
@@ -261,7 +269,7 @@ export class ChatCompletionFunctionCall<
   }
 
   /** Runs json + zod parse on the arguments. */
-  parse(): z.infer<T['params']> {
+  parse(): _infer<T['params']> {
     const jsonParsed = JSON.parse(this.arguments);
     const { function: fn } = this;
     if (fn) {
@@ -272,14 +280,14 @@ export class ChatCompletionFunctionCall<
   }
 
   /** Runs json + zod parse on the arguments without throwing. */
-  safeParse(): SafeParseReturnType<z.input<T['params']>, z.output<T['params']>> {
+  safeParse(): SafeParseReturnType<input<T['params']>, output<T['params']>> {
     try {
       var jsonParsed = JSON.parse(this.arguments);
     } catch (error: any) {
       return {
         success: false,
-        error: z.ZodError.create([
-          z.makeIssue({
+        error: ZodError.create([
+          makeIssue({
             data: this.arguments,
             path: ['arguments'],
             errorMaps: [],
@@ -493,6 +501,7 @@ async function finishChatCompletionStream(inputBody: any, options: ChatCompletio
   });
   const eventSource = new OpenAIEventSource(reader);
   eventSource.onData = (data: RawChatCompletionChunk) => {
+    console.log({ data: JSON.stringify(data) });
     if (data.model && !metadata.model) {
       metadata.model = data.model;
     }
