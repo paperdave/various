@@ -1,5 +1,11 @@
 # @paperdave/openai
 
+## 1.0.1
+
+### Patch Changes
+
+- fix publishing issue
+
 ## 1.0.0
 
 ### Major Changes
