@@ -501,7 +501,6 @@ async function finishChatCompletionStream(inputBody: any, options: ChatCompletio
   });
   const eventSource = new OpenAIEventSource(reader);
   eventSource.onData = (data: RawChatCompletionChunk) => {
-    console.log({ data: JSON.stringify(data) });
     if (data.model && !metadata.model) {
       metadata.model = data.model;
     }

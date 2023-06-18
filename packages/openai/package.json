@@ -1,6 +1,6 @@
 {
   "name": "@paperdave/openai",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "OpenAI API Library",
   "keywords": [
     "openai",

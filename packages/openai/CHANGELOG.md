@@ -1,5 +1,11 @@
 # @paperdave/openai
 
+## 1.0.2
+
+### Patch Changes
+
+- remove an anoying console.log
+
 ## 1.0.1
 
 ### Patch Changes
