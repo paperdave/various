@@ -6,3 +6,4 @@ export * from './models';
 export * from './text';
 export * from './text-edit';
 export * from './tokenization';
+export * from './moderation';

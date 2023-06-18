@@ -6,7 +6,7 @@
 </div>
 <br>
 
-This library allows you to interact with the OpenAI API. Instead of being a simple wrapper like the official `openai` package, it is a smarter abstraction that makes developing AI tools in TypeScript much easier to do. It is currently a large work in progress, only covering some of the API.
+This is a TypeScript library for interacting with the [OpenAI API](https://platform.openai.com/docs/introduction/overview). It provides smart and easy to use abstractions over the API that make tasks like [streaming](#streaming-messages) and [AI function calling](#function-calling) much easier to use.
 
 **Example: Generating a Chat Completion with GPT-4**:
 
@@ -35,8 +35,10 @@ const completion = await generateChatCompletion({
   stream: true,
 });
 
-for await (const token of completion.content) {
-  process.stdout.write(token);
+for await (const token of completion.tokens) {
+  if (token.type === 'text') {
+    process.stdout.write(token.value);
+  }
 }
 process.stdout.write('\n');
 ```
@@ -49,7 +51,7 @@ By default, this library reads your api key and organization from the `OPENAI_AP
 import { setAPIKey, setOrganization, generateChatCompletion } from '@paperdave/openai';
 
 setAPIKey('MY_OWN_TOKEN');
-setOrganization('org-zVFQp7dWPYVEISqJjXw2QFzx');
+setOrganization('MY_ORG_ID');
 
 // Per-request
 generateChatCompletion({
@@ -74,6 +76,9 @@ const response = await generateChatCompletion({
   // Required arguments, see OpenAI Docs
   model: ChatModel,
   messages: GPTMessage[]
+
+  // Optionally provide callable functions, see below
+  functions: Record<string, ChatCompletionFunctionOption>,
 
   // Optionally override API key and organization.
   auth: AuthOverride,
@@ -118,8 +123,23 @@ If stream is set to true, you will get an async iterator with a promise to the f
 
 ```ts
 interface ChatCompletionStream {
-  content: AsyncIterableIterator<string>;
+  content: AsyncIterableIterator<ChatCompletionStreamToken>;
   data: Promise<ChatCompletion>;
+}
+
+interface ChatCompletionStreamToken {
+  type: 'text' | 'function_call' | 'function_result';
+
+  // type=text
+  value: string;
+
+  // type=function_call
+  name: string;
+  arguments: any;
+
+  // type=function_result
+  name: string;
+  result: any;
 }
 ```
 
@@ -142,7 +162,80 @@ const data = await stream.data;
 console.log(`The above message cost $${data.usage.price.toFixed(3)}`);
 ```
 
+### Function Calling
+
+As of June 13th, OpenAI announced [new models that support function calling](https://openai.com/blog/function-calling-and-other-api-updates), which works similar to ChatGPT Plugins. This works by providing a list of functions, and the API may respond with a function call instead of a text output. However, when using `generateChatCompletion`, this is fully abstracted away and you can pass real function references:
+
+```ts
+import z from 'zod';
+import { generateChatCompletion, GPTMessage } from '@paperdave/openai';
+
+const messages: GPTMessage[] = [
+  { role: 'system', content: 'You are a helpful assistant.' },
+  { role: 'user', content: 'What is the weather in nyc like?' },
+];
+
+const functions = {
+  weather: {
+    description: 'Get the current weather in a given location',
+
+    params: z.object({
+      location: z.string().describe('The city and state, e.g. New York, NY'),
+      unit: z
+        .enum(['imperial', 'metric'])
+        .default('imperial')
+        .describe('The unit of measurement for the temperature'),
+    }),
+
+    // Defining the function is optional (see below)
+    async run({ location, unit }) {
+      // in your app, you would make this call to a weather API
+      console.log(`Getting weather for ${location} in ${unit} units...`);
+      return {
+        temperature: 72,
+        unit,
+        location,
+        forecast: ['sunny', 'windy'],
+      };
+    },
+  },
+};
+
+const result = await generateChatCompletion({
+  model: 'gpt-3.5-turbo-0613',
+  messages,
+  functions,
+});
+
+console.log(result.content);
+```
+
+Parameters are defined and validated with [zod](https://www.npmjs.com/package/zod). OpenAI says they support any JSON schema, but it may be best practice to only have an object with top level properties. If a `run` function is provided on all functions, `generateChatCompletion` will always return a chat reply in `.content`. Otherwise, there is a possibility it will return `.content = null` and `.function = {...}`.
+
+This works with streaming too:
+
+```ts
+const result = await generateChatCompletion({
+  model: 'gpt-3.5-turbo-0613',
+  messages,
+  functions,
+  stream: true,
+});
+
+for await (const token of result.tokens) {
+  if (token.type === 'text') {
+    process.stdout.write(token.value);
+  } else {
+    // this will be run twice, once with the function call, and once with the result
+    console.log();
+    console.log(token);
+  }
+}
+```
+
 ### Multiple generations
+
+**I don't recommend using the `n` option, but instead just make multiple calls to the OpenAI API.**
 
 When you set `n` to more than 1, you are given a `choices` array instead of a single property `content`. Here are what the types look like in this case:
 
@@ -151,28 +244,26 @@ interface ChatCompletionMulti {
   choices: ChatCompletionChoice[];
   created: Date;
   model: ChatModel; // (string enum)
-  usage: {
-    promptTokens: number;
-    completionTokens: number;
-    totalTokens: number;
-    price: number; // (in us dollars)
-  };
+  usage: ChatCompletionUsage;
 }
 
 interface ChatCompletionChoice {
-  content: string;
+  content: string | null;
+  function: ChatCompletionFunction | null;
   finishReason: FinishReason; // (string enum)
 }
 
 interface ChatCompletionMultiStream {
-  choices: AsyncIterableIterator<string>[];
+  choices: AsyncIterableIterator<ChatCompletionStreamToken>[];
   data: Promise<ChatCompletionMulti>;
 }
 ```
 
+This isnt supported when using functions yet.
+
 ## Text Completions / Insertions
 
-Text completions allow you to complete a text prompt. [OpenAI's Guide](https://platform.openai.com/docs/guides/completion)
+Text completions allow you to complete a text prompt. This form of GPT's API seems to be pushed away in favor of Chat Completions, with newer models only being supported there. [OpenAI's Guide](https://platform.openai.com/docs/guides/completion)
 
 One function is given to call this api: `generateTextCompletion`, which functions almost identically to `generateChatCompletion`, except that instead of a `messages` array, you pass a `prompt` string.
 
@@ -272,8 +363,43 @@ Coming Soon
 
 ## Moderation
 
-Coming Soon
+OpenAI has a tool for checking whether content complies with their usage policies. [OpenAI's Guide](https://platform.openai.com/docs/guides/moderation)
+
+There isn't much to say about this endpoint.
+
+```ts
+import { generateModeration } from '@paperdave/openai';
+
+const mod = await generateModeration({
+  input: 'JavaScript is a good programming language.',
+});
+
+// false, even though the statement is not true
+console.log(mod.flagged);
+```
 
 ## Counting Tokens
 
-Implemented, Docs coming soon.
+This package includes a modified api to access `tiktoken`, the method for tokenizing strings. This is exposed as `getTokenizer(modelOrEncodingName)`, which returns a tokenizer that contains many helpful methods:
+
+```ts
+import { getTokenizer } from '@paperdave/openai';
+
+const tokenizer = getTokenizer('gpt-3.5-turbo'); // or the underlying encoding "cl100k_base"
+
+console.log(tokenizer.count('Hello, world!')); // 4
+```
+
+The method `countGPTChatPrompt` takes in `{ messages, functions }` and returns the number of tokens that `usage.promptTokens` would be.
+
+> **Note**: I have not fully nailed down the counting algorithm for functions. It currently overcounts by 1 or 2 tokens in some situations.
+
+### Tokenizer Memory Management
+
+Tokenizers are automatically garbage collected, which can lead to slowdowns if garbage collection and GPT tasks are run too often. You can keep a tokenizer loaded by calling `keepTokenizerLoaded` with the model or encoding name.
+
+```ts
+keepTokenizerLoaded('cl100k_base'); // GPT-3 and 4
+```
+
+This is not done by default because it intentionally creates a memory leak by keeping the tokenizer loaded in memory.
