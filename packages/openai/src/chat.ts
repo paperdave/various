@@ -25,12 +25,17 @@ export interface GPTMessageString {
   content: string;
   /** The name of the user in a multi-user chat, or the name of the function called. */
   name?: string;
+  /** Function call metadata. */
+  function_call?: RawGPTFunctionCall;
 }
 
 export interface GPTMessageFunctionCall {
   /** The role of the author of this message. */
   role: 'assistant';
-  content: null;
+  /** The contents of the message. */
+  content?: string | null;
+  /** The name of the user in a multi-user chat, or the name of the function called. */
+  name?: string;
   function_call: RawGPTFunctionCall;
 }
 
@@ -348,6 +353,7 @@ export async function generateChatCompletion<
     functions: functions ? functionsToJSON(functions) : undefined,
     stream: gptOptions.stream,
   };
+  console.log(inputBody);
 
   if (gptOptions.stream && (gptOptions.n ?? 1) !== 1 && functions) {
     throw new Error(
@@ -402,7 +408,7 @@ export async function generateChatCompletion<
     }
   }
 
-  const completion: ChatCompletion | ChatCompletionMulti = {
+  const completion = {
     ...(json.choices.length === 1
       ? mapChoice(json.choices[0], functions)
       : {
@@ -412,14 +418,16 @@ export async function generateChatCompletion<
     model: json.model,
     usage: {
       ...usage,
-      price: json.usage.total_tokens * PRICING_CHAT[json.model],
+      price:
+        usage.promptTokens * PRICING_CHAT[gptOptions.model][0] +
+        usage.completionTokens * PRICING_CHAT[gptOptions.model][1],
     },
   };
 
   return completion as any;
 }
 
-type ChatCompletionStreamToken =
+export type ChatCompletionStreamToken =
   | {
       type: 'text';
       value: string;
@@ -440,7 +448,6 @@ function finishChatCompletionStream(
   inputBody: any,
   options: ChatCompletionOptions
 ) {
-  console.log('stream?');
   const messages = inputBody.messages.slice() as GPTMessage[];
   const streams = createArray(
     inputBody.n ?? 1,

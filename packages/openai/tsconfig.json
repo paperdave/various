@@ -14,12 +14,11 @@
     "strict": true,
     "noImplicitAny": false,
     "baseUrl": ".",
-    "types": [],
+    "types": ["bun-types"],
     "paths": {
       "@paperdave/openai": ["src/index.ts"]
     },
     "target": "ESNext"
   },
-  "include": ["src/"],
-  "exclude": ["**/*.test.ts", "**/*.tsx"]
+  "include": ["src/"]
 }

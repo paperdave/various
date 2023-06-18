@@ -29,8 +29,8 @@
     "build": "bash build.sh"
   },
   "dependencies": {
-    "@dqbd/tiktoken": "^1.0.2",
     "@paperdave/utils": "workspace:^1.6.1",
+    "tiktoken": "^1.0.8",
     "zod": "^3.21.4",
     "zod-to-json-schema": "^3.21.1"
   },
@@ -38,6 +38,7 @@
     "@esbuild-kit/esm-loader": "^2.5.5",
     "@types/dedent": "^0.7.0",
     "ansi-styles": "^6.2.1",
+    "bun-types": "^0.6.9",
     "chalk": "^5.1.2",
     "dedent": "^0.7.0",
     "dotenv": "^16.0.3",

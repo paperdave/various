@@ -1,6 +1,6 @@
 // @ts-nocheck
 import z from 'zod';
-import { generateChatCompletion, GPTMessage } from '../src';
+import { generateChatCompletion, GPTMessage } from '@paperdave/openai';
 
 const messages: GPTMessage[] = [
   { role: 'system', content: 'You are a helpful assistant.' },
@@ -38,4 +38,4 @@ const result = await generateChatCompletion({
   functions,
 });
 
-console.log(result);
+console.log(result.content);

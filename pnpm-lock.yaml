@@ -197,12 +197,12 @@ importers:
 
   packages/openai:
     dependencies:
-      '@dqbd/tiktoken':
-        specifier: ^1.0.2
-        version: 1.0.2
       '@paperdave/utils':
         specifier: workspace:^1.6.1
         version: link:../utils
+      tiktoken:
+        specifier: ^1.0.8
+        version: 1.0.8
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -219,6 +219,9 @@ importers:
       ansi-styles:
         specifier: ^6.2.1
         version: 6.2.1
+      bun-types:
+        specifier: ^0.6.9
+        version: 0.6.9
       chalk:
         specifier: ^5.1.2
         version: 5.2.0
@@ -557,10 +560,6 @@ packages:
       fs-extra: 7.0.1
       human-id: 1.0.2
       prettier: 2.8.8
-    dev: false
-
-  /@dqbd/tiktoken@1.0.2:
-    resolution: {integrity: sha512-AjGTBRWsMoVmVeN55NLyupyM8TNamOUBl6tj5t/leLDVup3CFGO9tVagNL1jf3GyZLkWZSTmYVbPQ/M2LEcNzw==}
     dev: false
 
   /@esbuild-kit/core-utils@3.1.0:
@@ -1371,6 +1370,10 @@ packages:
 
   /bun-types@0.5.8:
     resolution: {integrity: sha512-VHwD0MAHo3wraYAeqTWH2NDmXOdGfC3wWWOnZvK93ytI6yq/LkgsCjDudWNmN7MlfPvJb2zoLMnkzhjxNwLsLw==}
+    dev: true
+
+  /bun-types@0.6.9:
+    resolution: {integrity: sha512-qsxwgWWl6qBrHhj+c8QKte+Qyn8MwQweCp7gR51dfw6G43z+PmNk+ipx3xJj/EIU8i9QPyikriZ/tOeEoYPKyw==}
     dev: true
 
   /call-bind@1.0.2:
@@ -3940,6 +3943,10 @@ packages:
 
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
+
+  /tiktoken@1.0.8:
+    resolution: {integrity: sha512-bmATMbOd35gIiEJdmfKau1K6WnEodO78+sPY++WCZOXS19OYM0qas7LaoA/dvGqgg2W3eaTua32RHHnnbLPeNw==}
+    dev: false
 
   /tiny-glob@0.2.9:
     resolution: {integrity: sha512-g/55ssRPUjShh+xkfx9UPDXqhckHEsHr4Vd9zX55oSdGZc/MD0m3sferOkwWtp98bv+kcVfEHtRJgBVJzelrzg==}
