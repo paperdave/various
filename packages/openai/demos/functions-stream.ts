@@ -29,9 +29,9 @@ const functions = {
       };
     },
   },
-};
+} as const;
 
-console.log(messages[1].content);
+console.log(messages[1].content); // original message
 const result = await generateChatCompletion({
   model: 'gpt-3.5-turbo-0613',
   messages,
@@ -41,11 +41,13 @@ const result = await generateChatCompletion({
 
 for await (const token of result.tokens) {
   if (token.type === 'text') {
+    // this logs once per token for the message to be displayed
     process.stdout.write(token.value);
   } else {
-    console.log();
+    // this logs two times, once for the function name and once for the result
     console.log(token);
   }
 }
 
-console.log(await result.data);
+// generation metadata
+console.log('\n', await result.data);

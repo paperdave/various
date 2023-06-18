@@ -3,7 +3,7 @@ import { AnyZodObject, SafeParseReturnType, z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { AuthOverride } from './api-key';
 import { OpenAIEventSource } from './event-source-parser';
-import { fetchOpenAI, FetchOptions } from './fetch';
+import { fetchOpenAI, fetchOpenAIEventSource, FetchOptions } from './fetch';
 import { ChatModel, PRICING_CHAT } from './models';
 import { CompletionUsage, FinishReason, RawCompletionUsage } from './shared';
 import { getTokenizer } from './tokenization';
@@ -361,6 +361,10 @@ export async function generateChatCompletion<
     );
   }
 
+  if (gptOptions.stream) {
+    return finishChatCompletionStream(inputBody, options);
+  }
+
   const response = await fetchOpenAI({
     endpoint: '/chat/completions',
     method: 'POST',
@@ -368,10 +372,6 @@ export async function generateChatCompletion<
     auth,
     retry,
   });
-
-  if (gptOptions.stream) {
-    return finishChatCompletionStream(response, inputBody, options);
-  }
 
   let json = (await response.json()) as RawChatCompletion;
 
@@ -443,11 +443,7 @@ export type ChatCompletionStreamToken =
       result: any;
     };
 
-function finishChatCompletionStream(
-  response: Response,
-  inputBody: any,
-  options: ChatCompletionOptions
-) {
+async function finishChatCompletionStream(inputBody: any, options: ChatCompletionOptions) {
   const messages = inputBody.messages.slice() as GPTMessage[];
   const streams = createArray(
     inputBody.n ?? 1,
@@ -488,8 +484,13 @@ function finishChatCompletionStream(
 
   let finishedStreams = 0;
 
-  const reader = response.body?.getReader();
-  if (!reader) return;
+  let reader = await fetchOpenAIEventSource({
+    endpoint: '/chat/completions',
+    method: 'POST',
+    body: inputBody,
+    auth: options.auth,
+    retry: options.retry,
+  });
   const eventSource = new OpenAIEventSource(reader);
   eventSource.onData = (data: RawChatCompletionChunk) => {
     if (data.model && !metadata.model) {
@@ -550,7 +551,8 @@ function finishChatCompletionStream(
               metadata.usage.promptTokens += tokens;
               metadata.usage.completionTokens = tokenizer.countGPTMessage(callMessage);
               metadata.usage.generations++;
-              const response = await fetchOpenAI({
+              (reader as any)?._destroy?.();
+              reader = await fetchOpenAIEventSource({
                 endpoint: '/chat/completions',
                 method: 'POST',
                 body: {
@@ -560,9 +562,12 @@ function finishChatCompletionStream(
                   stream: true,
                 },
               });
-              const newReader = response.body?.getReader();
-              if (!newReader) return onFinish();
-              eventSource.continue(newReader);
+              eventSource.continue(reader);
+              choices[choice.index] = {
+                content: '',
+                functionName: '',
+                functionArgs: '',
+              };
             } else {
               onFinish();
             }
