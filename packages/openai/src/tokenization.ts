@@ -203,7 +203,3 @@ export function getTokenizer(
 export function countTokens(model: ChatModel | TextModel, text: string) {
   return getTokenizer(model).count(text);
 }
-
-const tokenizer = getTokenizer('gpt-3.5-turbo'); // or the underlying encoding "cl100k_base"
-
-console.log(tokenizer.count('Hello, world!')); // 4
