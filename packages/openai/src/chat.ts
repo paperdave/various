@@ -6,6 +6,7 @@ import { OpenAIEventSource } from './event-source-parser';
 import { fetchOpenAI, FetchOptions } from './fetch';
 import { ChatModel, PRICING_CHAT } from './models';
 import { CompletionUsage, FinishReason, RawCompletionUsage } from './shared';
+import { getTokenizer } from './tokenization';
 
 export interface ChatCompletionUsage extends CompletionUsage {
   /** GenerateChatCompletion may run multiple generations if functions are used. */
@@ -319,7 +320,7 @@ function mapChoice(choice: RawChatCompletionChoice, functionDefinitions?: any) {
   if ('function_call' in choice.message) {
     return {
       content: null,
-      function: new ChatCompletionFunctionCall(choice.message, functionDefinitions),
+      function: new ChatCompletionFunctionCall(choice.message as any, functionDefinitions),
       finishReason: choice.finish_reason,
     };
   }
@@ -353,7 +354,6 @@ export async function generateChatCompletion<
     functions: functions ? functionsToJSON(functions) : undefined,
     stream: gptOptions.stream,
   };
-  console.log(inputBody);
 
   if (gptOptions.stream && (gptOptions.n ?? 1) !== 1 && functions) {
     throw new Error(
@@ -460,19 +460,33 @@ function finishChatCompletionStream(
     completion.choices = streams;
   }
 
-  const choices = createArray(streams.length, () => ({ content: '' })) as any;
+  const tokenizer = getTokenizer(inputBody.model);
+
+  const choices = createArray(streams.length, () => ({
+    content: '',
+    functionName: '',
+    functionArgs: '',
+  })) as any;
   const metadata: any = {
     created: null as any,
     model: null as any,
     usage: {
-      promptTokens: 0,
+      promptTokens: tokenizer.countGPTChatPrompt({
+        messages,
+        functions: inputBody.functions,
+      }),
       completionTokens: 0,
       totalTokens: 0,
       price: 0,
+      generations: 1,
+      initialPromptTokens: 0,
     },
   };
+  metadata.usage.initialPromptTokens = metadata.usage.promptTokens;
 
   const [dataPromise, onFinish] = deferred<void>();
+
+  let finishedStreams = 0;
 
   const reader = response.body?.getReader();
   if (!reader) return;
@@ -492,60 +506,91 @@ function finishChatCompletionStream(
         });
         choices[choice.index].content += choice.delta.content;
       }
-      if (choice.finish_reason) {
-        choices[choice.index].finishReason = choice.finish_reason;
+      if (choice.delta.function_call) {
+        if (choice.delta.function_call.name) {
+          choices[choice.index].functionName += choice.delta.function_call.name;
+        }
+        if (choice.delta.function_call.arguments) {
+          choices[choice.index].functionArgs += choice.delta.function_call.arguments;
+        }
       }
-    }
-  };
-  // This is probably gonna be a function call
-  eventSource.onNonStreamValue = async (data: RawChatCompletion) => {
-    if (data.choices.length !== 1) {
-      throw new Error('Not Implemented');
-    }
-    const choice = data.choices[0];
-    if (choice.finish_reason === 'function_call') {
-      const callMessage = choice.message as GPTMessageFunctionCall;
-      const fn = options.functions?.[callMessage.function_call.name];
-
-      if (fn?.run) {
-        const args = fn.params.parse(JSON.parse(callMessage.function_call.arguments));
-        streams[0].push({
-          type: 'function_call',
-          name: callMessage.function_call.name,
-          arguments: args,
-        });
-        const result = await fn.run(args);
-        streams[0].push({
-          type: 'function_result',
-          name: callMessage.function_call.name,
-          result,
-        });
-        const responseMessage = createResponseMessage(callMessage.function_call.name, result);
-        messages.push(callMessage, responseMessage);
-
-        response = await fetchOpenAI({
-          endpoint: '/chat/completions',
-          method: 'POST',
-          body: {
-            ...inputBody,
-            messages,
-            max_tokens: options.maxTokens
-              ? options.maxTokens - data.usage.completion_tokens
-              : undefined,
-            stream: true,
-          },
-        });
-
-        const newReader = response.body?.getReader();
-        if (!newReader) return onFinish();
-        eventSource.continue(newReader);
-      } else {
-        onFinish();
+      if (choice.finish_reason) {
+        if (choice.finish_reason === 'function_call') {
+          (async () => {
+            const name = choices[choice.index].functionName;
+            const argsRaw = choices[choice.index].functionArgs;
+            const fn = options.functions?.[name];
+            if (fn?.run) {
+              const args = fn.params.parse(JSON.parse(argsRaw));
+              streams[choice.index].push({
+                type: 'function_call',
+                name,
+                arguments: args,
+              });
+              const result = await fn.run(args);
+              streams[choice.index].push({
+                type: 'function_result',
+                name,
+                result,
+              });
+              const callMessage = {
+                role: 'assistant',
+                content: null,
+                function_call: {
+                  name,
+                  arguments: argsRaw,
+                },
+              } as any;
+              const responseMessage = createResponseMessage(name, result);
+              messages.push(callMessage, responseMessage);
+              const tokens = tokenizer.countGPTChatPrompt({
+                messages,
+                functions: inputBody.functions,
+              });
+              metadata.usage.promptTokens += tokens;
+              metadata.usage.completionTokens = tokenizer.countGPTMessage(callMessage);
+              metadata.usage.generations++;
+              const response = await fetchOpenAI({
+                endpoint: '/chat/completions',
+                method: 'POST',
+                body: {
+                  ...inputBody,
+                  messages,
+                  max_tokens: options.maxTokens ? options.maxTokens - tokens : undefined,
+                  stream: true,
+                },
+              });
+              const newReader = response.body?.getReader();
+              if (!newReader) return onFinish();
+              eventSource.continue(newReader);
+            } else {
+              onFinish();
+            }
+          })();
+        } else {
+          choices[choice.index].finishReason = choice.finish_reason;
+          finishedStreams++;
+          if (finishedStreams === streams.length) {
+            onFinish();
+          }
+        }
       }
     }
   };
 
   completion.data = dataPromise.then(() => {
+    metadata.usage.completionTokens = choices.reduce(
+      (acc: number, choice: any) => acc + tokenizer.count(choice.content),
+      0
+    );
+    metadata.usage.totalTokens = metadata.usage.promptTokens + metadata.usage.completionTokens;
+    metadata.usage.price =
+      metadata.usage.promptTokens * PRICING_CHAT[inputBody.model][0] +
+      metadata.usage.completionTokens * PRICING_CHAT[inputBody.model][1];
+
+    for (const stream of streams) {
+      stream.end();
+    }
     return metadata;
   });
 

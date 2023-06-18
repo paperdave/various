@@ -1,9 +1,8 @@
-// export function parseEvents(reader: ReadableStreamReader<Uint8Array>) { }
-
 import { td } from './shared';
 
-const openBracket = '{'.charCodeAt(0);
+// const openBracket = '{'.charCodeAt(0);
 
+// todo just make this an async iterator
 export class OpenAIEventSource {
   running = false;
 
@@ -12,8 +11,7 @@ export class OpenAIEventSource {
   }
 
   onData: (chunk: any) => void = () => {};
-
-  onNonStreamValue: (value: any) => void = () => {};
+  // onNonStreamValue: (value: any) => void = () => {};
 
   async #cycle() {
     if (this.running) {
@@ -23,21 +21,21 @@ export class OpenAIEventSource {
     let { reader } = this;
     try {
       let buf = '';
-      let isFirst = true;
+      // let isFirst = true;
       let { done, value } = await reader.read();
       while (!done) {
-        if (isFirst) {
-          if (value![0] === openBracket) {
-            const parse = JSON.parse(td.decode(value));
-            this.running = false;
-            this.onNonStreamValue(parse);
+        // if (isFirst) {
+        //   if (value![0] === openBracket) {
+        //     const parse = JSON.parse(td.decode(value));
+        //     this.running = false;
+        //     this.onNonStreamValue(parse);
 
-            let done2;
-            while (!done2) done2 = (await reader.read()).done;
-            return;
-          }
-          isFirst = false;
-        }
+        //     let done2;
+        //     while (!done2) done2 = (await reader.read()).done;
+        //     return;
+        //   }
+        //   isFirst = false;
+        // }
 
         const lines = (buf + td.decode(value)).split('\n');
         buf = lines.pop()!;

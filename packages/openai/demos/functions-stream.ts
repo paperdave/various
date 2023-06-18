@@ -31,14 +31,13 @@ const functions = {
   },
 };
 
+console.log(messages[1].content);
 const result = await generateChatCompletion({
   model: 'gpt-3.5-turbo-0613',
   messages,
   functions,
   stream: true,
 });
-
-console.log(messages[1].content);
 
 for await (const token of result.tokens) {
   if (token.type === 'text') {
@@ -48,3 +47,5 @@ for await (const token of result.tokens) {
     console.log(token);
   }
 }
+
+console.log(await result.data);
