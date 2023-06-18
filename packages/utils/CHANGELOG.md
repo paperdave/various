@@ -1,5 +1,17 @@
 # @paperdave/utils
 
+## 1.8.0
+
+### Minor Changes
+
+- Add uniqueBy
+  ([`23c2b3d`](https://github.com/paperdave/various/commit/23c2b3d5b2b1243e03411f71c64de6ee36f89a18))
+
+### Patch Changes
+
+- fix escapeHTML
+  ([`8e02210`](https://github.com/paperdave/various/commit/8e0221008309d7ee104a43cb77f17985df9bee20))
+
 ## 1.7.0
 
 ### Minor Changes

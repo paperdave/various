@@ -1,5 +1,12 @@
 # next-metadata
 
+## 0.2.0
+
+### Minor Changes
+
+- Update with new features
+  ([`93173b0`](https://github.com/paperdave/various/commit/93173b0b92b2648f41fb30014419c00baac58232))
+
 ## 0.1.4
 
 ### Patch Changes
