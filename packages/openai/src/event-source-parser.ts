@@ -13,6 +13,8 @@ export class OpenAIEventSource {
   onData: (chunk: any) => void = () => {};
   // onNonStreamValue: (value: any) => void = () => {};
 
+  queue: any[] = [];
+
   async #cycle() {
     if (this.running) {
       throw new Error('Already running');
@@ -21,23 +23,9 @@ export class OpenAIEventSource {
     let { reader } = this;
     try {
       let buf = '';
-      // let isFirst = true;
       let { done, value } = await reader.read();
       while (!done) {
-        // if (isFirst) {
-        //   if (value![0] === openBracket) {
-        //     const parse = JSON.parse(td.decode(value));
-        //     this.running = false;
-        //     this.onNonStreamValue(parse);
-
-        //     let done2;
-        //     while (!done2) done2 = (await reader.read()).done;
-        //     return;
-        //   }
-        //   isFirst = false;
-        // }
-
-        const lines = (buf + td.decode(value)).split('\n');
+        const lines = (buf + (typeof value === 'string' ? value : td.decode(value))).split('\n');
         buf = lines.pop()!;
         for (const line of lines) {
           if (line.startsWith('data: ') && line !== 'data: [DONE]') {
@@ -49,12 +37,21 @@ export class OpenAIEventSource {
       this.running = false;
     } finally {
       reader.releaseLock();
+      (reader as any)?._destroy?.();
+    }
+
+    if (this.queue.length) {
+      this.reader = this.queue.shift()!;
+      this.#cycle();
     }
   }
 
   continue(newReader: ReadableStreamDefaultReader<Uint8Array>) {
-    if (this.running) throw new Error('Already running');
-    this.reader = newReader;
-    this.#cycle();
+    if (this.running) {
+      this.queue.push(newReader);
+    } else {
+      this.reader = newReader;
+      this.#cycle();
+    }
   }
 }

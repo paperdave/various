@@ -1,5 +1,6 @@
 import { delay } from '@paperdave/utils';
 import { AuthOverride, getAuthHeaders } from './api-key';
+import { fetchOpenAI_BunEventSource } from './bun-eventsource';
 
 export interface FetchOptions {
   /** Number of retries before giving up. Defaults to 3. */
@@ -60,5 +61,16 @@ export async function fetchOpenAI(options: InternalFetchOptions) {
       }
       tries++;
     }
+  }
+}
+
+export async function fetchOpenAIEventSource(
+  options: InternalFetchOptions
+): Promise<ReadableStreamDefaultReader> {
+  if (typeof Bun === 'undefined') {
+    const response = await fetchOpenAI(options);
+    return response.body!.getReader();
+  } else {
+    return fetchOpenAI_BunEventSource(options);
   }
 }
